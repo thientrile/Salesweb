@@ -1,7 +1,7 @@
 <?php
 
 $method = $_SERVER['REQUEST_METHOD'];
-if ($method == 'POST'  && isset($_SESSION["s_user"]) &&! $Cart->checkCart($_SESSION["s_user"], $_POST['id'])) {
+if ($method == 'POST'  && isset($_SESSION["s_user"]) && !$Cart->checkCart($_SESSION["s_user"], $_POST['id'])) {
 
     $Cart->addCart($_SESSION["s_user"], $_POST['id']);
     echo json_encode(array("status" => "success"));
@@ -22,5 +22,5 @@ if ($method == 'POST'  && isset($_SESSION["s_user"]) &&! $Cart->checkCart($_SESS
     echo json_encode($array);
 } elseif ($method == 'PUT') {
 } elseif ($method == 'DELETE') {
-    // Method is DELETE
+    $Cart->deleteOne($_GET['id']);
 }

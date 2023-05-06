@@ -36,7 +36,7 @@ class cart
    function viewCart($userId)
    {
       $db = new connect();
-      $select = "select *  from cart, product where user_id=$userId and product_id=product.id";
+      $select = "select cart.id as id , product_id, title, img, discount, price   from cart, product where user_id=$userId and product_id=product.id";
 
       $result = $db->getlist($select);
       return $result;

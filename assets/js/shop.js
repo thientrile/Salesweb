@@ -301,7 +301,7 @@ function checkcart() {
         $("#addcart").attr("onclick", "location.href='index.php?action=cart'");
       } else {
         $("#addcart").text(`Add to cart`);
-        $("#addcart").attr("onclick", `addcart(${req.id})`);
+        $("#addcart").attr("onclick", "addcart(${req.id})");
       }
     },
   });
