@@ -96,6 +96,19 @@ function loadproduct() {
         type: "GET",
         dataType: "json",
         success: function (data) {
+          let button =
+            checkCookie("c_user") == true
+              ? `<button class="btn btn-success">Buy</button> <button class="btn btn-warning">Add to cart</button>`
+              : `<a href="index.php?action=login" class="btn btn-primary">Login</a>`;
+        
+          let price =
+            req.discount > 0
+              ? `         <sub style="text-decoration:line-through">${
+                  req.price
+                }</sub>$ ${req.price - req.price * req.discount}`
+              : req.price > 0
+              ? `$ ${req.price}`
+              : "Free";
           let indicators = "";
           let inner = "";
           for (let i = 0; i < data.length; i++) {
@@ -163,8 +176,9 @@ ${inner}
               <div class="card-header text-center">Item Details</div>
               <div class="card-body d-flex justify-content-center align-items-center flex-column">
                   <h3 class="">
-
+                ${price}
                   </h3>
+                  ${button}
 
               </div>
           </div>
@@ -245,6 +259,8 @@ function getFileType(filename) {
   }
 }
 $(document).ready(function () {
+  checkCookie("c_user");
+  console.log("🚀 ~ file: shop.js:257 ~ , " + checkCookie("c_user"));
   if (window.location.href.indexOf("id=") != -1) {
     loadproduct();
   } else {
