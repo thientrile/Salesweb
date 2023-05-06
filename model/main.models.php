@@ -17,7 +17,7 @@ spl_autoload_register();
 /* It's creating a new instance of the `connect` class. */
 $cc = new connect();
 $userInfor = new user();
-$cart = new cart();
+$Cart = new cart();
 $mail = new sendmail();
 $product = new product();
 $paging = new pagination();
