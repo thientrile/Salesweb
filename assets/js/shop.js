@@ -281,10 +281,11 @@ function addcart(id) {
     contentType: false,
   });
 }
+
 $(document).ready(function () {
   checkCookie("c_user");
   console.log("🚀 ~ file: shop.js:257 ~ , " + checkCookie("c_user"));
-  if (window.location.href.indexOf("id=") != -1) {
+if (window.location.href.indexOf("id=") != -1) {
     loadproduct();
   } else {
     loadproducts();
