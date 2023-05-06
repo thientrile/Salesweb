@@ -18,7 +18,7 @@ $Cart = new cart();
 $mail = new sendmail();
 $product = new product();
 $paging = new pagination();
-$statistics=new statistics();
+$statistics = new statistics();
 if (isset($_COOKIE['userId'])) {
 
     $checkout = new  invoice($_COOKIE['userId']);
@@ -61,7 +61,7 @@ function random()
 }
 function getFileType($extension)
 {
-    
+
 
     switch ($extension) {
         case 'mp3':
