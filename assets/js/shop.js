@@ -100,7 +100,7 @@ function loadproduct() {
             checkCookie("c_user") == true
               ? `<button class="btn btn-success">Buy</button> <button class="btn btn-warning">Add to cart</button>`
               : `<a href="index.php?action=login" class="btn btn-primary">Login</a>`;
-        
+
           let price =
             req.discount > 0
               ? `         <sub style="text-decoration:line-through">${
@@ -178,7 +178,11 @@ ${inner}
                   <h3 class="">
                 ${price}
                   </h3>
-                  ${button}
+                  ${
+                    checkCookie("c_user") == true
+                      ? `<button class="btn btn-success">Buy</button> <button onclick="addcart(${req.id})" class="btn btn-warning">Add to cart</button>`
+                      : `<a href="index.php?action=login" class="btn btn-primary">Login</a>`
+                  }
 
               </div>
           </div>
@@ -186,12 +190,20 @@ ${inner}
               <div class="card-header text-center">DETAILS</div>
               <div class="card-body d-flex justify-content-start align-items-center flex-column">
                   <ul class="list-group" style="width:100%">
-                      <li class="list-group-item">Category:<a href="index.php?action=shop&cate=${req.category_id}"
-                              style="font-size:1em;text-decoration: none;" class="text-success">${req.name}
+                      <li class="list-group-item">Category:<a href="index.php?action=shop&cate=${
+                        req.category_id
+                      }"
+                              style="font-size:1em;text-decoration: none;" class="text-success">${
+                                req.name
+                              }
 
                           </a></li>
-                      <li class="list-group-item">Released Date:${req.created_at}</li>
-                      <li class="list-group-item">Last Updated:${req.updated_at}</li>
+                      <li class="list-group-item">Released Date:${
+                        req.created_at
+                      }</li>
+                      <li class="list-group-item">Last Updated:${
+                        req.updated_at
+                      }</li>
                   </ul>
               </div>
           </div>
@@ -257,6 +269,17 @@ function getFileType(filename) {
   ) {
     return "image";
   }
+}
+function addcart(id) {
+  let formData = new FormData();
+  formData.append("id", id);
+  $.ajax({
+    url: `server.php?action=cart`,
+    type: "POST",
+    data: formData,
+    processData: false,
+    contentType: false,
+  });
 }
 $(document).ready(function () {
   checkCookie("c_user");
