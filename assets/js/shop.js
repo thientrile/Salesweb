@@ -180,7 +180,7 @@ ${inner}
                   </h3>
                   ${
                     checkCookie("c_user") == true
-                      ? `<button class="btn btn-success">Buy</button> <button onclick="addcart(${req.id})" class="btn btn-warning">Add to cart</button>`
+                      ? `<button class="btn btn-success">Buy</button> <button id="addcart" onclick="addcart(${req.id})" class="btn btn-warning">Add to cart</button>`
                       : `<a href="index.php?action=login" class="btn btn-primary">Login</a>`
                   }
 
@@ -232,6 +232,7 @@ ${req.description}
 
   </div>
 </div>`);
+          checkcart();
         },
         error: function (xhr, status, error) {
           console.log(xhr.responseText);
@@ -279,13 +280,34 @@ function addcart(id) {
     data: formData,
     processData: false,
     contentType: false,
+    success: function (data) {
+      $("#addcart").text(`View cart`);
+      $("#addcart").attr("onclick", "location.href='index.php?action=cart'");
+    },
   });
 }
-
+function checkcart() {
+  let id = window.location.href.split("id=")[1].split("&")[0];
+  $.ajax({
+    url: `server.php?action=cart&id=${id}`,
+    type: "GET",
+    dataType: "JSON",
+    processData: false,
+    contentType: false,
+    success: function (data) {
+      console.log(data.result);
+      if (data.result == true) {
+        $("#addcart").text(`View cart`);
+        $("#addcart").attr("onclick", "location.href='index.php?action=cart'");
+      } else {
+        $("#addcart").text(`Add to cart`);
+        $("#addcart").attr("onclick", `addcart(${req.id})`);
+      }
+    },
+  });
+}
 $(document).ready(function () {
-  checkCookie("c_user");
-  console.log("🚀 ~ file: shop.js:257 ~ , " + checkCookie("c_user"));
-if (window.location.href.indexOf("id=") != -1) {
+  if (window.location.href.indexOf("id=") != -1) {
     loadproduct();
   } else {
     loadproducts();
