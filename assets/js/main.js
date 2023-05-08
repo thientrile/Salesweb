@@ -32,7 +32,7 @@ class server {
         });
     });
   }
-  post(path = "", Data) {
+  post(path = "", Data = "") {
     let urlApi = this.url + path;
     return new Promise(function (resolve, reject) {
       $.ajax({
@@ -40,6 +40,25 @@ class server {
         type: "POST",
         data: Data,
         dataType: "json",
+        processData: false,
+        contentType: false,
+      })
+        .done(function (res, req) {
+          resolve(res, req);
+        })
+        .fail(function (xhr, status, error) {
+          reject(xhr, status, error);
+        });
+    });
+  }
+  delete(path = "", Data = "") {
+    let urlApi = this.url + path;
+    return new Promise(function (resolve, reject) {
+      $.ajax({
+        url: urlApi,
+        type: "DELETE",
+        data: Data,
+
         processData: false,
         contentType: false,
       })

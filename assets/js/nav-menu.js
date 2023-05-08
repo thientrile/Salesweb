@@ -32,4 +32,16 @@ window.addEventListener("DOMContentLoaded", function () {
   });
 });
 
-
+function countCart() {
+  let Server = new server();
+  Server.get("action=cart")
+    .then((res, req) => {
+      $("#countCart").text(res.length);
+    })
+    .catch((xhr, sta, err) => {
+      $("#countCart").text(0);
+    });
+}
+$(document).ready(() => {
+  countCart();
+});

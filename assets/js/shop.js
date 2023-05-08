@@ -75,10 +75,24 @@ function loadproducts(href = "") {
 }
 
 function loadproduct() {
+  $(".creative").html(` <div class="container translate-top">
+  <div class="row" id="product">
+  <div class="col-12 d-flex justify-content-center">
+  <div class="spinner-border text-info "></div></div>
+
+
+  </div>
+ 
+
+
+</div>`);
   let id = window.location.href.split("id=")[1].split("&")[0];
   let Server = new server();
   Server.get(`action=product&id=${id}`)
     .then((res, req) => {
+      $("body > header > title").text(
+        "SHOP - " + res.title
+      );
       let img = res.img;
       $(".heading-title").html(res.title).addClass("text-center");
       $(".heading-sub")
@@ -87,11 +101,6 @@ function loadproduct() {
         .css("font-size:", "1em");
       Server.get(`action=product&id=${id}&function=gallery`).then(
         (data, req = "") => {
-          console.log(data);
-          let button =
-            checkCookie("c_user") == true
-              ? `<button class="btn btn-success">Buy</button> <button class="btn btn-warning">Add to cart</button>`
-              : `<a href="index.php?action=login" class="btn btn-primary">Login</a>`;
           let price =
             res.discount > 0
               ? `         <sub style="text-decoration:line-through">${
@@ -195,7 +204,7 @@ function loadproduct() {
                     <!-- Tab panes -->
                     <div class="tab-content">
                         <div class="tab-pane container active" id="description">
-          ${req.description}
+          ${res.description}
                         </div>
                     </div>
                 </div>
@@ -240,6 +249,7 @@ function addcart(id, e) {
   Server.post("action=cart", formData)
     .then((res, req) => {
       checkcart();
+      countCart();
     })
     .catch((xhr, sta, err) => {
       console.log(err);
