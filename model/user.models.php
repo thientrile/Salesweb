@@ -99,7 +99,7 @@ class user
             $sql .= " fullname='$username',";
         }
         if (!empty($phoneNumber)) {
-            
+
             $sql .= " phone_number='$phoneNumber',";
         }
         if (!empty($address)) {

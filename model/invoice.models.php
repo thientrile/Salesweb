@@ -4,8 +4,8 @@ class invoice
     var $userId = null;
     var $orderId = 0;
     var $check = false;
-    var $countLibary=1;
-    var $countOrder=1;
+    var $countLibary = 1;
+    var $countOrder = 1;
     function __construct($userId)
     {
         $this->userId = $userId;
@@ -25,23 +25,21 @@ class invoice
             $this->orderId = $result[0];
             $c = $cart->viewCart($this->userId);
             while ($item = $c->fetch()) {
-                $inserts = "INSERT INTO `order_details`(`id`, `order_id`, `product_id`, `price`, `discount`) VALUES (NULL,$this->orderId,$item[2],$item[11],$item[10])";
+                $inserts = "INSERT INTO `order_details`(`id`, `order_id`, `product_id`, `price`, `discount`) VALUES (NULL,$this->orderId,$item[1],$item[5],$item[4])";
                 $db->send($inserts);
             }
             $update = "UPDATE user SET balance=balance-$total WHERE id=$this->userId";
             $db->send($update);
             $cart->deleteAll($this->userId);
-            echo "<script>alert('thanh toán thành công');</script>";
-            echo '<meta http-equiv="refresh" content="0; url=index.php?action=home"/>';
+            return json_encode(array("status" => "success", "message" => "Payment success"));
         } else {
-            echo "<script>alert('vui lòng nạp thêm tiền');</script>";
-            echo '<meta http-equiv="refresh" content="0; url=index.php?action=cart"/>';
+            return json_encode(array("status" => "fail", "message" => "Please add more money to your account"));
         }
     }
     function order_One($product_id, $discount, $price)
     {
         $db = new connect();
-        
+
         $total = $price - $price * $discount;
         $user = new user();
         $balance = $user->getInfor($this->userId)[3];
@@ -67,37 +65,39 @@ class invoice
             echo '<meta http-equiv="refresh" content="0; url=index.php?action=shop&act=detail&id=' . $product_id . '"/>';
         }
     }
-    function check_Libary( $product_id)
+    function check_Libary($product_id)
     {
         $db = new connect();
-        $select="SELECT COUNT(*) FROM `order_details` WHERE product_id=".$product_id." and order_id IN( SELECT id FROM `order` WHERE user_id=".$this->userId.")";
-        $result=$db->getonce($select);
-        return $result[0]>0?true:false;
+        $select = "SELECT COUNT(*) FROM `order_details` WHERE product_id=" . $product_id . " and order_id IN( SELECT id FROM `order` WHERE user_id=" . $this->userId . ")";
+        $result = $db->getonce($select);
+        return $result[0] > 0 ? true : false;
     }
-    function view_Libary($currentPage = 1){
+    function view_Libary($currentPage = 1)
+    {
         $db = new connect();
         $start = 6 * $currentPage - 6;
         $end = 6 * $currentPage;
-        $select="SELECT * FROM product WHERE id IN (SELECT product_id FROM `order_details` WHERE  order_id IN( SELECT id FROM `order` WHERE user_id=".$this->userId."))  LIMIT $start,$end";
-        $this->countLibary=ceil($db->getonce("SELECT COUNT(*) FROM product WHERE id IN (SELECT product_id FROM `order_details` WHERE  order_id IN( SELECT id FROM `order` WHERE user_id=" . $this->userId . ")) ")[0]/6);
-        $result=$db->getlist($select);
+        $select = "SELECT * FROM product WHERE id IN (SELECT product_id FROM `order_details` WHERE  order_id IN( SELECT id FROM `order` WHERE user_id=" . $this->userId . "))  LIMIT $start,$end";
+        $this->countLibary = ceil($db->getonce("SELECT COUNT(*) FROM product WHERE id IN (SELECT product_id FROM `order_details` WHERE  order_id IN( SELECT id FROM `order` WHERE user_id=" . $this->userId . ")) ")[0] / 6);
+        $result = $db->getlist($select);
         return $result;
     }
-    function view_Order($currentPage=1){
+    function view_Order($currentPage = 1)
+    {
 
-        $db=new connect();
+        $db = new connect();
         $start = 6 * $currentPage - 6;
         $end = 6 * $currentPage;
-        $select="SELECT * FROM `order`WHERE user_id=".$this->userId. " ORDER BY date_order DESC LIMIT $start,$end";
-        $this->countOrder=ceil($db->getonce("SELECT count(*) FROM `order`WHERE user_id=" . $this->userId . " ORDER BY date_order DESC ")[0]/6);
-        $result=$db->getlist($select);
+        $select = "SELECT * FROM `order`WHERE user_id=" . $this->userId . " ORDER BY date_order DESC LIMIT $start,$end";
+        $this->countOrder = ceil($db->getonce("SELECT count(*) FROM `order`WHERE user_id=" . $this->userId . " ORDER BY date_order DESC ")[0] / 6);
+        $result = $db->getlist($select);
         return $result;
     }
     function view_OrderDetail($orderId)
     {
-        $db=new connect();
-        $select="SELECT title, img, id FROM `product` WHERE id IN(SELECT product_id FROM order_details WHERE order_id=".$orderId.")";        
-        $result=$db->getlist($select);
+        $db = new connect();
+        $select = "SELECT title, img, id FROM `product` WHERE id IN(SELECT product_id FROM order_details WHERE order_id=" . $orderId . ")";
+        $result = $db->getlist($select);
         return $result;
     }
 }

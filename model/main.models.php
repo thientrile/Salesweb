@@ -1,31 +1,28 @@
 <?php
 /* It's starting a session. */
-session_set_cookie_params(0);
 
-// Start the session
+
+
 session_start();
 
-// Unset all session variables
-$_SESSION = array();
 
-// Destroy the session
-session_destroy();
+
 set_include_path(get_include_path() . PATH_SEPARATOR . './');
 spl_autoload_extensions('.models.php');
 spl_autoload_register();
 
 /* It's creating a new instance of the `connect` class. */
 $cc = new connect();
-$userInfor = new user();
-$cart = new cart();
+$User = new user();
+$Cart = new cart();
 $mail = new sendmail();
 $product = new product();
 $paging = new pagination();
-$statistics=new statistics();
-if (isset($_COOKIE['userId'])) {
+$statistics = new statistics();
+if (isset($_SESSION['s_user'])) {
 
-    $checkout = new  invoice($_COOKIE['userId']);
-    $admin = new admin($_COOKIE['userId']);
+    $checkout = new  invoice($_SESSION['s_user']);
+    $admin = new admin($_SESSION['s_user']);
 }
 
 // tạo điều hướng controllers
@@ -64,7 +61,7 @@ function random()
 }
 function getFileType($extension)
 {
-    
+
 
     switch ($extension) {
         case 'mp3':

@@ -83,83 +83,71 @@ if (document.querySelector(".typewrite")) {
   };
 }
 $(document).ready(function () {
-  //  console.log(true);
-  // load product
-  $.ajax({
-    url: "http://demo.local/server.php?action=product",
-    type: "GET",
-    dataType: "json",
-    success: function (data) {
-      let result = "";
-      for (let i of data) {
-        let price =
-          i.discount > 0
-            ? `         <sub style="text-decoration:line-through">${
-                i.price
-              }</sub>$ ${i.price - i.price * i.discount}`
-            : i.price > 0
-            ? `$ ${i.price}`
-            : "Free";
+  let Server = new server();
+  Server.get("action=product").then((res, req) => {
+    let result = "";
+    
+    for (let i of res) {
+      let price =
+        i.discount > 0
+          ? `         <sub style="text-decoration:line-through">${
+              i.price
+            }</sub>$ ${i.price - i.price * i.discount}`
+          : i.price > 0
+          ? `$ ${i.price}`
+          : "Free";
 
-        result += `
-      <div class="col-lg-4 col-md-6">
-          <div class="card">
-              <div class="creative-img-cover">
-                  <img class="card-img-top" src="assets/products/${i.id}/img/${i.img}" alt="${i.img}" style="width: 100%; min-height:200px" />
-                  <div class="creative-icon">
-                      <span class="plus" style="--bg: #fff; --color: #34b7ae">
-                          <a href="index.php?action=shop&id=${i.id}">
-
-
-                              <i class="fa-solid fa-plus"></i>
-                          </a>
-                      </span>
-                      <span class="cart" style="--bg: #34b7ae; --color: #fff"><a href="index.php?action=cart"><i class="fa-solid fa-cart-shopping"></i></a>
-                      </span>
+      result += `
+          <div class="col-lg-4 col-md-6">
+              <div class="card">
+                  <div class="creative-img-cover">
+                      <img class="card-img-top" src="assets/products/${i.id}/img/${i.img}" alt="${i.img}" style="width: 100%; min-height:200px" />
+                      <div class="creative-icon">
+                          <span class="plus" style="--bg: #fff; --color: #34b7ae">
+                              <a href="index.php?action=shop&id=${i.id}">
+    
+    
+                                  <i class="fa-solid fa-plus"></i>
+                              </a>
+                          </span>
+                          <span class="cart" style="--bg: #34b7ae; --color: #fff"><a href="index.php?action=cart"><i class="fa-solid fa-cart-shopping"></i></a>
+                          </span>
+                      </div>
+                  </div>
+    
+                  <div class="card-body">
+                      <a href="index.php?action=shop&cate=${i.category_id}" class="heading-note">${i.name}</a>
+                      <br>
+                      <a href="index.php?action=shop&act=detail&id=${i.id}" class="card-title h5 text-dark" style="text-decoration: none;">${i.title}</a>
+                      <p class="card-text card-price">
+                          <span>
+                          ${price}
+    
+    
+    
+                          </span>
+                      </p>
                   </div>
               </div>
-
-              <div class="card-body">
-                  <a href="index.php?action=shop&cate=${i.category_id}" class="heading-note">${i.name}</a>
-                  <br>
-                  <a href="index.php?action=shop&act=detail&id=${i.id}" class="card-title h5 text-dark" style="text-decoration: none;">${i.title}</a>
-                  <p class="card-text card-price">
-                      <span>
-                      ${price}
-
-
-
-                      </span>
-                  </p>
-              </div>
           </div>
-      </div>
-`;
-      }
-      $("#product").html(result);
-    },
-    error: function (xhr, status, error) {
-      console.log(xhr.responseText);
-      console.log(status);
-      console.log(error);
-    },
+    `;
+    }
+    $("#product").html(result);
+  }).catch((xhr,statu,error)=>{
+    console.log(error);
   });
-  $.ajax({
-    url: "http://demo.local/server.php?action=product&function=category",
-    type: "GET",
-    dataType: "json",
-    success: function (data) {
-      console.log(true);
+
+  Server.get("action=product&function=category")
+    .then((res, req) => {
+  
       let result = "";
-      for (let i of data) {
+      for (let i of res) {
         result += `<li><a href="index.php?action=shop&cate=${i.id}">${i.name}</a></li>`;
       }
 
       $("#category").html(result);
-    },
-    error: function (xhr, status, error) {
-      // handle errors
-      console.log(error);
-    },
-  });
+    })
+    .catch((x, st, err) => {
+      console.log(x);
+    });
 });

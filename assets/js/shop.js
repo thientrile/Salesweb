@@ -6,6 +6,8 @@ function loadproducts(href = "") {
 
   $(".creative").html(` <div class="container translate-top">
   <div class="row" id="product">
+  <div class="col-12 d-flex justify-content-center">
+  <div class="spinner-border text-info "></div></div>
 
 
   </div>
@@ -15,14 +17,12 @@ function loadproducts(href = "") {
 
 
 </div>`);
-
-  $.ajax({
-    url: `http://demo.local/server.php?action=product&${url}`,
-    type: "GET",
-    dataType: "json",
-    success: function (data) {
+  let Server = new server();
+  Server.get(`action=product&${url}`)
+    .then((res, req) => {
       let result = "";
-      for (let i of data) {
+
+      for (let i of res) {
         let price =
           i.discount > 0
             ? `         <sub style="text-decoration:line-through">${
@@ -33,69 +33,82 @@ function loadproducts(href = "") {
             : "Free";
 
         result += `
-      <div class="col-lg-4 col-md-6">
-          <div class="card">
-              <div class="creative-img-cover">
-                  <img class="card-img-top" src="assets/products/${i.id}/img/${i.img}" alt="${i.img}" style="width: 100%; min-height:200px" />
-                  <div class="creative-icon">
-                      <span class="plus" style="--bg: #fff; --color: #34b7ae">
-                          <a href="index.php?action=shop&id=${i.id}">
-
-
-                              <i class="fa-solid fa-plus"></i>
-                          </a>
-                      </span>
-                      <span class="cart" style="--bg: #34b7ae; --color: #fff"><a href="index.php?action=cart"><i class="fa-solid fa-cart-shopping"></i></a>
-                      </span>
+          <div class="col-lg-4 col-md-6">
+              <div class="card">
+                  <div class="creative-img-cover">
+                      <img class="card-img-top" src="assets/products/${i.id}/img/${i.img}" alt="${i.img}" style="width: 100%; min-height:200px" />
+                      <div class="creative-icon">
+                          <span class="plus" style="--bg: #fff; --color: #34b7ae">
+                              <a href="index.php?action=shop&id=${i.id}">
+    
+    
+                                  <i class="fa-solid fa-plus"></i>
+                              </a>
+                          </span>
+                          <span class="cart" style="--bg: #34b7ae; --color: #fff"><a href="index.php?action=cart"><i class="fa-solid fa-cart-shopping"></i></a>
+                          </span>
+                      </div>
+                  </div>
+    
+                  <div class="card-body">
+                      <a href="index.php?action=shop&cate=${i.category_id}" class="heading-note">${i.name}</a>
+                      <br>
+                      <a href="index.php?action=shop&act=detail&id=${i.id}" class="card-title h5 text-dark" style="text-decoration: none;">${i.title}</a>
+                      <p class="card-text card-price">
+                          <span>
+                          ${price}
+    
+    
+    
+                          </span>
+                      </p>
                   </div>
               </div>
-
-              <div class="card-body">
-                  <span title="index.php?action=shop&cate=${i.category_id}" onclick="loadproducts(this.title)" class="heading-note">${i.name}</span>
-                  <br>
-                  <a href="index.php?action=shop&id=${i.id}" class="card-title h5 text-dark" style="text-decoration: none;">${i.title}</a>
-                  <p class="card-text card-price">
-                      <span>
-                      ${price}
-
-
-
-                      </span>
-                  </p>
-              </div>
           </div>
-      </div>
-`;
+    `;
       }
       $("#product").html(result);
-    },
-    error: function (xhr, status, error) {
-      console.log(xhr.responseText);
-      console.log(status);
+    })
+    .catch((xhr, statu, error) => {
       console.log(error);
-    },
-  });
+    });
 }
 
 function loadproduct() {
-  let id = window.location.href.split("id=")[1].split("&")[0];
+  $(".creative").html(` <div class="container translate-top">
+  <div class="row" id="product">
+  <div class="col-12 d-flex justify-content-center">
+  <div class="spinner-border text-info "></div></div>
 
-  $.ajax({
-    url: `http://demo.local/server.php?action=product&id=${id}`,
-    type: "GET",
-    dataType: "json",
-    success: function (req) {
-      let img = req.img;
-      $(".heading-title").html(req.title).addClass("text-center");
+
+  </div>
+ 
+
+
+</div>`);
+  let id = window.location.href.split("id=")[1].split("&")[0];
+  let Server = new server();
+  Server.get(`action=product&id=${id}`)
+    .then((res, req) => {
+      $("body > header > title").text(
+        "SHOP - " + res.title
+      );
+      let img = res.img;
+      $(".heading-title").html(res.title).addClass("text-center");
       $(".heading-sub")
-        .html(req.sDescription)
+        .html(res.sDescription)
         .addClass("text-center")
         .css("font-size:", "1em");
-      $.ajax({
-        url: `http://demo.local/server.php?action=product&id=${id}&function=gallery`,
-        type: "GET",
-        dataType: "json",
-        success: function (data) {
+      Server.get(`action=product&id=${id}&function=gallery`).then(
+        (data, req = "") => {
+          let price =
+            res.discount > 0
+              ? `         <sub style="text-decoration:line-through">${
+                  res.price
+                }</sub>$ ${res.price - res.price * res.discount}`
+              : res.price > 0
+              ? `$ ${res.price}`
+              : "Free";
           let indicators = "";
           let inner = "";
           for (let i = 0; i < data.length; i++) {
@@ -109,15 +122,13 @@ function loadproduct() {
               inner +=
                 i == 0
                   ? `<div class="carousel-item active">
-            <img class="d-block w-100 " src=" assets/products/${id}/img/${img}" alt=${img}">
-            <audio class="d-block w-100" src=" assets/products/${id}/gallery/${data[i].thumnali}" controls></audio>
-
-          </div>`
+                      <img class="d-block w-100 " src=" assets/products/${id}/img/${img}" alt=${img}">
+                      <audio class="d-block w-100" src=" assets/products/${id}/gallery/${data[i].thumnali}" controls></audio>
+                    </div>`
                   : `<div class="carousel-item">
-            <img class="d-block w-100 " src=" assets/products/${id}/img/${img}" alt="<?php echo $new[2] ?>">
-            <audio class="d-block w-100" src=" assets/products/${id}/gallery/${data[i].thumnali}" controls></audio>
-
-          </div>`;
+                      <img class="d-block w-100 " src=" assets/products/${id}/img/${img}" alt="<?php echo $new[2] ?>">
+                      <audio class="d-block w-100" src=" assets/products/${id}/gallery/${data[i].thumnali}" controls></audio>
+                    </div>`;
             } else if (getFileType(data[i].thumnali) == "image") {
               inner +=
                 i == 0
@@ -127,99 +138,85 @@ function loadproduct() {
               inner +=
                 i == 0
                   ? `<div class="carousel-item active ">
-            <video class="d-block w-100" src=" assets/products/${id}/gallery/${data[i].thumnali}" controls></video>
-
-          </div>`
+                      <video class="d-block w-100" src=" assets/products/${id}/gallery/${data[i].thumnali}" controls></video>
+                    </div>`
                   : `<div class="carousel-item">
-            <video class="d-block w-100" src=" assets/products/${id}/gallery/${data[i].thumnali}" controls></video>
-
-          </div>`;
+                      <video class="d-block w-100" src=" assets/products/${id}/gallery/${data[i].thumnali}" controls></video>
+                    </div>`;
             }
           }
           $(".creative")
             .html(` <div class="container translate-top shadow-lg" style="background: white;">
-  <div class="row p-3">
-      <div class="col-md-8">
-          <div id="media-carousel" class="carousel slide" data-bs-ride="carousel">
-              <!-- Indicators -->
-              <ol class="carousel-indicators" style="bottom:auto;top:0">
-${indicators}
-                
-
-              </ol>
-              <!-- Slides -->
-
-              <div class="carousel-inner">
-${inner}
-
-              </div>
-
-
-          </div>
-
-      </div>
-      <div class="col-md-4">
-          <div class="card mt-4 border border-3" style="width:100%;">
-              <div class="card-header text-center">Item Details</div>
-              <div class="card-body d-flex justify-content-center align-items-center flex-column">
-                  <h3 class="">
-
-                  </h3>
-
-              </div>
-          </div>
-          <div class="card mt-4 border border-3" style="width:100%;">
-              <div class="card-header text-center">DETAILS</div>
-              <div class="card-body d-flex justify-content-start align-items-center flex-column">
-                  <ul class="list-group" style="width:100%">
-                      <li class="list-group-item">Category:<a href="index.php?action=shop&cate=${req.category_id}"
-                              style="font-size:1em;text-decoration: none;" class="text-success">${req.name}
-
-                          </a></li>
-                      <li class="list-group-item">Released Date:${req.created_at}</li>
-                      <li class="list-group-item">Last Updated:${req.updated_at}</li>
-                  </ul>
-              </div>
-          </div>
-      </div>
-      <div class="col-md-8 mt-5">
-          <ul class="nav nav-tabs">
-              <li class="nav-item">
-                  <a class="nav-link active" data-bs-toggle="tab" href="#description">Description</a>
-              </li>
-
-          </ul>
-
-          <!-- Tab panes -->
-          <div class="tab-content">
-              <div class="tab-pane container active" id="description">
-${req.description}
-
-              </div>
-
-          </div>
-      </div>
-
-
-
-
-
-  </div>
-</div>`);
-        },
-        error: function (xhr, status, error) {
-          console.log(xhr.responseText);
-          console.log(status);
-          console.log(error);
-        },
-      });
-    },
-    error: function (xhr, status, error) {
-      console.log(xhr.responseText);
-      console.log(status);
+            <div class="row p-3">
+                <div class="col-md-8">
+                    <div id="media-carousel" class="carousel slide" data-bs-ride="carousel">
+                        <!-- Indicators -->
+                        <ol class="carousel-indicators" style="bottom:auto;top:0">
+          ${indicators}
+                        </ol>
+                        <!-- Slides -->
+                        <div class="carousel-inner">
+          ${inner}
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card mt-4 border border-3" style="width:100%;">
+                        <div class="card-header text-center">Item Details</div>
+                        <div class="card-body d-flex justify-content-center align-items-center flex-column">
+                            <h3 class="">
+                          ${price}
+                            </h3>
+                            ${
+                              checkCookie("c_user") == true
+                                ? `<button class="btn btn-success">Buy</button> <button id="addcart" onclick="addcart(${res.id})" class="btn btn-warning">Add to cart</button>`
+                                : `<a href="index.php?action=login" class="btn btn-primary">Login</a>`
+                            }
+                        </div>
+                    </div>
+                    <div class="card mt-4 border border-3" style="width:100%;">
+                        <div class="card-header text-center">DETAILS</div>
+                        <div class="card-body d-flex justify-content-start align-items-center flex-column">
+                            <ul class="list-group" style="width:100%">
+                                <li class="list-group-item">Category:<a href="index.php?action=shop&cate=${
+                                  res.category_id
+                                }"
+                                        style="font-size:1em;text-decoration: none;" class="text-success">${
+                                          res.name
+                                        }
+                                    </a></li>
+                                <li class="list-group-item">Released Date:${
+                                  res.created_at
+                                }</li>
+                                <li class="list-group-item">Last Updated:${
+                                  res.updated_at
+                                }</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-8 mt-5">
+                    <ul class="nav nav-tabs">
+                        <li class="nav-item">
+                            <a class="nav-link active" data-bs-toggle="tab" href="#description">Description</a>
+                        </li>
+                    </ul>
+                    <!-- Tab panes -->
+                    <div class="tab-content">
+                        <div class="tab-pane container active" id="description">
+          ${res.description}
+                        </div>
+                    </div>
+                </div>
+            </div>
+          </div>`);
+          checkcart();
+        }
+      );
+    })
+    .catch((xhr, stauts, error) => {
       console.log(error);
-    },
-  });
+    });
 }
 
 function getFileType(filename) {
@@ -243,6 +240,36 @@ function getFileType(filename) {
   ) {
     return "image";
   }
+}
+function addcart(id, e) {
+  $(e).html(`<div class="spinner-border text-white"></div>`);
+  let formData = new FormData();
+  formData.append("id", id);
+  let Server = new server();
+  Server.post("action=cart", formData)
+    .then((res, req) => {
+      checkcart();
+      countCart();
+    })
+    .catch((xhr, sta, err) => {
+      console.log(err);
+    })
+    .finally(() => {
+      checkcart();
+    });
+}
+function checkcart() {
+  let id = window.location.href.split("id=")[1].split("&")[0];
+  let Server = new server();
+  Server.get(`action=cart&id=${id}`).then((res, req) => {
+    if (res.result == true) {
+      $("#addcart").text(`View cart`);
+      $("#addcart").attr("onclick", "location.href='index.php?action=cart'");
+    } else {
+      $("#addcart").text(`Add to cart`);
+      $("#addcart").attr("onclick", `addcart(${id},this)`);
+    }
+  });
 }
 $(document).ready(function () {
   if (window.location.href.indexOf("id=") != -1) {

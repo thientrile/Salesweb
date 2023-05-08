@@ -62,7 +62,7 @@
 			<div class="d-flex">
 				<a href="index.php?action=user" id="user-login" class="heading-icon me-4"><i class="fa-solid fa-user"></i></a>
 				<a href="index.php?action=cart" class="heading-icon me-4"><i class="fa-solid fa-cart-shopping"></i>
-					<span>0</span>
+					<span id="countCart">0</span>
 				</a>
 				<button style="background: transparent; border: none" class="heading-icon me-4">
 					<i class="fa-solid fa-magnifying-glass" data-bs-toggle="modal" data-bs-target="#Modal-search"></i>
