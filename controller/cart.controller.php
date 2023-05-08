@@ -22,5 +22,10 @@ if ($method == 'POST'  && isset($_SESSION["s_user"]) && !$Cart->checkCart($_SESS
     echo json_encode($array);
 } elseif ($method == 'PUT') {
 } elseif ($method == 'DELETE') {
-    $Cart->deleteOne($_GET['id']);
+    if (isset($_GET['id'])) {
+
+        $Cart->deleteOne($_GET['id']);
+    } else {
+        $Cart->deleteAll($_SESSION["s_user"]);
+    }
 }
