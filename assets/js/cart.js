@@ -1,6 +1,5 @@
 // function is called when the website is loaded.It's loads
 function loadCart() {
-
   $.ajax({
     url: `server.php?action=cart`,
     type: "GET",
