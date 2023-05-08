@@ -149,7 +149,6 @@ $(document).ready(function () {
     type: "GET",
     dataType: "json",
     success: function (data) {
-      console.log(true);
       let result = "";
       for (let i of data) {
         result += `<li><a href="index.php?action=shop&cate=${i.id}">${i.name}</a></li>`;

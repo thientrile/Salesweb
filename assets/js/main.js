@@ -38,7 +38,10 @@ $(document).ready(function () {
     }
   }
 
-  $("#body").load("view/" + urlAction + ".views.php");
+  $("#body")
+    .load("view/" + urlAction + ".views.php")
+    
+  
 
   $("body > header > title").text(urlAction.toLocaleUpperCase()); //
 });

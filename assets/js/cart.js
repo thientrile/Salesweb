@@ -1,6 +1,6 @@
 // function is called when the website is loaded.It's loads
 function loadCart() {
-  $("#cart").html(`<div class="spinner-border text-info"></div>`);
+
   $.ajax({
     url: `server.php?action=cart`,
     type: "GET",
@@ -31,7 +31,7 @@ function loadCart() {
             </div>         `;
         }
 
-        $("#cart").append(items);
+        $("#cart").html(items);
       } else {
         $("#cart").text("Your cart is empty.");
         $("#cart").css({ background: "white", "min-height": "150px" });

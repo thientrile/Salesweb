@@ -295,7 +295,6 @@ function checkcart() {
     processData: false,
     contentType: false,
     success: function (data) {
-      console.log(data.result);
       if (data.result == true) {
         $("#addcart").text(`View cart`);
         $("#addcart").attr("onclick", "location.href='index.php?action=cart'");
