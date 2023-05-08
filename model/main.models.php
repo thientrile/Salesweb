@@ -13,16 +13,16 @@ spl_autoload_register();
 
 /* It's creating a new instance of the `connect` class. */
 $cc = new connect();
-$userInfor = new user();
+$User = new user();
 $Cart = new cart();
 $mail = new sendmail();
 $product = new product();
 $paging = new pagination();
 $statistics = new statistics();
-if (isset($_COOKIE['userId'])) {
+if (isset($_SESSION['s_user'])) {
 
-    $checkout = new  invoice($_COOKIE['userId']);
-    $admin = new admin($_COOKIE['userId']);
+    $checkout = new  invoice($_SESSION['s_user']);
+    $admin = new admin($_SESSION['s_user']);
 }
 
 // tạo điều hướng controllers

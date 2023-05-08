@@ -7,13 +7,9 @@ function loadCart() {
   let Server = new server();
   Server.get("action=cart")
     .then((res, req) => {
-      let price = 0;
-      let discount = 0;
       if (res.length > 0) {
         let items = "";
         for (let i of res) {
-          price += i.price;
-          discount += i.discount;
           items += ` <div class="row bg-white shadow-lg m-2 p-2 rounded bg-white">
               <div class="col-3 p-2" style="line-height: 100%;">${i.title}</div>
               <div class="col-3"><img width="50%" src="assets/products/${
@@ -36,16 +32,10 @@ function loadCart() {
         items += ` <div class="row bg-white shadow-lg m-2 p-2 rounded bg-white">
         
         <div class="col-3"> <h5>Items:  ${res.length}</h5></div>
-        <div class="col-2">
-        Price: $ ${price}
-        <br>
-        Discount: $ ${price * discount}
-      
-        </div>
-        <div class="col-3">Totals: $ ${price - price * discount}</div>
+       <div class="col-5"></div>
         <div class="col-4">
            <button class="btn btn-outline-danger" onclick="carDels(this)">Deletel All</button>
-           <button class="btn btn-success">Payments</button>
+           <a href="index.php?action=payment" class="btn btn-success">Payments</a>
         </div>
       
         

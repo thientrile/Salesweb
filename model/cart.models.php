@@ -59,7 +59,7 @@ class cart
       $sum = 0;
 
       while ($set = $result->fetch()) {
-         $sum += $set[11];
+         $sum += $set['price'];
       }
       return $sum;
    }
@@ -70,7 +70,7 @@ class cart
       $discount = 0;
       while ($set = $result->fetch()) {
 
-         $discount +=  $set[10] * $set[11];
+         $discount +=  $set['discount'] * $set['price'];
       }
       return $discount;
    }
