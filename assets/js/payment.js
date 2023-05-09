@@ -56,7 +56,6 @@ function view() {
       $("#items").html(items);
     });
   } else {
-    console.log(id);
     Server.get(`action=product&id=${id}`)
       .then((res, req) => {
         $("#items").html(`<div class="row ">
@@ -77,8 +76,12 @@ function view() {
     </div>         `);
         $("#payment").html(`  <div class="row">
     <div class="col-md-12 col-sm-2 text-center h2">Items:1</div>
-    <div class="col-md-12 col-sm-2 border-top">Price:$${res.price}</div>
-    <div class="col-md-12 col-sm-2">Discount: $${res.discount * res.price}</div>
+    <div class="col-md-12 col-sm-2 border-top" value="${res.price}">Price:$${
+          res.price
+        }</div>
+    <div class="col-md-12 col-sm-2 "value="${res.discount}">Discount: $${
+          res.discount * res.price
+        }</div>
     <div class="col-md-12 col-sm-2 border-top">Totals: $${
       res.price - res.discount * res.price
     }</div>
@@ -131,16 +134,16 @@ function pay(e) {
       });
   } else {
     let formData = new FormData();
-   
+
     formData.append("id", url.split("id=")[1]);
     formData.append(
       "price",
-      $("#payment > div > div:nth-child(2)").text().split("Price:$")[1]
+      parseFloat($("#payment > div > div:nth-child(2)").attr("value"))
     );
-  
+
     formData.append(
       "discount",
-      $("#payment > div > div:nth-child(3)").text().split("Discount: $")[1]
+      parseFloat($("#payment > div > div:nth-child(3)").attr("value"))
     );
     Server.post("action=payment", formData)
       .then((res, req) => {
@@ -170,7 +173,7 @@ function pay(e) {
         }
       })
       .catch((xhr, status, err) => {
-        console.log(false);
+        console.log(xhr, status, err);
       })
       .finally(() => {
         $(e).text(`Payment`);

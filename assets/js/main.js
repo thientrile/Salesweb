@@ -47,7 +47,6 @@ class server {
           resolve(res, req);
         })
         .fail(function (xhr, status, error) {
-          console.log(xhr, status, error);
           reject(xhr, status, error);
         });
     });
@@ -103,9 +102,8 @@ $(document).ready(function () {
   $("#body").load(
     "view/" + urlAction + ".views.php",
     (response, status, xhr) => {
-     
       if (status == "error") {
-     $('html').load('view/error/404.php');
+        $("html").load("view/error/404.php");
       }
     }
   );
