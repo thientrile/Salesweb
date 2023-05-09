@@ -169,7 +169,7 @@ function loadproduct() {
                             </h3>
                             ${
                               checkCookie("c_user") == true
-                                ? `<button class="btn btn-success">Buy</button> <button id="addcart" onclick="addcart(${res.id})" class="btn btn-warning">Add to cart</button>`
+                                ? `<a href="index.php?action=payment&id=${res.id}" class="btn btn-success">Buy</a> <button id="addcart" onclick="addcart(${res.id})" class="btn btn-warning">Add to cart</button>`
                                 : `<a href="index.php?action=login" class="btn btn-primary">Login</a>`
                             }
                         </div>
