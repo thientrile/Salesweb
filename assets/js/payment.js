@@ -130,20 +130,51 @@ function pay(e) {
         $(e).text(`Payment`);
       });
   } else {
-    console.log(
-      $("#payment > div > div:nth-child(2)").text().split("Price:$")[1]
-    );
     let formData = new FormData();
+   
     formData.append("id", url.split("id=")[1]);
     formData.append(
       "price",
       $("#payment > div > div:nth-child(2)").text().split("Price:$")[1]
     );
+  
     formData.append(
-      "price",
-      $("#payment > div > div:nth-child(4)").text().split("Discount: $")[1]
+      "discount",
+      $("#payment > div > div:nth-child(3)").text().split("Discount: $")[1]
     );
-    console.log(formData);
+    Server.post("action=payment", formData)
+      .then((res, req) => {
+        if (res.status == "success") {
+          Swal.fire({
+            icon: "success",
+            title: "Your work has been saved",
+            showConfirmButton: false,
+            timer: 500,
+          }).then((res) => {
+            window.location.replace("index.php?action=shop");
+          });
+        } else {
+          Swal.fire({
+            title: "Do you want to top up more money?",
+            text: "Your account balance is not enough!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes,I want!",
+          }).then((result) => {
+            if (result.isConfirmed) {
+              window.location.replace("index.php?action=recharge");
+            }
+          });
+        }
+      })
+      .catch((xhr, status, err) => {
+        console.log(false);
+      })
+      .finally(() => {
+        $(e).text(`Payment`);
+      });
   }
 }
 $(document).ready(function () {

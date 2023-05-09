@@ -58,11 +58,9 @@ class invoice
             $db->send($update);
             $query = "delete from cart where user_id=$this->userId and product_id=$product_id";
             $db->send($query);
-            echo "<script>alert('thanh toán thành công');</script>";
-            echo '<meta http-equiv="refresh" content="0; url=index.php?action=shop&act=detail&id=' . $product_id . '"/>';
+            return json_encode(array("status" => "success", "message" => "Payment success"));
         } else {
-            echo "<script>alert('vui lòng nạp thêm tiền');</script>";
-            echo '<meta http-equiv="refresh" content="0; url=index.php?action=shop&act=detail&id=' . $product_id . '"/>';
+            return json_encode(array("status" => "fail", "message" => "Please add more money to your account"));
         }
     }
     function check_Libary($product_id)
