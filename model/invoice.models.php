@@ -76,10 +76,14 @@ class invoice
         $db = new connect();
         $start = 6 * $currentPage - 6;
         $end = 6 * $currentPage;
-        $select = "SELECT * FROM product WHERE id IN (SELECT product_id FROM `order_details` WHERE  order_id IN( SELECT id FROM `order` WHERE user_id=" . $this->userId . "))  LIMIT $start,$end";
+        $select = "SELECT product.id as id, title,img,source,category_id,description,sDescription, discount,price,created_at,updated_at, deleted, category.name as name FROM product,category WHERE  product.id IN (SELECT product_id FROM `order_details` WHERE  order_id IN( SELECT id FROM `order` WHERE user_id=" . $this->userId . "))AND product.category_id=category.id  LIMIT $start,$end";
         $this->countLibary = ceil($db->getonce("SELECT COUNT(*) FROM product WHERE id IN (SELECT product_id FROM `order_details` WHERE  order_id IN( SELECT id FROM `order` WHERE user_id=" . $this->userId . ")) ")[0] / 6);
         $result = $db->getlist($select);
-        return $result;
+        $array = array();
+        while ($row = $result->fetch()) {
+            array_push($array, $row);
+        }
+        return json_encode($array);
     }
     function view_Order($currentPage = 1)
     {

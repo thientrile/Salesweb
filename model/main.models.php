@@ -19,14 +19,19 @@ $mail = new sendmail();
 $product = new product();
 $paging = new pagination();
 $statistics = new statistics();
-if (isset($_SESSION['s_user'])) {
+if (isset($_SESSION['s_user']) && isset($_COOKIE['c_user']) && md5($_SESSION['s_user']) == $_COOKIE['c_user']) {
 
     $checkout = new  invoice($_SESSION['s_user']);
     $admin = new admin($_SESSION['s_user']);
+} else {
+    // Xoá cookie c_user
+    setcookie('c_user', '', time() - 86400);
+    
 }
 
+
 // tạo điều hướng controllers
-$ctrl = 'product';
+$ctrl = 'home';
 if (isset($_GET['action'])) {
     $mydir = 'controller';
 

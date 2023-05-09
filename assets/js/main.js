@@ -100,7 +100,15 @@ $(document).ready(function () {
     }
   }
 
-  $("#body").load("view/" + urlAction + ".views.php");
+  $("#body").load(
+    "view/" + urlAction + ".views.php",
+    (response, status, xhr) => {
+     
+      if (status == "error") {
+     $('html').load('view/error/404.php');
+      }
+    }
+  );
 
   $("body > header > title").text(urlAction.toLocaleUpperCase()); //
 });

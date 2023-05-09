@@ -16,8 +16,9 @@ if ($method == 'POST') {
                 $resutl = $checkout->check_Library($_GET['id']);
                 echo $resutl;
                 break;
-            case "blue":
-                echo "Your favorite color is blue!";
+            case "view_Library":
+                $result=$checkout->view_Library(isset($_GET['page'])?$_GET['page']:1);
+                echo  $result;
                 break;
             case "green":
                 echo "Your favorite color is green!";
