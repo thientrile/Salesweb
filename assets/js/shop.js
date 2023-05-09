@@ -90,9 +90,7 @@ function loadproduct() {
   let Server = new server();
   Server.get(`action=product&id=${id}`)
     .then((res, req) => {
-      $("body > header > title").text(
-        "SHOP - " + res.title
-      );
+      $("body > header > title").text("SHOP - " + res.title);
       let img = res.img;
       $(".heading-title").html(res.title).addClass("text-center");
       $(".heading-sub")
@@ -167,30 +165,20 @@ function loadproduct() {
                             <h3 class="">
                           ${price}
                             </h3>
-                            ${
-                              checkCookie("c_user") == true
-                                ? `<a href="index.php?action=payment&id=${res.id}" class="btn btn-success">Buy</a> <button id="addcart" onclick="addcart(${res.id})" class="btn btn-warning">Add to cart</button>`
-                                : `<a href="index.php?action=login" class="btn btn-primary">Login</a>`
-                            }
+                            <div id="view-btn"></div>
+
+                            
                         </div>
                     </div>
                     <div class="card mt-4 border border-3" style="width:100%;">
                         <div class="card-header text-center">DETAILS</div>
                         <div class="card-body d-flex justify-content-start align-items-center flex-column">
                             <ul class="list-group" style="width:100%">
-                                <li class="list-group-item">Category:<a href="index.php?action=shop&cate=${
-                                  res.category_id
-                                }"
-                                        style="font-size:1em;text-decoration: none;" class="text-success">${
-                                          res.name
-                                        }
+                                <li class="list-group-item">Category:<a href="index.php?action=shop&cate=${res.category_id}"
+                                        style="font-size:1em;text-decoration: none;" class="text-success">${res.name}
                                     </a></li>
-                                <li class="list-group-item">Released Date:${
-                                  res.created_at
-                                }</li>
-                                <li class="list-group-item">Last Updated:${
-                                  res.updated_at
-                                }</li>
+                                <li class="list-group-item">Released Date:${res.created_at}</li>
+                                <li class="list-group-item">Last Updated:${res.updated_at}</li>
                             </ul>
                         </div>
                     </div>
@@ -210,7 +198,7 @@ function loadproduct() {
                 </div>
             </div>
           </div>`);
-          checkcart();
+          checkLibary(res.id);
         }
       );
     })
@@ -270,6 +258,21 @@ function checkcart() {
       $("#addcart").attr("onclick", `addcart(${id},this)`);
     }
   });
+}
+function checkLibary(id) {
+  let Server = new server();
+  Server.get(`action=payment&function=check_Library&id=${id}`).then(
+    (res, req) => {
+      $("#view-btn").html(
+        checkCookie("c_user") == true
+          ? res.message == true
+            ? `<a href="index.php?action=library" class="btn btn-outline-info">View Library</a>`
+            : `  <a href="index.php?action=payment&id=${id}" class="btn btn-success px-4">Buy</a> <br> <button id="addcart" onclick="addcart(${id})" class="btn btn-warning">Add to cart</button>`
+          : `<a href="index.php?action=login" class="btn btn-primary">Login</a>`
+      );
+      checkcart();
+    }
+  );
 }
 $(document).ready(function () {
   if (window.location.href.indexOf("id=") != -1) {

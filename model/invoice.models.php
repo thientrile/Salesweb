@@ -63,14 +63,15 @@ class invoice
             return json_encode(array("status" => "fail", "message" => "Please add more money to your account"));
         }
     }
-    function check_Libary($product_id)
+    // Libary
+    function check_Library($product_id)
     {
         $db = new connect();
         $select = "SELECT COUNT(*) FROM `order_details` WHERE product_id=" . $product_id . " and order_id IN( SELECT id FROM `order` WHERE user_id=" . $this->userId . ")";
         $result = $db->getonce($select);
-        return $result[0] > 0 ? true : false;
+        return  json_encode(array("status" => "success", "message" => $result[0] > 0 ? true : false));
     }
-    function view_Libary($currentPage = 1)
+    function view_Library($currentPage = 1)
     {
         $db = new connect();
         $start = 6 * $currentPage - 6;

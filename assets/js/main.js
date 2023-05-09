@@ -44,7 +44,6 @@ class server {
         contentType: false,
       })
         .done(function (res, req) {
-          console.log(res, req);
           resolve(res, req);
         })
         .fail(function (xhr, status, error) {
