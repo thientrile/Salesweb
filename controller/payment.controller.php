@@ -22,6 +22,7 @@ if ($method == 'POST') {
                 break;
             case "order":
                 if (isset($_GET['id'])) {
+                    echo $checkout->view_OrderDetail($_GET['id']);
                 } else {
                     echo $checkout->view_Order(isset($_GET['page']) ? $_GET['page'] : 1);
                 }

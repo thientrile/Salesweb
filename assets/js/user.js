@@ -1,8 +1,16 @@
+var fullname = "";
+var address = "";
+var phone = "";
+var email = "";
 function userInfo() {
   $("#upload").hide();
   let Server = new server();
   Server.get("action=user")
     .then((res, req) => {
+      fullname = res.fullname;
+      address = res.address;
+      phone = res.phone_number;
+      email = res.email;
       $(
         "#profile > div > div.col-lg-3.border-right.shadow-lg > div > span.font-weight-bold"
       ).text(res.fullname);
@@ -37,12 +45,91 @@ function loadOrders() {
   let Server = new server();
   Server.get("action=payment&function=order")
     .then((res, req) => {
-      console.log(res);
+      if (res.length > 0) {
+        let result = "";
+        for (let i of res) {
+          let created = new Date(i.date_order);
+          let currentDate = new Date();
+          let timeDiff = currentDate - created;
+
+          // Convert milliseconds to days
+          let daysDiff = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
+          if (daysDiff === 0) {
+            created = "Today";
+          }
+          // Check if it's yesterday
+          else if (daysDiff === 1) {
+            created = "Yesterday";
+          }
+          // It's neither today nor yesterday, so print the original date
+          else {
+            created = created.toDateString();
+          }
+          result += ` <tr>
+          <td>#DG-${i.id}</td>
+          <td>$${i.total}</td>
+          <td >${created}</td>
+          <td><button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#myModal" onclick="loadOrder(${i.id},'${i.date_order}')">
+                  <i class="fas fa-info me-2"></i> Get information
+              </button></td>
+      </tr>`;
+        }
+        $("#order").html(result);
+      } else {
+        $("#Order-History").hide();
+        $("#body > div.creative > div > ul > li:nth-child(2) > a").hide()
+      }
     })
     .catch((xhr, status, err) => {
-      console.log(xhr);
+      console.log(xhr, status, err);
     });
 }
+function loadOrder(id, created) {
+  let date = new Date(created);
+  date = date.toUTCString();
+
+  $(".id").text(`ID: #DG${id}`);
+  $(".fullname").text(fullname);
+  $(".created").text(date);
+  $(".address").text(address);
+  $(".phone").text(phone);
+  let Server = new server();
+  let price = 0;
+  let discount = 0;
+  let result = "";
+  Server.get(`action=payment&function=order&id=${id}`)
+    .then((res, req) => {
+      for (let i of res) {
+        price += i.price;
+        discount += i.discount;
+        result += ` <tr>
+        <td scope="col">#DG${i.id}</td>
+        <td scope="col">${i.title}</td>
+        <td scope="col">${i.discount * i.price}</td>
+        <td scope="col">${i.price}</td>
+        <td scope="col">${i.price - i.price * i.discount}</td>
+    </tr>`;
+      }
+      $("#detail").html(result);
+      $(".price").html(
+        `<span class="text-black me-4">SubTotal</span>$${price}`
+      );
+      $(".discount").html(
+        `<span class="text-black me-4 discount">Tax(${
+          discount * 100
+        }%)</span>$${price * discount}`
+      );
+      $(".total").html(
+        `<span class="text-black me-3"> Total Amount</span><span style="font-size: 25px;">$${
+          price - price * discount
+        }</span>`
+      );
+    })
+    .catch((xhr, status, error) => {
+      console.log(xhr, status, error);
+    });
+}
+
 function logout() {
   Swal.fire({
     title: "Do you want to logout?",
@@ -69,7 +156,7 @@ function logout() {
 }
 $(document).ready(() => {
   userInfo();
-  loadOrder();
+  loadOrders();
   $("#myfile").on("input", (e) => {
     const selectedFile = event.target.files[0];
     const reader = new FileReader();
@@ -126,5 +213,13 @@ $(document).ready(() => {
       .catch((xhr, stauts, error) => {
         console.log(xhr, stauts, error);
       });
+  });
+  $("#body > div.creative > div > ul > li > a").click((e) => {
+    window.history.replaceState(
+      {},
+      "",
+      "index.php?action=user&function=" +
+        e.target.getAttribute("href").split("#")[1]
+    );
   });
 });

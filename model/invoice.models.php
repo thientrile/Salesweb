@@ -103,7 +103,7 @@ class invoice
     function view_OrderDetail($orderId)
     {
         $db = new connect();
-        $select = "SELECT title, img, id FROM `product` WHERE id IN(SELECT product_id FROM order_details WHERE order_id=" . $orderId . ")";
+        $select = "SELECT product_id as id, title ,order_details.price, order_details.discount ,img FROM product, order_details WHERE order_details.order_id=$orderId AND product.id=order_details.product_id";
         $result = $db->getlist($select);
         $array = array();
         while ($row = $result->fetch()) {
