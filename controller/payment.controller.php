@@ -17,11 +17,14 @@ if ($method == 'POST') {
                 echo $resutl;
                 break;
             case "view_Library":
-                $result=$checkout->view_Library(isset($_GET['page'])?$_GET['page']:1);
+                $result = $checkout->view_Library(isset($_GET['page']) ? $_GET['page'] : 1);
                 echo  $result;
                 break;
-            case "green":
-                echo "Your favorite color is green!";
+            case "order":
+                if (isset($_GET['id'])) {
+                } else {
+                    echo $checkout->view_Order(isset($_GET['page']) ? $_GET['page'] : 1);
+                }
                 break;
             default:
                 echo "Your favorite color is neither red, blue, nor green!";

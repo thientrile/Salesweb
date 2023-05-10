@@ -94,13 +94,21 @@ class invoice
         $select = "SELECT * FROM `order`WHERE user_id=" . $this->userId . " ORDER BY date_order DESC LIMIT $start,$end";
         $this->countOrder = ceil($db->getonce("SELECT count(*) FROM `order`WHERE user_id=" . $this->userId . " ORDER BY date_order DESC ")[0] / 6);
         $result = $db->getlist($select);
-        return $result;
+        $array = array();
+        while ($row = $result->fetch()) {
+            array_push($array, $row);
+        }
+        return json_encode($array);
     }
     function view_OrderDetail($orderId)
     {
         $db = new connect();
         $select = "SELECT title, img, id FROM `product` WHERE id IN(SELECT product_id FROM order_details WHERE order_id=" . $orderId . ")";
         $result = $db->getlist($select);
-        return $result;
+        $array = array();
+        while ($row = $result->fetch()) {
+            array_push($array, $row);
+        }
+        return json_encode($array);
     }
 }

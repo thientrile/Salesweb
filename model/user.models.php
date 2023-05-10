@@ -78,9 +78,8 @@ class user
         move_uploaded_file($file["tmp_name"], $target_file);
         $update = "UPDATE `user` SET avatar='" . $file["name"] . "' WHERE id=" . $id;
         $db = new connect();
-        $result=$db->send($update);
-        return json_encode(array("status"=>$result?"success":"error"));
-
+        $result = $db->send($update);
+        return json_encode(array("status" => $result ? "success" : "error"));
     }
     // cập nhật mật khẩu thông qua email
     function updatePassword($email, $pass)
@@ -112,8 +111,8 @@ class user
         // Add the WHERE clause to specify the user to update.
         $sql .= " WHERE id=$userId";
 
-        return
-            $cc->send($sql);
+        $result = $cc->send($sql);
+        return json_encode(array("status" => $result ? "success" : "error"));
     }
     //kiểm tra định dạng trường thông tin
     // kiểm tra username có độ dài từ 5 đến 16 ký tự

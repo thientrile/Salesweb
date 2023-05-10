@@ -2,7 +2,7 @@
 /* It's starting a session. */
 
 
-
+header('Content-Type: application/json');
 session_start();
 
 
@@ -26,12 +26,16 @@ if (isset($_SESSION['s_user']) && isset($_COOKIE['c_user']) && md5($_SESSION['s_
 } else {
     // Xoá cookie c_user
     setcookie('c_user', '', time() - 86400);
-    
+    if (isset($_SESSION['s_user'])) {
+        session_name("s_user");
+        session_unset();
+        session_destroy();
+    }
 }
 
 
 // tạo điều hướng controllers
-$ctrl = 'home';
+$ctrl = 'product';
 if (isset($_GET['action'])) {
     $mydir = 'controller';
 
@@ -57,7 +61,7 @@ if (!function_exists('currency_format')) {
     }
 }
 
-$cart = 0;
+
 function random()
 {
     $interval = 30; // Interval in seconds

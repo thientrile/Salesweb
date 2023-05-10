@@ -10,8 +10,10 @@ if ($method == 'GET') {
             case "avatar":
                 echo $User->upAvatar($_POST['id'], $_FILES['File_avatar']);
                 break;
-            case "blue":
-                echo "Your favorite color is blue!";
+            case "Upload":
+                echo $User->updateUser($_POST[
+                    'id'
+                ],$_POST['name'],$_POST['phone'],$_POST['address']);
                 break;
             case "green":
                 echo "Your favorite color is green!";
