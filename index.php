@@ -7,6 +7,7 @@
   <link rel="stylesheet" href="./assets/js/node_modules/themify-icons/themify-icons.css">
 
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <script src="./assets/js/node_modules/ckeditor/ckeditor.js"></script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <script src="./assets/js/node_modules/sweetalert2/dist/sweetalert2.min.js"></script>
   <link rel="stylesheet" href="./assets/js/node_modules/sweetalert2/dist/sweetalert2.min.css">

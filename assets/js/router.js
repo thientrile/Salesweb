@@ -58,7 +58,19 @@ $(function () {
               window.location.href.search("function=") != -1
                 ? window.location.href.split("function=")[1].split("&")[0]
                 : "dashboard";
-            $("#body").load(`view/admin/${adminUrl}.views.php`);
+            $("#body").load(
+              `view/admin/${adminUrl}.views.php`,
+              function (res, status, xhr) {
+                $("head > title").html(
+                  urlAction.toLocaleUpperCase() + " - " + adminUrl
+                );
+                if (status == "error") {
+                  window.location.replace(
+                    "index.php?action=admin&function=dashboard"
+                  );
+                }
+              }
+            );
           });
         } else {
           window.location.replace("index.php?action=home");
