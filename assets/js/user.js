@@ -182,9 +182,9 @@ $(document).ready(() => {
         console.log(false);
       });
   });
-  $("#info").submit((e) => {
+  $("#upload").click((e) => {
     e.preventDefault();
-
+    console.log(true);
     let dataForm = new FormData();
     let id = $("#myfile").attr("userId");
     let name = $("#info > div > div.row.mt-2 > div > input").val();
@@ -215,12 +215,12 @@ $(document).ready(() => {
         console.log(xhr, stauts, error);
       });
   });
-  $("#body > div.creative > div > ul > li > a").click((e) => {
-    window.history.replaceState(
-      {},
-      "",
-      "index.php?action=user&function=" +
-        e.target.getAttribute("href").split("#")[1]
-    );
-  });
+  // $("#body > div.creative > div > ul > li > a").click((e) => {
+  //   window.history.replaceState(
+  //     {},
+  //     "",
+  //     "index.php?action=user&function=" +
+  //       e.target.getAttribute("href").split("#")[1]
+  //   );
+  // });
 });
