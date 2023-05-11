@@ -6,9 +6,7 @@ class user
     var $code = "";
 
 
-    function __construct()
-    {
-    }
+
 
     //phương thức đăng nhập
     function userLogin($email, $password)

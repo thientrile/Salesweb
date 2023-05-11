@@ -74,29 +74,22 @@ class server {
 
 $(document).ready(function () {
   let urlAction = window.location.href;
-  if (checkCookie("c_user")) {
-    urlAction =
-      urlAction.indexOf("action=") != -1 &&
-      urlAction.split("action=")[1].split("&")[0] != "login"
-        ? urlAction.split("action=")[1].split("&")[0]
-        : "home";
-
-    $("#user-login").attr("href", "index.php?action=user");
-  } else {
-    urlAction =
-      urlAction.indexOf("action=") != -1 &&
-      urlAction.split("action=")[1].split("&")[0] != "user"
-        ? urlAction.split("action=")[1].split("&")[0]
-        : "home";
-    $("#user-login").attr("href", "index.php?action=login");
-    if (urlAction == "login") {
-      $("#header").remove();
-      $("body > link:nth-child(3)").remove();
-      $("#Modal-search").remove();
-      $("#main > script").remove();
-      $("#footer").remove();
-      $("body > link").remove();
-    }
+  urlAction =
+    urlAction.indexOf("action=") != -1
+      ? urlAction.split("action=")[1].split("&")[0]
+      : "home";
+  if (urlAction == "login" && checkCookie("c_user")) {
+    window.location.replace("index.php?action=user");
+  } else if (urlAction == "login") {
+    $("#header").remove();
+    $("body > link:nth-child(3)").remove();
+    $("#Modal-search").remove();
+    $("#main > script").remove();
+    $("#footer").remove();
+    $("body > link").remove();
+  }
+  if (urlAction == "user" && !checkCookie("c_user")) {
+    window.location.replace("index.php?action=login");
   }
 
   $("#body").load(
@@ -108,5 +101,5 @@ $(document).ready(function () {
     }
   );
 
-  $("body > header > title").text(urlAction.toLocaleUpperCase()); //
+  $("body > header > title").html(urlAction.toLocaleUpperCase()); //
 });

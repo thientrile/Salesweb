@@ -16,9 +16,7 @@
             <li class="nav-item">
                 <a class="nav-link" data-bs-toggle="pill" href="#Order-History">Order History</a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link" data-bs-toggle="pill" href="#menu2">Menu 2</a>
-            </li>
+
             <li class="d-flex ms-auto">
 
                 <button class="btn btn-danger" type="button" onclick="logout()">Logout <i class="fa-solid fa-arrow-right-from-bracket"></i></button>
@@ -117,7 +115,7 @@
 
 
             </div>
-            <div class="tab-pane container fade" id="menu2">...</div>
+
         </div>
     </div>
 
@@ -144,7 +142,7 @@
                             <div class="col-md-12">
                                 <div class="d-flex justify-content-center">
                                     <img src="./assets/img/heading/logo/dgw-logo-grey.png" alt="" style="height:100px;object-fit: cover;" />
-                                    <!-- <p class="pt-0">MDBootstrap.com</p> -->
+
                                 </div>
 
                             </div>

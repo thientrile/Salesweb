@@ -77,7 +77,8 @@ function loadOrders() {
         $("#order").html(result);
       } else {
         $("#Order-History").hide();
-        $("#body > div.creative > div > ul > li:nth-child(2) > a").hide()
+        $("#body > div.creative > div > ul > li:nth-child(2) > a").hide();
+        $("#myModal").hide();
       }
     })
     .catch((xhr, status, err) => {

@@ -1,7 +1,7 @@
 <div id="header">
 	<nav id="nav-menu" class="navbar navbar-expand-sm navbar-dark fixed-top">
 		<div class="container-fluid">
-			<a class="navbar-brand" href="index.php?action=home"><img src="./assets/img/heading/logo/dgw-logo-grey.png" alt="" /></a>
+			<a class="navbar-brand" href="index.php?action=home"></a>
 
 			<div class="offcanvas offcanvas-end text-bg-white" id="right">
 				<div class="offcanvas-header">

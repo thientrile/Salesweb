@@ -9,7 +9,7 @@
   <link rel="stylesheet" href="./assets/js/node_modules/sweetalert2/dist/sweetalert2.min.css">
   <link rel="stylesheet" href="./assets/js/node_modules/animate.css/animate.min.css" />
   <link href="https://fonts.googleapis.com/css?family=Open+Sans+Condensed:300" rel="stylesheet" />
-  <link rel="icon" href="https://media.geeksforgeeks.org/wp-content/cdn-uploads/gfg_200X200.png" type="image/x-icon" />
+  <link rel="shortcut icon" href="./assets/img/heading/logo/dgw-logo-grey.png" type="image/x-icon" />
   <script defer src="./assets/js/node_modules/@fortawesome/fontawesome-free/js/brands.js"></script>
   <script defer src="./assets/js/node_modules/@fortawesome/fontawesome-free/js/solid.js"></script>
   <script defer src="./assets/js/node_modules/@fortawesome/fontawesome-free/js/fontawesome.js"></script>
