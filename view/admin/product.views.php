@@ -20,10 +20,10 @@
                 <td></td>
                 <td></td>
                 <td></td>
+                <td></td>
                 <td scope="row">
                     <div class="spinner-border text-secondary"></div>
                 </td>
-                <td></td>
                 <td></td>
                 <td></td>
                 <td></td>
@@ -79,7 +79,21 @@
                         </div>
                     </div>
                     <div class="row mt-3">
-                        
+                        <div class="col-md-6">
+                            <label for="sdesc" class="form-label">Product summary</label>
+                            <textarea id="sdesc"></textarea>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="btn btn-info" for="src">Choose another source</label>
+                            <input type="file" id="src" class="form-control" style="display:none">
+                            <span class="src"></span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <label for="desc" class="form-label">Product summary</label>
+                            <textarea id="desc"></textarea>
+                        </div>
                     </div>
                 </form>
 

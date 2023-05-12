@@ -4,10 +4,9 @@
 
 <head>
   <meta charset="UTF-8" />
-  <link rel="stylesheet" href="./assets/js/node_modules/themify-icons/themify-icons.css">
 
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <script src="./assets/js/node_modules/ckeditor/ckeditor.js"></script>
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <script src="./assets/js/node_modules/sweetalert2/dist/sweetalert2.min.js"></script>
   <link rel="stylesheet" href="./assets/js/node_modules/sweetalert2/dist/sweetalert2.min.css">
@@ -19,10 +18,11 @@
   <script defer src="./assets/js/node_modules/@fortawesome/fontawesome-free/js/solid.js"></script>
   <script defer src="./assets/js/node_modules/@fortawesome/fontawesome-free/js/fontawesome.js"></script>
   <script src="./assets/js/node_modules/jquery/dist/jquery.min.js"></script>
+  <script src="https://cdn.tiny.cloud/1/ne7jh8amcsjb3xmqmi897dq6otm31983uforos958vktr7b4/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
   <script src="./assets/js/node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
   <script src="./assets/js/router.js"></script>
-  <link href="./assets/js/node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
-  <link rel="stylesheet" href="./assets/css/style.css" />
+  <link id="bs5" href="./assets/js/node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link id="style" rel="stylesheet" href="./assets/css/style.css" />
 
   <title></title>
 </head>
