@@ -21,8 +21,8 @@ $(function () {
   if (urlAction == "login" && checkCookie("c_user")) {
     window.location.replace("index.php?action=user");
   } else if (urlAction == "login") {
-    $("head > link:nth-child(18)").remove();
-    $("head > link:nth-child(18)").remove();
+    $("#bs5").remove();
+    $("#style").remove();
     $("#main > script").remove();
     $("#Modal-search").remove();
     $("#header").remove();
@@ -43,16 +43,12 @@ $(function () {
   } else if (checkCookie("c_user")) {
     $("#header").remove();
     $("#footer").remove();
+    $("#style").attr("href", "./assets/css/styles.min.css");
+    $("#Modal-search").remove();
     let Server = new server();
     Server.get("action=user")
       .then((res, req) => {
         if (res.role_id != 2) {
-          $("head > link:nth-child(18)").attr(
-            "href",
-            "./assets/css/styles.min.css"
-          );
-          $("#Modal-search").remove();
-
           $("body").load("view/include/admin.php", function () {
             let adminUrl =
               window.location.href.search("function=") != -1
@@ -73,15 +69,15 @@ $(function () {
             );
           });
         } else {
-          window.location.replace("index.php?action=home");
+          window.location.replace("index.php?action=user");
         }
       })
       .catch((xhr, status, error) => {
-        window.location.replace("index.php?action=home");
+        window.location.replace("index.php?action=user");
         console.log(xhr, status, error);
       });
   } else {
-    window.location.replace("index.php?action=home");
+    window.location.replace("index.php?action=user");
   }
   $("head > title").html(urlAction.toLocaleUpperCase()); //
 });
