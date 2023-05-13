@@ -47,7 +47,7 @@
 </style>
 <div class="d-flex justify-content-end ">
 
-    <div class="shadow-lg  p-4 ">
+    <div class="shadow-lg  p-4 " style="">
         <div class="d-flex justify-content-center h-100">
             <div class="searchbar">
                 <input class="search_input" id="search" oninput="loads()" type="text" name="" placeholder="Search...">
@@ -109,7 +109,7 @@
 </div>
 <div class="modal fade" id="myModal">
     <div class="modal-dialog modal-fullscreen">
-        <div class="modal-content">
+        <form id="form-data" class="modal-content needs-validation" onsubmit="update(event)">
 
             <!-- Modal Header -->
             <div class="modal-header">
@@ -119,13 +119,16 @@
 
             <!-- Modal body -->
             <div class="modal-body">
-                <form id="form-data" class="container" onsubmit="update(event)">
+                <div class="container ">
                     <input type="hidden" id="id">
                     <div class="row mt-3">
                         <div class="col-md-6">
                             <div class="input-group">
                                 <span class="input-group-text">Title</span>
-                                <input required type="text" id="title" class="form-control" placeholder="Enter product title">
+                                <input type="text" required id="title" class="form-control" placeholder="Enter product title" required>
+                                <div class="invalid-feedback">
+                                    Please enter a valid title.
+                                </div>
                             </div>
                         </div>
                         <div class="col-md-6">
@@ -142,13 +145,19 @@
                         <div class="col-md-6">
                             <div class="input-group">
                                 <span class="input-group-text">Price</span>
-                                <input type="text" value="0" id="price" class="form-control">
+                                <input type="text" required value="0" id="price" class="form-control">
+                                <div class="invalid-feedback">
+                                    Please enter a valid price.
+                                </div>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="input-group">
                                 <span class="input-group-text">Discount</span>
-                                <input type="text" value="0" min=0 max=1 id="discount" class="form-control">
+                                <input type="text" required value="0" min=0 max=1 id="discount" class="form-control">
+                                <div class="invalid-feedback">
+                                    Please enter a valid discount.
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -160,14 +169,20 @@
                         <div class="col-md-6 mt-3">
                             <div class="border border-1 p-2 rounded-2">
                                 <label class="btn btn-info" for="src">Choose source</label>
-                                <input type="file" id="src" class="form-control" onchange="inputSrc(this)" style="display:none">
+                                <input class="form-control" type="file" name="src" id="src" class="form-control" onchange="inputSrc(this)" style="display:none">
                                 <span class="src"></span>
+                                <div class="invalid-feedback">
+                                    Please enter a valid source of the product.
+                                </div>
 
 
                             </div>
                             <div class="border boder-1 mt-3 p-2 rounded-2">
                                 <label class="btn btn-outline-success" for="img">Choose a representative image of the product</label>
-                                <input type="file" id="img" onchange=" inputImage(this)" style="display:none" accept="image/*">
+                                <input class="form-control" type="file" name="img" id="img" onchange=" inputImage(this)" style="display:none" accept="image/*">
+                                <div class="invalid-feedback">
+                                    Please enter a valid image of the product.
+                                </div>
                                 <img src="" class="mt-3" id="img-prev" alt="" width="100%" style="object-fit: cover;max-height:320px">
 
                             </div>
@@ -184,8 +199,10 @@
                         <label class="h5" for="gallery">Gallery</label>
                         <br>
                         <label class="btn btn-outline-primary" for="gallery">Select image gallery</label>
-                        <input onchange="inputGallery(this)" type="file" name="gallery" id="gallery" multiple accept="image/*, video/*, audio/*" style="display:none">
-
+                        <input class="form-control" name="gallery" onchange="inputGallery(this)" type="file" name="gallery" id="gallery" multiple accept="image/*, video/*, audio/*" style="display:none">
+                        <div class="invalid-feedback">
+                            Please enter a valid gallery of the product.
+                        </div>
                     </div>
                     <div class="row mt-3 border border-3 p-3" id="gallery-prev">
 
@@ -194,17 +211,17 @@
 
 
                     </div>
-                </form>
+                </div>
 
             </div>
 
             <!-- Modal footer -->
             <div class="modal-footer">
-                <button id="function" type="button" class="btn btn-success" data-bs-dismiss="modal">Update</button>
+                <button id="function" type="submit" class="btn btn-success">Update</button>
                 <button type="button" class="btn btn-danger" id="reset">Reset</button>
             </div>
 
-        </div>
+        </form>
     </div>
 </div>
 

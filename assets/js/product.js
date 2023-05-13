@@ -1,5 +1,6 @@
 var arrGallery = [];
 function loads() {
+  $("#form-data").removeClass("was-validated");
   let Server = new server();
   Server.get(
     `action=product&keySearch=${$("#search").val()}&cate=${$("#cate").val()}`
@@ -52,6 +53,10 @@ function getCate() {
     });
 }
 function load(id) {
+  $("#form-data").removeClass("was-validated");
+  $("#gallery").removeAttr("required");
+  $("#img").removeAttr("required");
+  $("#src").removeAttr("required");
   arrGallery = [];
   loadGallery(id);
   $("#reset").attr({ onclick: `load(${id})` });
@@ -290,7 +295,6 @@ function update(e) {
   formData.append("src", $("#src").prop("files")[0]);
   formData.append("type", $("#category").val());
   formData.append("desc", tinymce.get("desc").getContent());
-  console.log(tinymce.get("desc").getContent());
   formData.append("sdesc", tinymce.get("sdesc").getContent());
   formData.append("discount", $("#discount").val());
   formData.append("price", $("#price").val());
@@ -302,7 +306,7 @@ function update(e) {
     formData.append("gallery[]", $("#gallery").prop("files")[0]);
   }
   let Server = new server();
-  Server.post(`action=admin&function=Editproduct&id=${id}`, formData)
+  Server.post(`action=admin&function=product&id=${id}`, formData)
     .then((res, req) => {
       load(id);
       loads();
@@ -321,41 +325,71 @@ function del(e, id) {
     confirmButtonColor: "#3085d6",
     cancelButtonColor: "#d33",
     confirmButtonText: "Yes, delete it!",
-  }).then((result) => {
-    if (result.isConfirmed) {
-      let Server = new server();
-      Server.delete(`action=admin&function=product&id=${id}`)
-        .then((res, req) => {
-          Swal.fire({
-            icon: "success",
-            title: "Deleted!",
-            text: "Your file has been deleted.",
-            showConfirmButton: false,
-            timer: 1000,
-          });
-          e.parentNode.parentNode.remove();
-        })
-        .catch((xhr, status, error) => {
-          console.log(xhr, status, error);
-        })
-        .finailly(() => {});
-    } else {
-      $(e).text(`Delete`);
-    }
-  });
+  })
+    .then((result) => {
+      if (result.isConfirmed) {
+        let Server = new server();
+        Server.delete(`action=admin&function=product&id=${id}`)
+          .then((res, req) => {
+            Swal.fire({
+              icon: "success",
+              title: "Deleted!",
+              text: "Your file has been deleted.",
+              showConfirmButton: false,
+              timer: 1000,
+            });
+            e.parentNode.parentNode.remove();
+          })
+          .catch((xhr, status, error) => {
+            console.log(xhr, status, error);
+          })
+          .finailly(() => {});
+      } else {
+        $(e).text(`Delete`);
+      }
+    })
+    .catch((error) => {
+      console.log(error);
+    });
 }
 function addNew(e) {
   e.preventDefault();
+  let formData = new FormData();
+
+  formData.append("title", $("#title").val());
+  formData.append("img", $("#img").prop("files")[0]);
+  formData.append("src", $("#src").prop("files")[0]);
+  formData.append("type", $("#category").val());
+  formData.append("desc", tinymce.get("desc").getContent());
+  formData.append("sdesc", tinymce.get("sdesc").getContent());
+  formData.append("discount", $("#discount").val());
+  formData.append("price", $("#price").val());
+  if (arrGallery.length > 0) {
+    arrGallery.forEach((file) => {
+      formData.append("gallery[]", file);
+    });
+  } else {
+    formData.append("gallery[]", $("#gallery").prop("files")[0]);
+  }
+  let Server = new server();
+  Server.post(`action=admin&function=product`, formData)
+    .then((res, req) => {
+      loads();
+    })
+    .catch((xhr, status, error) => {
+      console.log(xhr, status, error);
+    });
 }
 
 function Reset() {
   arrGallery = [];
+  $("#form-data").removeClass("was-validated");
   $("#form-data").attr({ onsubmit: "addNew(event)" });
   $("#title").val("");
   $("#id").val("");
   $("#function").text("Add new");
-  $("#price").val("");
-  $("#discount").val("");
+  $("#price").val("0");
+  $("#discount").val("0").attr({ required: "true" });
   $(".src").text("");
   tinymce.get("sdesc").setContent("");
   tinymce.get("desc").setContent("");
@@ -365,6 +399,9 @@ function Reset() {
   });
   $("#gallery-prev").html("");
   $("#reset").attr({ onclick: "Reset()" });
+  $("#gallery").prop({ required: "true" }).val("");
+  $("#img").prop({ required: "true" }).val("");
+  $("#src").prop({ required: "true" }).val("");
   let Server = new server();
   Server.get(`action=product&function=category`)
     .then((res, req) => {
@@ -459,8 +496,13 @@ $(function () {
       });
     },
   });
-
   $("#function").click(() => {
-    $("#form-data").submit();
+    let form = document.getElementById("form-data");
+
+    if (!form.checkValidity()) {
+      form.classList.add("was-validated");
+    } else {
+      form.classList.remove("was-validated");
+    }
   });
 });

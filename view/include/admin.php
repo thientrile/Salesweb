@@ -35,15 +35,15 @@
                             <span>
                                 <i class="ti ti-box"></i>
                             </span>
-                            <span class="hide-menu">Product Management</span>
+                            <span class="hide-menu">Product </span>
                         </a>
                     </li>
                     <li class="sidebar-item">
-                        <a class="sidebar-link" href="./ui-alerts.html" aria-expanded="false">
+                        <a class="sidebar-link" href="index.php?action=admin&function=category" aria-expanded="false">
                             <span>
-                                <i class="ti ti-alert-circle"></i>
+                                <i class="ti ti-category"></i>
                             </span>
-                            <span class="hide-menu">Alerts</span>
+                            <span class="hide-menu">Category</span>
                         </a>
                     </li>
                     <li class="sidebar-item">
