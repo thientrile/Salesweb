@@ -37,13 +37,12 @@ class server {
         });
     });
   }
-  delete(path = "", Data = "") {
+  delete(path = "") {
     let urlApi = this.url + path;
     return new Promise(function (resolve, reject) {
       $.ajax({
         url: urlApi,
         type: "DELETE",
-        data: Data,
 
         processData: false,
         contentType: false,

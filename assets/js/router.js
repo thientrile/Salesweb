@@ -36,14 +36,14 @@ $(function () {
       "view/client/" + urlAction + ".views.php",
       (response, status, xhr) => {
         if (status == "error") {
-          $("html").load("view/error/404.php");
+          window.location.replace("index.php?action=home");
         }
       }
     );
   } else if (checkCookie("c_user")) {
+    $("#style").attr("href", "./assets/css/styles.min.css");
     $("#header").remove();
     $("#footer").remove();
-    $("#style").attr("href", "./assets/css/styles.min.css");
     $("#Modal-search").remove();
     let Server = new server();
     Server.get("action=user")

@@ -155,6 +155,37 @@ function logout() {
     }
   });
 }
+function update(e) {
+  e.preventDefault();
+
+  let dataForm = new FormData();
+  let id = $("#myfile").attr("userId");
+  let name = $("#info > div > div.row.mt-2 > div > input").val();
+  let address = $(
+    "#info > div > div.row.mt-3 > div:nth-child(2) > input"
+  ).val();
+  let phone = $("#info > div > div.row.mt-3 > div:nth-child(1) > input").val();
+
+  dataForm.append("id", id);
+  dataForm.append("name", name);
+  dataForm.append("address", address);
+  dataForm.append("phone", phone);
+  let Server = new server();
+  Server.post("action=user&function=Upload", dataForm)
+    .then((res, req) => {
+      Swal.fire({
+        icon: "success",
+        title: "Your information has been updated successfully",
+        showConfirmButton: false,
+        timer: 500,
+      }).then((res) => {
+        userInfo();
+      });
+    })
+    .catch((xhr, stauts, error) => {
+      console.log(xhr, stauts, error);
+    });
+}
 $(document).ready(() => {
   userInfo();
   loadOrders();
@@ -174,6 +205,7 @@ $(document).ready(() => {
     let formData = new FormData();
     formData.append("id", $("#myfile").attr("userId"));
     formData.append("File_avatar", $("#myfile")[0].files[0]);
+
     Server.post(`action=user&function=avatar`, formData)
       .then((res, req) => {
         userInfo();
@@ -183,37 +215,7 @@ $(document).ready(() => {
       });
   });
   $("#upload").click((e) => {
-    e.preventDefault();
-    console.log(true);
-    let dataForm = new FormData();
-    let id = $("#myfile").attr("userId");
-    let name = $("#info > div > div.row.mt-2 > div > input").val();
-    let address = $(
-      "#info > div > div.row.mt-3 > div:nth-child(2) > input"
-    ).val();
-    let phone = $(
-      "#info > div > div.row.mt-3 > div:nth-child(1) > input"
-    ).val();
-
-    dataForm.append("id", id);
-    dataForm.append("name", name);
-    dataForm.append("address", address);
-    dataForm.append("phone", phone);
-    let Server = new server();
-    Server.post("action=user&function=Upload", dataForm)
-      .then((res, req) => {
-        Swal.fire({
-          icon: "success",
-          title: "Your information has been updated successfully",
-          showConfirmButton: false,
-          timer: 500,
-        }).then((res) => {
-          userInfo();
-        });
-      })
-      .catch((xhr, stauts, error) => {
-        console.log(xhr, stauts, error);
-      });
+    $("#info").submit();
   });
   // $("#body > div.creative > div > ul > li > a").click((e) => {
   //   window.history.replaceState(

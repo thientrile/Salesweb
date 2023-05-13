@@ -71,6 +71,7 @@ function checkEmail(value) {
   return new Promise((resolve, reject) => {
     let formData = new FormData();
     formData.append("email", value);
+
     $.ajax({
       url: "server.php?action=checkmail",
       type: "POST",
@@ -93,12 +94,13 @@ function checkEmail(value) {
   });
 }
 
-$(document).ready(function () {
+$(function () {
   $("#login > span").css("display", "none");
   Main();
 
   $("#login").submit(function (event) {
     event.preventDefault();
+
     let formData = new FormData(this);
 
     $.ajax({
@@ -120,7 +122,7 @@ $(document).ready(function () {
       },
       error: function (xhr, status, error) {
         // handle errors
-        console.log(error);
+        console.log(xhr, status, error);
       },
     });
   });

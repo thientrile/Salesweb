@@ -5,7 +5,7 @@
         <div>
             <div class="brand-logo d-flex align-items-center justify-content-between">
                 <a href="index.php?action=admin" class="text-nowrap logo-img">
-                    <img src="./assets/img/heading/logo/dgw-logo-grey.png" alt=""style="width:80%;"  />
+                    <img src="./assets/img/heading/logo/dgw-logo-grey.png" alt="" style="width:80%;" />
                 </a>
                 <div class="close-btn d-xl-none d-block sidebartoggler cursor-pointer" id="sidebarCollapse">
                     <i class="ti ti-x fs-8"></i>
@@ -19,7 +19,7 @@
                         <span class="hide-menu">Home</span>
                     </li>
                     <li class="sidebar-item">
-                        <a class="sidebar-link" href="index.php?action=admin&function=dashboard" aria-expanded="false">
+                        <a class="sidebar-link  " href="index.php?action=admin&function=dashboard" aria-expanded="false">
                             <span>
                                 <i class="ti ti-layout-dashboard"></i>
                             </span>
@@ -33,7 +33,7 @@
                     <li class="sidebar-item">
                         <a class="sidebar-link" href="index.php?action=admin&function=product" aria-expanded="false">
                             <span>
-                            <i class="ti ti-box"></i>
+                                <i class="ti ti-box"></i>
                             </span>
                             <span class="hide-menu">Product Management</span>
                         </a>

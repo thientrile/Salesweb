@@ -140,7 +140,10 @@ function loadproduct() {
                         <video class="d-block w-100" src=" assets/products/${id}/gallery/${data[i].thumnali}" controls></video>
                       </div>`
                     : `<div class="carousel-item">
-                        <video class="d-block w-100" src=" assets/products/${id}/gallery/${data[i].thumnali}" controls></video>
+                        <video class="d-block w-100" controls>
+                        
+                        <source   src=" assets/products/${id}/gallery/${data[i].thumnali}" type="video/*">
+                        </video>
                       </div>`;
               }
             }

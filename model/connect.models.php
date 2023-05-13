@@ -3,7 +3,7 @@ class connect
 {
     //thuộc tính
     var $db = null;
-    var $error=false;
+
 
     //hàm tạo
     // thực hiện công việt connect với database vằng PDB
@@ -23,10 +23,8 @@ class connect
         $password = '';
         try {
             $this->db = new PDO($dsn, $user, $password, array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES UTF8"));
-            $this->error=false;
         } catch (\Throwable $th) {
-            $this->error=true;
-            
+            echo json_encode(array("status" => "failed", "message" => $th));
         }
     }
     /**

@@ -243,20 +243,20 @@ class admin
             $result = $db->send($insert);
             $product_id = $db->getonce("SELECT MAX(id) FROM `product`")[0];
 
-            mkdir("assets/products/" . md5($product_id), 0700);
-            mkdir("assets/products/" . md5($product_id) . "/img", 0700);
+            mkdir("assets/products/" . $product_id, 0700);
+            mkdir("assets/products/" . $product_id . "/img", 0700);
 
-            move_uploaded_file($fileAvatar["tmp_name"], "assets/products/" . md5($product_id) . "/img/" . basename($fileAvatar["name"]));
-            mkdir("assets/products/" . md5($product_id) . "/src", 0700);
-            move_uploaded_file($fileSrc["tmp_name"], "assets/products/" . md5($product_id) . "/src/" . basename($fileSrc["name"]));
+            move_uploaded_file($fileAvatar["tmp_name"], "assets/products/" . $product_id . "/img/" . basename($fileAvatar["name"]));
+            mkdir("assets/products/" . $product_id . "/src", 0700);
+            move_uploaded_file($fileSrc["tmp_name"], "assets/products/" . $product_id . "/src/" . basename($fileSrc["name"]));
             // add gallery
-            mkdir("assets/products/" . md5($product_id) . "/gallery", 0700);
+            mkdir("assets/products/" . $product_id . "/gallery", 0700);
 
 
             foreach ($filesGallery['tmp_name'] as $key => $tmp_name) {
                 $insert = "INSERT INTO `gallery`(`id`, `product_id`, `thumnali`, `type`) VALUES ('NULL','$product_id','" . $filesGallery["name"][$key] . "','" . pathinfo($filesGallery["name"][$key], PATHINFO_EXTENSION) . "')";
                 $db->send($insert);
-                move_uploaded_file($tmp_name, "assets/products/" . md5($product_id) . "/gallery/" . basename($filesGallery["name"][$key]));
+                move_uploaded_file($tmp_name, "assets/products/" . $product_id . "/gallery/" . basename($filesGallery["name"][$key]));
             }
         }
         return $result;
@@ -280,13 +280,13 @@ class admin
             $current_time = date("Y-m-d H:i:s");
             $up = " `title`='$title',`category_id`='$cate',`description`='$desc',`sDescription`='$sdesc',`discount`='$discount',`price`=' $price',`updated_at`=' $current_time'";
             $product_id = $id;
-            if ($fileAvatar['name'] != "") {
+            if ($fileAvatar != null) {
                 $up .= ",`img`='" . $fileAvatar['name'] . "'";
-                move_uploaded_file($fileAvatar["tmp_name"], "assets/products/" . md5($product_id) . "/img/" . basename($fileAvatar["name"]));
+                move_uploaded_file($fileAvatar["tmp_name"], "assets/products/" . $product_id . "/img/" . basename($fileAvatar["name"]));
             }
-            if ($fileSrc['name'] != "") {
+            if ($fileSrc != null) {
                 $up .= ",`source`" . $fileSrc['name'] . "'";
-                move_uploaded_file($fileSrc["tmp_name"], "assets/products/" . md5($product_id) . "/src/" . basename($fileSrc["name"]));
+                move_uploaded_file($fileSrc["tmp_name"], "assets/products/" . $product_id . "/src/" . basename($fileSrc["name"]));
             }
             $update = "UPDATE `product` SET $up  WHERE id=" . $id;
             $result = $db->send($update);
@@ -298,12 +298,12 @@ class admin
 
 
 
-            foreach ($filesGallery['tmp_name'] as $key => $tmp_name) {
-                if ($filesGallery["name"][$key] != "") {
+            if ($filesGallery != null) {
+                foreach ($filesGallery['tmp_name'] as $key => $tmp_name) {
 
                     $insert = "INSERT INTO `gallery`(`id`, `product_id`, `thumnali`, `type`) VALUES ('NULL','$product_id','" . $filesGallery["name"][$key] . "','" . pathinfo($filesGallery["name"][$key], PATHINFO_EXTENSION) . "')";
                     $db->send($insert);
-                    move_uploaded_file($tmp_name, "assets/products/" . md5($product_id) . "/gallery/" . basename($filesGallery["name"][$key]));
+                    move_uploaded_file($tmp_name, "assets/products/" . $product_id . "/gallery/" . basename($filesGallery["name"][$key]));
                 }
             }
         }
@@ -317,17 +317,17 @@ class admin
             $db->send("DELETE FROM `gallery` WHERE id=" . $id);
         }
     }
-    function view_Order($year="",$month="",$currentPage = 1)
+    function view_Order($year = "", $month = "", $currentPage = 1)
     {
         if ($this->check) {
             $db = new connect();
             $start = 6 * $currentPage - 6;
             $end = 6 * $currentPage;
-            $Where="1=1";
-            if($month!=""){
-                $Where.= " AND MONTH(date_order)=" . $month;
+            $Where = "1=1";
+            if ($month != "") {
+                $Where .= " AND MONTH(date_order)=" . $month;
             }
-            if($year!=""){
+            if ($year != "") {
                 $Where .= " AND YEAR(date_order)=" . $year;
             }
             $select = "SELECT * FROM `order`WHERE  $Where ORDER BY date_order DESC LIMIT $start,$end";
@@ -338,11 +338,12 @@ class admin
         return null;
     }
     function view_OrderDetail($orderId)
-    {   if($this->check){
-        $db = new connect();
-        $select = "SELECT title, img, id FROM `product` WHERE id IN(SELECT product_id FROM order_details WHERE order_id=" . $orderId . ")";
-        $result = $db->getlist($select);
-        return $result;
+    {
+        if ($this->check) {
+            $db = new connect();
+            $select = "SELECT title, img, id FROM `product` WHERE id IN(SELECT product_id FROM order_details WHERE order_id=" . $orderId . ")";
+            $result = $db->getlist($select);
+            return $result;
         }
         return null;
     }
