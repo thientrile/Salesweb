@@ -16,6 +16,12 @@ if ($method == "POST" && isset($_GET['function'])) {
                 }
                 break;
             }
+        case "productHidden": {
+                $admin->hideProduct($_POST['id']);
+                echo json_encode(array("staut" => "success"));
+
+                break;
+            }
     }
 } elseif ($method == "DELETE" && isset($_GET['function'])) {
 
@@ -35,6 +41,19 @@ if ($method == "POST" && isset($_GET['function'])) {
                 break;
             }
     }
+} elseif ($method == "GET" && isset($_GET['function'])) {
+    switch (isset($_GET['function'])) {
+        case "product": {
+
+                $result = $admin->getProduct(isset($_GET['page']) && $_GET['page'] != "" ? (int) $_GET['page'] : 1, isset($_GET['cate']) && $_GET['cate'] != "" ? $_GET['cate'] : 0, isset($_GET['keySearch']) ? $_GET['keySearch'] : "");
+                $array = array();
+                while ($row = $result->fetch()) {
+                    array_push($array, $row);
+                }
+                echo json_encode($array);
+                break;
+            }
+    }
 } else {
-    echo json_encode(array("status" => "fail", "method" => $method));
+    echo json_encode(array("status" => "success"));
 }

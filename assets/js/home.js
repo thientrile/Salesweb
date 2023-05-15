@@ -101,7 +101,7 @@ $(document).ready(function () {
           <div class="col-lg-4 col-md-6">
               <div class="card">
                   <div class="creative-img-cover">
-                      <img class="card-img-top" src="assets/products/${i.id}/img/${i.img}" alt="${i.img}" style="width: 100%; min-height:200px" />
+                      <img class="card-img-top" src="${i.img}" alt="${i.img}" style="width: 100%; min-height:200px" />
                       <div class="creative-icon">
                           <span class="plus" style="--bg: #fff; --color: #34b7ae">
                               <a href="index.php?action=shop&id=${i.id}">

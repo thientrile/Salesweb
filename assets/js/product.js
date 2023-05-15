@@ -1,29 +1,46 @@
+function Hidden(e, id) {
+  let text = $(e).text() == "Hidden" ? "Show" : "Hidden";
+  let Server = new server();
+  let data = new FormData();
+  data.append("id", id);
+  Server.post("action=admin&function=productHidden", data)
+    .then((res, req) => {
+      $(e).text(text);
+    })
+    .catch((xhr, stauts, error) => {
+      console.log(xhr, stauts, error);
+    });
+}
 var arrGallery = [];
 function loads() {
   $("#form-data").removeClass("was-validated");
   let Server = new server();
   Server.get(
-    `action=product&keySearch=${$("#search").val()}&cate=${$("#cate").val()}`
+    `action=admin&function=product&keySearch=${$("#search").val()}&cate=${$(
+      "#cate"
+    ).val()}`
   )
     .then((res, req) => {
       let view = "";
       for (let i of res) {
         view += `
           <tr>
-                <td scope="row">${i.id}</td>
+                <td scope="row">DG${i.id}</td>
                 <td scope="row">${i.title}</td>
-                <td scope="row"> <img style="width:20%" src="assets/products/${
-                  i.id
-                }/img/${i.img}"> </td>
+                <td scope="row"> <img style="width:20%" src="${i.img}"> </td>
                 <td scope="row">${i.name}</td>
                 <td scope="row">${i.discount * 100}%</td>
                 <td scope="row">$${i.price}</td>
+                <td><button  type="button" class="btn btn-light" onclick="Hidden(this,${
+                  i.id
+                })">${i.hide == 0 ? "Show" : "Hidden"}</button></td>
                 <td scope="row"> <button onclick="load(${
                   i.id
                 })" class="btn btn-success"data-bs-toggle="modal" data-bs-target="#myModal">Edit</button> </td>
                 <td scope="row"> <button onclick="del(this,${
                   i.id
                 })" class="btn btn-danger">Delete</button> </td>
+              
 
 
 
@@ -87,11 +104,11 @@ function load(id) {
         .attr("selected", "true");
       $("#price").val(res.price);
       $("#discount").val(res.discount);
-      $(".src").text(res.source);
+      $(".src").text(res.source.substring(res.source.lastIndexOf("/") + 1));
       tinymce.get("sdesc").setContent(res.sDescription);
       tinymce.get("desc").setContent(res.description);
       $("#img-prev").attr({
-        src: `assets/products/${res.id}/img/${res.img}`,
+        src: `${res.img}`,
         alt: res.img,
       });
     })
@@ -115,7 +132,7 @@ function loadGallery(id) {
   </div>
   <div class="toast-body">
     
-    <audio  class="card-img-top" src="assets/products/${id}/gallery/${i.thumnali}" controls>
+    <audio  class="card-img-top" src="${i.thumnali}" controls>
     
     
     </audio>
@@ -135,7 +152,7 @@ function loadGallery(id) {
             </div>
             <div class="toast-body">
             <video class="card-img-top" controls>
-            <source  src="assets/products/${id}/gallery/${i.thumnali}" type="video/mp4">
+            <source  src="${i.thumnali}" type="video/mp4">
            
          
           </video>
@@ -155,7 +172,7 @@ function loadGallery(id) {
             </div>
             <div class="toast-body">
               
-              <img   class="card-img-top" src="assets/products/${id}/gallery/${i.thumnali}"width="100%" style="object-fit: cover;max-height:320px">
+              <img   class="card-img-top" src="${i.thumnali}"width="100%" style="object-fit: cover;max-height:320px">
             </div>
           </div>
            `;
@@ -375,6 +392,7 @@ function addNew(e) {
   Server.post(`action=admin&function=product`, formData)
     .then((res, req) => {
       loads();
+      Reset();
     })
     .catch((xhr, status, error) => {
       console.log(xhr, status, error);

@@ -36,7 +36,7 @@ function loadproducts(href = "") {
           <div class="col-lg-4 col-md-6">
               <div class="card">
                   <div class="creative-img-cover">
-                      <img class="card-img-top" src="assets/products/${i.id}/img/${i.img}" alt="${i.img}" style="width: 100%; min-height:200px" />
+                      <img class="card-img-top" src="${i.img}" alt="" style="width: 100%; min-height:200px" />
                       <div class="creative-icon">
                           <span class="plus" style="--bg: #fff; --color: #34b7ae">
                               <a href="index.php?action=shop&id=${i.id}">
@@ -121,28 +121,28 @@ function loadproduct() {
                 inner +=
                   i == 0
                     ? `<div class="carousel-item active">
-                        <img class="d-block w-100 " src=" assets/products/${id}/img/${img}" alt=${img}">
-                        <audio class="d-block w-100" src=" assets/products/${id}/gallery/${data[i].thumnali}" controls></audio>
+                        <img class="d-block w-100 " src=" ${img}" alt=${img}">
+                        <audio class="d-block w-100" src=" ${data[i].thumnali}" controls></audio>
                       </div>`
                     : `<div class="carousel-item">
-                        <img class="d-block w-100 " src=" assets/products/${id}/img/${img}" alt="<?php echo $new[2] ?>">
-                        <audio class="d-block w-100" src=" assets/products/${id}/gallery/${data[i].thumnali}" controls></audio>
+                        <img class="d-block w-100 " src=" ${img}" alt="<?php echo $new[2] ?>">
+                        <audio class="d-block w-100" src=" ${data[i].thumnali}" controls></audio>
                       </div>`;
               } else if (getFileType(data[i].thumnali) == "image") {
                 inner +=
                   i == 0
-                    ? `<div class="carousel-item active"><img class="d-block w-100 " style="object-fit: cover;" src="assets/products/${id}/gallery/${data[i].thumnali}"></div>`
-                    : `<div class="carousel-item"><img class="d-block w-100 " style="object-fit: cover;" src="assets/products/${id}/gallery/${data[i].thumnali}"></div>`;
+                    ? `<div class="carousel-item active"><img class="d-block w-100 " style="object-fit: cover;" src="${data[i].thumnali}"></div>`
+                    : `<div class="carousel-item"><img class="d-block w-100 " style="object-fit: cover;" src="${data[i].thumnali}"></div>`;
               } else {
                 inner +=
                   i == 0
                     ? `<div class="carousel-item active ">
-                        <video class="d-block w-100" src=" assets/products/${id}/gallery/${data[i].thumnali}" controls></video>
+                        <video class="d-block w-100" src=" ${data[i].thumnali}" controls></video>
                       </div>`
                     : `<div class="carousel-item">
                         <video class="d-block w-100" controls>
                         
-                        <source   src=" assets/products/${id}/gallery/${data[i].thumnali}" type="video/*">
+                        <source   src=" ${data[i].thumnali}" type="video/*">
                         </video>
                       </div>`;
               }
@@ -205,7 +205,7 @@ function loadproduct() {
             checkLibary(res.id);
           }
         );
-      }else{
+      } else {
         window.location.replace("index.php?action=shop");
       }
     })
