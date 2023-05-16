@@ -250,8 +250,8 @@ class admin
         $page = $pageNumber > 0 && ($pageNumber <= ceil($count[0] / $view)) ? $pageNumber : 1;
 
         $start = $view * $page - $view;
-        $end = $view * $page;
-        $select = "select product.id as id, title,img,source,category_id,description,sDescription, discount,price,created_at,updated_at, deleted, category.name as name, hide from product,category WHERE $Where  AND deleted=0 AND product.category_id=category.id LIMIT $start,$end";
+      
+        $select = "select product.id as id, title,img,source,category_id,description,sDescription, discount,price,created_at,updated_at, deleted, category.name as name, hide from product,category WHERE $Where  AND deleted=0 AND product.category_id=category.id LIMIT $start,6";
         $this->countpage = ceil($count[0] / $view);
 
         return $cc->getlist($select);

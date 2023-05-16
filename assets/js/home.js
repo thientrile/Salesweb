@@ -84,20 +84,21 @@ if (document.querySelector(".typewrite")) {
 }
 $(document).ready(function () {
   let Server = new server();
-  Server.get("action=product").then((res, req) => {
-    let result = "";
-    
-    for (let i of res) {
-      let price =
-        i.discount > 0
-          ? `         <sub style="text-decoration:line-through">${
-              i.price
-            }</sub>$ ${i.price - i.price * i.discount}`
-          : i.price > 0
-          ? `$ ${i.price}`
-          : "Free";
+  Server.get("action=product")
+    .then((res, req) => {
+      let result = "";
 
-      result += `
+      for (let i of res.data) {
+        let price =
+          i.discount > 0
+            ? `         <sub style="text-decoration:line-through">${
+                i.price
+              }</sub>$ ${i.price - i.price * i.discount}`
+            : i.price > 0
+            ? `$ ${i.price}`
+            : "Free";
+
+        result += `
           <div class="col-lg-4 col-md-6">
               <div class="card">
                   <div class="creative-img-cover">
@@ -131,15 +132,15 @@ $(document).ready(function () {
               </div>
           </div>
     `;
-    }
-    $("#product").html(result);
-  }).catch((xhr,statu,error)=>{
-    console.log(error);
-  });
+      }
+      $("#product").html(result);
+    })
+    .catch((xhr, statu, error) => {
+      console.log(error);
+    });
 
   Server.get("action=product&function=category")
     .then((res, req) => {
-  
       let result = "";
       for (let i of res) {
         result += `<li><a href="index.php?action=shop&cate=${i.id}">${i.name}</a></li>`;

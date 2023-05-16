@@ -50,7 +50,8 @@ if ($method == "POST" && isset($_GET['function'])) {
                 while ($row = $result->fetch()) {
                     array_push($array, $row);
                 }
-                echo json_encode($array);
+
+                echo json_encode(array("status" => "success", "data" => $array, "page" => $admin->countpage));
                 break;
             }
     }

@@ -16,11 +16,10 @@ class product
         }
         $count =  $cc->getonce('SELECT COUNT(*) FROM `product`WHERE ' . $Where . '  AND deleted=0 AND hide=0');
 
-        $page = $pageNumber > 0 && ($pageNumber <= ceil($count[0] / $view)) ? $pageNumber : 1;
 
-        $start = $view * $page - $view;
-        $end = $view * $page;
-        $select = "select product.id as id, title,img,source,category_id,description,sDescription, discount,price,created_at,updated_at, deleted, category.name as name from product,category WHERE $Where  AND deleted=0 AND hide=0 AND product.category_id=category.id LIMIT $start,$end";
+        $start = ($pageNumber - 1) * $view;
+
+        $select = "select product.id as id, title,img,source,category_id,description,sDescription, discount,price,created_at,updated_at, deleted, category.name as name from product,category WHERE $Where   AND product.category_id=category.id AND deleted=0 AND hide=0 ORDER BY product.id LIMIT $start,6";
         $this->countpage = ceil($count[0] / $view);
 
         return $cc->getlist($select);

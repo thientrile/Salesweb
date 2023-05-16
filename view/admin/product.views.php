@@ -47,7 +47,7 @@
 </style>
 <div class="d-flex justify-content-end ">
 
-    <div class="shadow-lg  p-4 " style="">
+    <div class="shadow-lg  p-4 ">
         <div class="d-flex justify-content-center h-100">
             <div class="searchbar">
                 <input class="search_input" id="search" oninput="loads()" type="text" name="" placeholder="Search...">
@@ -107,6 +107,17 @@
 
         </tbody>
     </table>
+
+    <div class="d-flex justify-content-center " id="page">
+        <ul class="pagination">
+            <li class="page-item"><a class="page-link" href="#">Previous</a></li>
+            <li class="page-item"><a class="page-link" href="#">1</a></li>
+            <li class="page-item active"><a class="page-link" href="#">2</a></li>
+            <li class="page-item"><a class="page-link" href="#">3</a></li>
+            <li class="page-item"><a class="page-link" href="#">Next</a></li>
+        </ul>
+    </div>
+
 </div>
 <div class="modal fade" id="myModal">
     <div class="modal-dialog modal-fullscreen">
