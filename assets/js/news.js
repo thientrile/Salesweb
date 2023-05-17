@@ -23,7 +23,7 @@ function loadcate(id = 1) {
 function createNews() {
   $("#title").val("");
   $("#img-prev").attr({ src: "" });
-  tinymce.get("content").setContent();
+  tinymce.get("content").setContent("");
   $("#form-data").attr({ onsubmit: "insertNews(event)" });
 }
 function insertNews(e) {
@@ -74,21 +74,15 @@ function showAddCate(element) {
 }
 $(function () {
   loadcate();
-
   tinymce.init({
     selector: "#content",
     plugins: "save image media",
-
     height: 700,
     image_title: true,
     media_live_embeds: true,
     image_dimensions: false,
-
     file_picker_callback: function (callback, value, meta) {
       if (meta.filetype === "image") {
-        // Mở hộp thoại chọn ảnh
-        // Để đơn giản, ví dụ này sử dụng hộp thoại mặc định của trình duyệt
-        // Bạn có thể sử dụng thư viện tải lên tệp tin của riêng mình
         var input = document.createElement("input");
         input.setAttribute("type", "file");
         input.setAttribute("accept", "image/*");
