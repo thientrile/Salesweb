@@ -9,10 +9,13 @@
     <div class="container translate-top">
         <div class="row" id="library">
 
-              
-         
+
+
         </div>
-       
+
+    </div>
+    <div id="page" class="d-flex justify-content-center">
+
     </div>
 
 </div>

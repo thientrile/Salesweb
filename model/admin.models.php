@@ -250,7 +250,7 @@ class admin
         $page = $pageNumber > 0 && ($pageNumber <= ceil($count[0] / $view)) ? $pageNumber : 1;
 
         $start = $view * $page - $view;
-      
+
         $select = "select product.id as id, title,img,source,category_id,description,sDescription, discount,price,created_at,updated_at, deleted, category.name as name, hide from product,category WHERE $Where  AND deleted=0 AND product.category_id=category.id LIMIT $start,6";
         $this->countpage = ceil($count[0] / $view);
 
@@ -381,5 +381,34 @@ class admin
             return $result;
         }
         return null;
+    }
+    // News
+    // function add news
+    function addnews($title, $avatar, $cateNews, $authorid, $content)
+    {
+        $db = new connect();
+        $insert = "INSERT INTO `blog` (`id`, `title`, `avatar`, `content`, `newsCate_id`, `author`, `created_at`) VALUES (NULL, '$title', '$avatar', ' $content', '$cateNews', '$authorid', current_timestamp())";
+        $result = $db->send($insert);
+        echo json_encode(array("status" => $result));
+    }
+    // function add news categories
+    function addNewsCate($name)
+    {
+        $db = new connect();
+        $insert = "INSERT INTO `newscategory`(`id`, `name`) VALUES (default,'$name')";
+        $result = $db->send($insert);
+        echo json_encode(array("status" => $result));
+    }
+    // function view news categories
+    function viewNewsCate()
+    {
+        $db = new connect();
+        $select = "SELECT * FROM `newscategory` WHERE 1";
+        $result = $db->getlist($select);
+        $array = array();
+        while ($row = $result->fetch()) {
+            array_push($array, $row);
+        }
+        echo json_encode(array("status" => "success", "data" => $array));
     }
 }

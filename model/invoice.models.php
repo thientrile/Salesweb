@@ -83,15 +83,15 @@ class invoice
         while ($row = $result->fetch()) {
             array_push($array, $row);
         }
-        return json_encode($array);
+        return json_encode(array("status" => "success", "data" => $array, "page" => $this->countLibary));
     }
     function view_Order($currentPage = 1)
     {
 
         $db = new connect();
         $start = 6 * $currentPage - 6;
-        $end = 6 * $currentPage;
-        $select = "SELECT * FROM `order`WHERE user_id=" . $this->userId . " ORDER BY date_order DESC LIMIT $start,$end";
+
+        $select = "SELECT * FROM `order`WHERE user_id=" . $this->userId . " ORDER BY date_order DESC LIMIT $start,6";
         $this->countOrder = ceil($db->getonce("SELECT count(*) FROM `order`WHERE user_id=" . $this->userId . " ORDER BY date_order DESC ")[0] / 6);
         $result = $db->getlist($select);
         $array = array();

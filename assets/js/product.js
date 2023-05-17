@@ -108,8 +108,7 @@ function loads() {
       totalPages = res.page;
       if (res.page > 1) {
         createPagination(currentPages, res.page);
-      }
-      else{
+      } else {
         $("#page").html("");
       }
 
@@ -480,6 +479,7 @@ function addNew(e) {
     .then((res, req) => {
       loads();
       Reset();
+      
     })
     .catch((xhr, status, error) => {
       console.log(xhr, status, error);

@@ -84,8 +84,18 @@
                 <th scope="col">Discount</th>
                 <th scope="col">Price</th>
                 <th scope="col">Status</th>
+
                 <th scope="col"></th>
-                <th scope="col"></th>
+                <th scope="col" id="page">
+                    <ul class="pagination bg-success">
+                        <li class="page-item"><a class="page-link" href="#">Previous</a></li>
+                        <li class="page-item"><a class="page-link" href="#">1</a></li>
+                        <li class="page-item active"><a class="page-link" href="#">2</a></li>
+                        <li class="page-item"><a class="page-link" href="#">3</a></li>
+                        <li class="page-item"><a class="page-link" href="#">Next</a></li>
+                    </ul>
+
+                </th>
 
             </tr>
         </thead>
@@ -108,15 +118,7 @@
         </tbody>
     </table>
 
-    <div class="d-flex justify-content-center " id="page">
-        <ul class="pagination">
-            <li class="page-item"><a class="page-link" href="#">Previous</a></li>
-            <li class="page-item"><a class="page-link" href="#">1</a></li>
-            <li class="page-item active"><a class="page-link" href="#">2</a></li>
-            <li class="page-item"><a class="page-link" href="#">3</a></li>
-            <li class="page-item"><a class="page-link" href="#">Next</a></li>
-        </ul>
-    </div>
+
 
 </div>
 <div class="modal fade" id="myModal">

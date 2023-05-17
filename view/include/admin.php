@@ -1,3 +1,4 @@
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
 <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full" data-sidebar-position="fixed" data-header-position="fixed">
     <!-- Sidebar Start -->
     <aside class="left-sidebar">
@@ -39,6 +40,14 @@
                         </a>
                     </li>
                     <li class="sidebar-item">
+                        <a class="sidebar-link" href="index.php?action=admin&function=member" aria-expanded="false">
+                            <span>
+                                <i class="fa-solid fa-people-group"></i>
+                            </span>
+                            <span class="hide-menu">MEMBER</span>
+                        </a>
+                    </li>
+                    <li class="sidebar-item">
                         <a class="sidebar-link" href="index.php?action=admin&function=category" aria-expanded="false">
                             <span>
                                 <i class="ti ti-category"></i>
@@ -46,20 +55,13 @@
                             <span class="hide-menu">Category</span>
                         </a>
                     </li>
+
                     <li class="sidebar-item">
-                        <a class="sidebar-link" href="./ui-card.html" aria-expanded="false">
+                        <a class="sidebar-link" href="index.php?action=admin&function=news" aria-expanded="false">
                             <span>
-                                <i class="ti ti-cards"></i>
+                                <i class="fa-solid fa-newspaper fa-bounce"></i>
                             </span>
-                            <span class="hide-menu">Card</span>
-                        </a>
-                    </li>
-                    <li class="sidebar-item">
-                        <a class="sidebar-link" href="./ui-forms.html" aria-expanded="false">
-                            <span>
-                                <i class="ti ti-file-description"></i>
-                            </span>
-                            <span class="hide-menu">Forms</span>
+                            <span class="hide-menu">NEWS</span>
                         </a>
                     </li>
                     <li class="sidebar-item">
@@ -72,58 +74,70 @@
                     </li>
                     <li class="nav-small-cap">
                         <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
-                        <span class="hide-menu">AUTH</span>
+                        <span class="hide-menu">PAGE</span>
                     </li>
                     <li class="sidebar-item">
-                        <a class="sidebar-link" href="./authentication-login.html" aria-expanded="false">
+                        <a class="sidebar-link" target="_blank" href="index.php?action=home" aria-expanded="false">
                             <span>
-                                <i class="ti ti-login"></i>
+                                <i class="fa-solid fa-house"></i>
                             </span>
-                            <span class="hide-menu">Login</span>
+                            <span class="hide-menu">HOME</span>
                         </a>
                     </li>
                     <li class="sidebar-item">
-                        <a class="sidebar-link" href="./authentication-register.html" aria-expanded="false">
+                        <a class="sidebar-link" target="_blank" href="index.php?action=shop" aria-expanded="false">
                             <span>
-                                <i class="ti ti-user-plus"></i>
+                                <i class="fa-solid fa-shop fa-beat"></i>
                             </span>
-                            <span class="hide-menu">Register</span>
+                            <span class="hide-menu">SHOP</span>
                         </a>
                     </li>
-                    <li class="nav-small-cap">
+                    <li class="sidebar-item">
+                        <a class="sidebar-link" target="_blank" href="index.php?action=libary" aria-expanded="false">
+                            <span>
+                                <i class="fa-solid fa-book"></i>
+                            </span>
+                            <span class="hide-menu">LIBARY</span>
+                        </a>
+                    </li>
+                    <li class="sidebar-item">
+                        <a class="sidebar-link" target="_blank" href="index.php?action=cart" aria-expanded="false">
+                            <span>
+                                <i class="fa-solid fa-cart-shopping"></i>
+                            </span>
+                            <span class="hide-menu">CART</span>
+                        </a>
+                    </li>
+                    <li class="sidebar-item">
+                        <a class="sidebar-link" target="_blank" href="index.php?action=user" aria-expanded="false">
+                            <span>
+                                <i class="fa-solid fa-user"></i>
+                            </span>
+                            <span class="hide-menu">USER</span>
+                        </a>
+                    </li>
+                    <!-- <li class="nav-small-cap">
                         <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
-                        <span class="hide-menu">EXTRA</span>
+                        <span class="hide-menu">AUTHOR</span>
                     </li>
                     <li class="sidebar-item">
                         <a class="sidebar-link" href="./icon-tabler.html" aria-expanded="false">
                             <span>
                                 <i class="ti ti-mood-happy"></i>
                             </span>
-                            <span class="hide-menu">Icons</span>
+                            <span class="hide-menu">AUTHOR</span>
                         </a>
                     </li>
                     <li class="sidebar-item">
                         <a class="sidebar-link" href="./sample-page.html" aria-expanded="false">
                             <span>
-                                <i class="ti ti-aperture"></i>
+                                <i class="fa-solid fa-right-from-bracket"></i>
                             </span>
-                            <span class="hide-menu">Sample Page</span>
+                            <span class="hide-menu">LOG OUT</span>
                         </a>
-                    </li>
+                    </li> -->
                 </ul>
-                <div class="unlimited-access hide-menu bg-light-primary position-relative mb-7 mt-5 rounded">
-                    <div class="d-flex">
-                        <div class="unlimited-access-title me-3">
-                            <h6 class="fw-semibold fs-4 mb-6 text-dark w-85">
-                                Upgrade to pro
-                            </h6>
-                            <a href="https://adminmart.com/product/modernize-bootstrap-5-admin-template/" target="_blank" class="btn btn-primary fs-2 fw-semibold lh-sm">Buy Pro</a>
-                        </div>
-                        <div class="unlimited-access-img">
-                            <img src="../assets/images/backgrounds/rocket.png" alt="" class="img-fluid" />
-                        </div>
-                    </div>
-                </div>
+
             </nav>
             <!-- End Sidebar navigation -->
         </div>
@@ -150,7 +164,7 @@
                 </ul>
                 <div class="navbar-collapse justify-content-end px-0" id="navbarNav">
                     <ul class="navbar-nav flex-row ms-auto align-items-center justify-content-end">
-                        <a href="https://adminmart.com/product/modernize-free-bootstrap-admin-dashboard/" target="_blank" class="btn btn-primary">Download Free</a>
+
                         <li class="nav-item dropdown">
                             <a class="nav-link nav-icon-hover" href="javascript:void(0)" id="drop2" data-bs-toggle="dropdown" aria-expanded="false">
                                 <img src="../assets/images/profile/user-1.jpg" alt="" width="35" height="35" class="rounded-circle" />

@@ -22,6 +22,21 @@ if ($method == "POST" && isset($_GET['function'])) {
 
                 break;
             }
+        case "cate_news": {
+                if (isset($_POST['name'])) {
+
+                    echo $admin->addNewsCate($_POST['name']);
+                } else {
+                    echo json_encode(array("staut" => "falied"));
+                }
+                break;
+            }
+        case "insert_news": {
+            // echo json_encode( array($_POST['avatar']));
+                echo $admin->addnews($_POST['title'], $_POST['avatar'], $_POST['cateNews'], $_SESSION["s_user"], $_POST['content']);
+                // echo json_encode(array($_POST['title'], $_POST['avatar'], $_POST['cateNews'], $_SESSION["s_user"], $_POST['content']));
+                break;
+            }
     }
 } elseif ($method == "DELETE" && isset($_GET['function'])) {
 
@@ -42,7 +57,7 @@ if ($method == "POST" && isset($_GET['function'])) {
             }
     }
 } elseif ($method == "GET" && isset($_GET['function'])) {
-    switch (isset($_GET['function'])) {
+    switch ($_GET['function']) {
         case "product": {
 
                 $result = $admin->getProduct(isset($_GET['page']) && $_GET['page'] != "" ? (int) $_GET['page'] : 1, isset($_GET['cate']) && $_GET['cate'] != "" ? $_GET['cate'] : 0, isset($_GET['keySearch']) ? $_GET['keySearch'] : "");
@@ -52,6 +67,10 @@ if ($method == "POST" && isset($_GET['function'])) {
                 }
 
                 echo json_encode(array("status" => "success", "data" => $array, "page" => $admin->countpage));
+                break;
+            }
+        case "cate_news": {
+                echo $admin->viewNewsCate();
                 break;
             }
     }

@@ -9,4 +9,7 @@
 
 
 </div>
+<div id="page" class="d-flex justify-content-center">
+
+</div>
 <script src="./assets/js/shop.js"></script>

@@ -89,9 +89,7 @@ function loadproducts(href = "") {
 
 
   </div>
-  <div id="page" class="d-flex justify-content-center">
-
-  </div>
+ 
 
 
 </div>`);
