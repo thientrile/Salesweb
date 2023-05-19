@@ -79,11 +79,13 @@
                 <th scope="col">ID</th>
                 <th scope="col">Title</th>
                 <th scope="col">Avatar</th>
+                <th scope="col">Category</th>
 
                 <th scope="col">Author</th>
                 <th scope="col">Date Created</th>
 
 
+                <th scope="col"></th>
                 <th scope="col"></th>
                 <th scope="col" id="page">
 
@@ -92,10 +94,9 @@
 
             </tr>
         </thead>
-        <tbody id="product">
+        <tbody id="news">
 
             <tr>
-                <td></td>
                 <td></td>
                 <td></td>
                 <td></td>
@@ -105,6 +106,7 @@
                 <td></td>
                 <td></td>
                 <td></td>
+
 
             </tr>
 

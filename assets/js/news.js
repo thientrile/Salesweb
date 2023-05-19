@@ -25,6 +25,7 @@ function createNews() {
   $("#img-prev").attr({ src: "" });
   tinymce.get("content").setContent("");
   $("#form-data").attr({ onsubmit: "insertNews(event)" });
+  $("#function").text("Insert");
 }
 function insertNews(e) {
   e.preventDefault();
@@ -39,6 +40,8 @@ function insertNews(e) {
   Server.post("action=admin&function=insert_news", data)
     .then((res, req) => {
       console.log(res);
+      showNews();
+      createNews();
     })
     .catch((xhr, status, error) => {
       console.log(xhr, status, error);
@@ -72,8 +75,37 @@ function showAddCate(element) {
     $("#newCate").remove();
   }
 }
+function showNews() {
+  let Server = new server();
+  Server.get("action=admin&function=news")
+    .then((res, req) => {
+      let result = "";
+      for (let i of res.data) {
+        result += ` <tr>
+        <td>NEWS${i.id}</td>
+        <td>${i.title}</td>
+        <td><img style="width:10rem" src="${i.avatar}"></td>
+        <td >
+           ${i.name}
+        </td>
+        <td>${i.fullname}</td>
+        <td>${i.created_at}</td>
+        <td><button class="btn btn-outline-light-danger" onclick="Hidden(this,${i.id})">Show</button> </td>
+        <td> <button class="btn btn-danger-light" onclick="edit(${i.id}) " data-bs-toggle="modal" data-bs-target="#myModal">Edit</button> </td>
+        <td> <button class="btn btn-success" onclick="del(${i.id})">Deleted</button> </td>
+
+
+    </tr>`;
+      }
+      $("#news").html(result);
+    })
+    .catch((xhr, status, error) => {
+      console.log(xhr, status, error);
+    });
+}
 $(function () {
   loadcate();
+  showNews();
   tinymce.init({
     selector: "#content",
     plugins: "save image media",
