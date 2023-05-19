@@ -69,14 +69,6 @@ if ($method == "POST" && isset($_GET['function'])) {
                 echo json_encode(array("status" => "success", "data" => $array, "page" => $admin->countpage));
                 break;
             }
-        case "cate_news": {
-                echo $admin->viewNewsCate();
-                break;
-            }
-        case "news": {
-                echo $admin->viewNews(isset($_GET['page']) ? $_GET['page'] : 1);
-                break;
-            }
     }
 } else {
     echo json_encode(array("status" => "success"));

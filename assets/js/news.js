@@ -10,15 +10,19 @@ function inputImage(input) {
 }
 function loadcate(id = 1) {
   let Server = new server();
-  Server.get("action=admin&function=cate_news").then((res, req) => {
-    let options = "";
-    for (let i of res.data) {
-      options += `<option value="${i.id}"${i.id == id ? checked : ""}>${
-        i.name
-      }</option>`;
-    }
-    $("#category").html(options);
-  });
+  Server.get("action=news&function=cate")
+    .then((res, req) => {
+      let options = "";
+      for (let i of res.data) {
+        options += `<option value="${i.id}"${i.id == id ? "selected" : ""}>${
+          i.name
+        }</option>`;
+      }
+      $("#category").html(options);
+    })
+    .catch((xhr, status, error) => {
+      console.log(xhr, status, error);
+    });
 }
 function createNews() {
   $("#title").val("");
@@ -26,6 +30,7 @@ function createNews() {
   tinymce.get("content").setContent("");
   $("#form-data").attr({ onsubmit: "insertNews(event)" });
   $("#function").text("Insert");
+  $("#img").prop({ required: "true" }).val("");
 }
 function insertNews(e) {
   e.preventDefault();
@@ -33,7 +38,6 @@ function insertNews(e) {
   let data = new FormData();
   data.append("title", $("#title").val());
   data.append("avatar", $("#img-prev").attr("src"));
-  // data.append("avatar", "t");
   data.append("cateNews", $("#category").val());
   data.append("content", tinymce.get("content").getContent());
   let Server = new server();
@@ -66,8 +70,11 @@ function showAddCate(element) {
   if ($(element).is(":checked")) {
     console.log(true);
     $("#Newscate").append(`<div class="form-floating mb-3" id="newCate">
-    <input type="text" class="form-control" id="cate-news">
+    <input type="text" class="form-control" id="cate-news" required>
     <label for="cate-news">New news category name</label>
+    <div class="invalid-feedback">
+                                Please enter a valid image of the category.
+                            </div>
     <button onclick="addCate()" class="btn btn-outline-indigo"> Add new category</button>
 
 </div>`);
@@ -77,7 +84,7 @@ function showAddCate(element) {
 }
 function showNews() {
   let Server = new server();
-  Server.get("action=admin&function=news")
+  Server.get("action=news&function=views")
     .then((res, req) => {
       let result = "";
       for (let i of res.data) {
@@ -102,6 +109,30 @@ function showNews() {
     .catch((xhr, status, error) => {
       console.log(xhr, status, error);
     });
+}
+function edit(id) {
+  let Server = new server();
+
+  Server.get(`action=news&function=views&id=${id}`)
+    .then((res, req) => {
+      $("#title").val(res.title);
+      $("#img-prev").attr({ src: res.avatar });
+      tinymce.get("content").setContent(res.content);
+      $("#form-data").attr({ onsubmit: `UpdateNews(event,${id})` });
+      $("#function").text("Update");
+      loadcate(res.newsCate_id);
+    })
+    .catch((xhr, status, error) => {
+      console.log(xhr, status, error);
+    });
+}
+function UpdateNews(e, id) {
+  e.preventDefault();
+  let data = new FormData();
+  data.append("title", $("#title").val());
+  data.append("avatar", $("#img-prev").attr("src"));
+  data.append("cateNews", $("#category").val());
+  data.append("content", tinymce.get("content").getContent());
 }
 $(function () {
   loadcate();
@@ -164,5 +195,14 @@ $(function () {
         );
       });
     },
+  });
+  $("#function").click(() => {
+    let form = document.getElementById("form-data");
+
+    if (!form.checkValidity()) {
+      form.classList.add("was-validated");
+    } else {
+      form.classList.remove("was-validated");
+    }
   });
 });

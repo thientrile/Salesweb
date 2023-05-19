@@ -119,7 +119,7 @@
 <div class="modal fade" id="myModal">
     <div class="modal-dialog modal-fullscreen">
         <form id="form-data" class="modal-content needs-validation" onsubmit="">
-
+<input type="hidden" id="id">
             <!-- Modal Header -->
             <div class="modal-header">
                 <h4 class="modal-title"></h4>
@@ -145,7 +145,7 @@
                             <label class="btn btn-outline-success" for="img">Choose avatar</label>
                             <input class="form-control" type="file" name="img" id="img" onchange=" inputImage(this)" style="display:none" accept="image/*">
                             <div class="invalid-feedback">
-                                Please enter a valid image of the product.
+                                Please enter a valid image of the news.
                             </div>
                             <img src="" class="mt-3" id="img-prev" alt="" width="100%" style="object-fit: cover;max-height:320px">
 
