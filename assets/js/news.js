@@ -1,3 +1,98 @@
+var totalPages = 1;
+var currentPages = 1;
+
+function createPagination(currentPage, totalPages) {
+  const paginationElement = document.getElementById("page");
+
+  // Xóa nội dung điều hướng phân trang hiện tại
+  paginationElement.innerHTML = "";
+
+  // Tạo phần tử <ul> chứa điều hướng phân trang
+  const paginationList = document.createElement("ul");
+  paginationList.classList.add("pagination");
+
+  // Tạo phần tử <li> và nút Previous (Trang trước)
+  const previousLi = document.createElement("li");
+  previousLi.classList.add("page-item");
+  const previousButton = document.createElement("a");
+  previousButton.classList.add("page-link");
+  previousButton.href = "#";
+  previousButton.innerText = "Previous";
+  previousButton.disabled = currentPage === 1;
+  previousButton.addEventListener("click", () => {
+    if (currentPage > 1) {
+      navigateToPage(currentPage - 1);
+    }
+  });
+  previousLi.appendChild(previousButton);
+  paginationList.appendChild(previousLi);
+
+  // Tạo phần tử <li> cho từng trang
+  for (let page = 1; page <= totalPages; page++) {
+    if (
+      page === currentPage ||
+      (page >= currentPage - 1 && page <= currentPage + 1) ||
+      (page === totalPages && page >= currentPage + 2)
+    ) {
+      const pageLi = document.createElement("li");
+      pageLi.classList.add("page-item");
+      const pageButton = document.createElement("a");
+      pageButton.classList.add("page-link");
+      pageButton.href = `#`;
+      pageButton.innerText = page.toString();
+      if (page === currentPage) {
+        pageLi.classList.add("active");
+      }
+      pageButton.addEventListener("click", () => {
+        navigateToPage(page);
+      });
+      pageLi.appendChild(pageButton);
+      paginationList.appendChild(pageLi);
+    } else if (page === currentPage + 2) {
+      const pageLi = document.createElement("li");
+      pageLi.classList.add("page-item");
+      const pageButton = document.createElement("a");
+      pageButton.classList.add("page-link");
+      pageButton.href = `#`;
+      pageButton.innerText = "...";
+      pageButton.addEventListener("click", () => {
+        navigateToPage(page);
+      });
+      pageLi.appendChild(pageButton);
+      paginationList.appendChild(pageLi);
+    }
+  }
+
+  // Tạo phần tử <li> và nút Next (Trang tiếp theo)
+  const nextLi = document.createElement("li");
+  nextLi.classList.add("page-item");
+  const nextButton = document.createElement("a");
+  nextButton.classList.add("page-link");
+  nextButton.href = "#";
+  nextButton.innerText = "Next";
+  nextButton.disabled = currentPage === totalPages;
+  nextButton.addEventListener("click", () => {
+    if (currentPage < totalPages) {
+      navigateToPage(currentPage + 1);
+    }
+  });
+  nextLi.appendChild(nextButton);
+  paginationList.appendChild(nextLi);
+
+  // Thêm phần tử <ul> vào điều hướng phân trang
+  paginationElement.appendChild(paginationList);
+}
+
+function navigateToPage(page) {
+  currentPages = page;
+  views();
+  createPagination(page, totalPages);
+  // Thực hiện các tác vụ cần thiết khi chuyển đến trang mới
+  // ở đây, bạn có thể gọi hàm tải dữ liệu mới, v.v.
+
+  // Gọi lại hàm tạo điều hướng phân trang với trang hiện tại mới
+}
+
 function inputImage(input) {
   let file = input.files;
   // $(".img-prev").text(file[0].name)
@@ -19,6 +114,7 @@ function loadcate(id = 1) {
         }</option>`;
       }
       $("#category").html(options);
+      $("#cate").html(`<option value="0" selected="">All</option>` + options);
     })
     .catch((xhr, status, error) => {
       console.log(xhr, status, error);
@@ -31,6 +127,7 @@ function createNews() {
   $("#form-data").attr({ onsubmit: "insertNews(event)" });
   $("#function").text("Insert");
   $("#img").prop({ required: "true" }).val("");
+  $("#reset").attr({ onclick: ` createNews()` });
 }
 function insertNews(e) {
   e.preventDefault();
@@ -41,10 +138,9 @@ function insertNews(e) {
   data.append("cateNews", $("#category").val());
   data.append("content", tinymce.get("content").getContent());
   let Server = new server();
-  Server.post("action=admin&function=insert_news", data)
+  Server.post("action=admin&function=news", data)
     .then((res, req) => {
-      console.log(res);
-      showNews();
+      views();
       createNews();
     })
     .catch((xhr, status, error) => {
@@ -55,7 +151,7 @@ function addCate() {
   let Server = new server();
   let formdata = new FormData();
   formdata.append("name", $("#cate-news").val());
-  Server.post("action=admin&function=cate_news", formdata)
+  Server.post("action=admin&function=news&type=category", formdata)
     .then((res, req) => {
       console.log(res);
       $("#newCate").remove();
@@ -68,7 +164,6 @@ function addCate() {
 }
 function showAddCate(element) {
   if ($(element).is(":checked")) {
-    console.log(true);
     $("#Newscate").append(`<div class="form-floating mb-3" id="newCate">
     <input type="text" class="form-control" id="cate-news" required>
     <label for="cate-news">New news category name</label>
@@ -82,11 +177,18 @@ function showAddCate(element) {
     $("#newCate").remove();
   }
 }
-function showNews() {
+function views() {
   let Server = new server();
-  Server.get("action=news&function=views")
+  Server.get(
+    `action=admin&function=news&keySearch=${$("#search").val()}&cate=${$(
+      "#cate"
+    ).val()}&page=${currentPages}`
+  )
     .then((res, req) => {
       let result = "";
+
+      totalPages = res.page;
+      createPagination(currentPages, totalPages);
       for (let i of res.data) {
         result += ` <tr>
         <td>NEWS${i.id}</td>
@@ -97,9 +199,17 @@ function showNews() {
         </td>
         <td>${i.fullname}</td>
         <td>${i.created_at}</td>
-        <td><button class="btn btn-outline-light-danger" onclick="Hidden(this,${i.id})">Show</button> </td>
-        <td> <button class="btn btn-danger-light" onclick="edit(${i.id}) " data-bs-toggle="modal" data-bs-target="#myModal">Edit</button> </td>
-        <td> <button class="btn btn-success" onclick="del(${i.id})">Deleted</button> </td>
+        <td><button class="btn ${
+          i.hidden == 0 ? "btn-light-danger" : "btn-outline-light-danger"
+        } btn-light-danger" onclick="Hidden(this,${i.id})">${
+          i.hidden == 0 ? "Show" : "Hidden"
+        }</button> </td>
+        <td> <button class="btn btn-danger-light" onclick="view(${
+          i.id
+        }) " data-bs-toggle="modal" data-bs-target="#myModal">Edit</button> </td>
+        <td> <button class="btn btn-danger" onclick="del(this,${
+          i.id
+        })">Deleted</button> </td>
 
 
     </tr>`;
@@ -110,7 +220,7 @@ function showNews() {
       console.log(xhr, status, error);
     });
 }
-function edit(id) {
+function view(id) {
   let Server = new server();
 
   Server.get(`action=news&function=views&id=${id}`)
@@ -121,6 +231,7 @@ function edit(id) {
       $("#form-data").attr({ onsubmit: `UpdateNews(event,${id})` });
       $("#function").text("Update");
       loadcate(res.newsCate_id);
+      $("#reset").attr({ onclick: ` view(${id})` });
     })
     .catch((xhr, status, error) => {
       console.log(xhr, status, error);
@@ -129,14 +240,76 @@ function edit(id) {
 function UpdateNews(e, id) {
   e.preventDefault();
   let data = new FormData();
+
   data.append("title", $("#title").val());
   data.append("avatar", $("#img-prev").attr("src"));
   data.append("cateNews", $("#category").val());
   data.append("content", tinymce.get("content").getContent());
+  let Server = new server();
+  Server.post(`action=admin&function=news&id=${id}`, data)
+    .then((res, req) => {
+      console.log(res);
+      view(id);
+      loadcate();
+      views();
+    })
+    .catch((xhr, status, error) => {
+      console.log(xhr, status, error);
+    });
+}
+function del(e, id) {
+  $(e).html(`<div class="spinner-border text-light"></div>`);
+  Swal.fire({
+    title: "Are you sure?",
+    text: "You won't be able to revert this!",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#3085d6",
+    cancelButtonColor: "#d33",
+    confirmButtonText: "Yes, delete it!",
+  })
+    .then((result) => {
+      if (result.isConfirmed) {
+        let Server = new server();
+        Server.delete(`action=admin&function=news&id=${id}`)
+          .then((res, req) => {
+            Swal.fire({
+              icon: "success",
+              title: "Deleted!",
+              text: "Your file has been deleted.",
+              showConfirmButton: false,
+              timer: 1000,
+            });
+            e.parentNode.parentNode.remove();
+            // console.log(res);
+          })
+          .catch((xhr, status, error) => {
+            console.log(xhr, status, error);
+          });
+      } else {
+        $(e).text(`Delete`);
+      }
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+}
+function Hidden(e, id) {
+  let data = new FormData();
+  let text = $(e).text() == "Hidden" ? "Show" : "Hidden";
+  data.append("id", id);
+  let Server = new server();
+  Server.post("action=admin&function=news&type=hidden", data)
+    .then((res, req) => {
+      $(e).text(text);
+    })
+    .catch((xhr, status, error) => {
+      console.log(xhr, status, error);
+    });
 }
 $(function () {
   loadcate();
-  showNews();
+  views();
   tinymce.init({
     selector: "#content",
     plugins: "save image media",
@@ -196,6 +369,7 @@ $(function () {
       });
     },
   });
+
   $("#function").click(() => {
     let form = document.getElementById("form-data");
 

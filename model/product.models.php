@@ -44,12 +44,12 @@ class product
             = $cc->getonce("select COUNT(*) from gallery where product_id =" . $productsId);
         return $result;
     }
-    function viewCategory($cateId = 0, $limted = 4)
+    function viewCategory($cateId = 0)
     {
         $db = new connect();
         if ($cateId == 0) {
 
-            $result = $db->getlist("SELECT * FROM `category` LIMIT " . $limted);
+            $result = $db->getlist("SELECT * FROM `category` where 1");
         } else {
             $result = $db->getonce("SELECT * FROM `category` WHERE id=" . $cateId);
         }

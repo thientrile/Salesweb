@@ -3,9 +3,10 @@ function Hidden(e, id) {
   let Server = new server();
   let data = new FormData();
   data.append("id", id);
-  Server.post("action=admin&function=productHidden", data)
+  Server.post("action=admin&function=product&type=hidden", data)
     .then((res, req) => {
       $(e).text(text);
+      console.log(res);
     })
     .catch((xhr, stauts, error) => {
       console.log(xhr, stauts, error);
@@ -18,70 +19,85 @@ var totalPages = 1;
 var currentPages = 1;
 
 function createPagination(currentPage, totalPages) {
-  if (totalPages > 1) {
-    const paginationElement = document.getElementById("page");
-    // Xóa nội dung điều hướng phân trang hiện tại
-    paginationElement.innerHTML = "";
+  const paginationElement = document.getElementById("page");
 
-    // Tạo phần tử <ul> chứa điều hướng phân trang
-    const paginationList = document.createElement("ul");
-    paginationList.classList.add("pagination");
+  // Xóa nội dung điều hướng phân trang hiện tại
+  paginationElement.innerHTML = "";
 
-    // Tạo phần tử <li> và nút Previous (Trang trước)
-    const previousLi = document.createElement("li");
-    previousLi.classList.add("page-item");
-    const previousButton = document.createElement("button");
-    previousButton.classList.add("page-link");
-    previousButton.innerText = "Previous";
-    previousButton.disabled = currentPage === 1;
-    previousButton.addEventListener("click", () => {
-      if (currentPage > 1) {
-        navigateToPage(currentPage - 1);
-      }
-    });
-    previousLi.appendChild(previousButton);
-    paginationList.appendChild(previousLi);
+  // Tạo phần tử <ul> chứa điều hướng phân trang
+  const paginationList = document.createElement("ul");
+  paginationList.classList.add("pagination");
 
-    // Tạo phần tử <li> cho từng trang
-    for (let page = 1; page <= totalPages; page++) {
-      // Hiển thị tối đa 3 trang
-      if (page <= 3) {
-        const pageLi = document.createElement("li");
-        pageLi.classList.add("page-item");
-        const pageButton = document.createElement("button");
-        pageButton.classList.add("page-link");
-        pageButton.innerText = page.toString();
-        if (page === currentPage) {
-          pageLi.classList.add("active");
-        }
-        pageButton.addEventListener("click", () => {
-          navigateToPage(page);
-        });
-        pageLi.appendChild(pageButton);
-        paginationList.appendChild(pageLi);
-      }
+  // Tạo phần tử <li> và nút Previous (Trang trước)
+  const previousLi = document.createElement("li");
+  previousLi.classList.add("page-item");
+  const previousButton = document.createElement("a");
+  previousButton.classList.add("page-link");
+  previousButton.href = "#";
+  previousButton.innerText = "Previous";
+  previousButton.disabled = currentPage === 1;
+  previousButton.addEventListener("click", () => {
+    if (currentPage > 1) {
+      navigateToPage(currentPage - 1);
     }
+  });
+  previousLi.appendChild(previousButton);
+  paginationList.appendChild(previousLi);
 
-    // Tạo phần tử <li> và nút Next (Trang tiếp theo)
-    const nextLi = document.createElement("li");
-    nextLi.classList.add("page-item");
-    const nextButton = document.createElement("button");
-    nextButton.classList.add("page-link");
-    nextButton.innerText = "Next";
-    nextButton.disabled = currentPage === totalPages;
-    nextButton.addEventListener("click", () => {
-      if (currentPage < totalPages) {
-        navigateToPage(currentPage + 1);
+  // Tạo phần tử <li> cho từng trang
+  for (let page = 1; page <= totalPages; page++) {
+    if (
+      page === currentPage ||
+      (page >= currentPage - 1 && page <= currentPage + 1) ||
+      (page === totalPages && page >= currentPage + 2)
+    ) {
+      const pageLi = document.createElement("li");
+      pageLi.classList.add("page-item");
+      const pageButton = document.createElement("a");
+      pageButton.classList.add("page-link");
+      pageButton.href = "#";
+      pageButton.innerText = page.toString();
+      if (page === currentPage) {
+        pageLi.classList.add("active");
       }
-    });
-    nextLi.appendChild(nextButton);
-    paginationList.appendChild(nextLi);
-
-    // Thêm phần tử <ul> vào điều hướng phân trang
-    paginationElement.appendChild(paginationList);
-  } else {
-    $("#page").html("");
+      pageButton.addEventListener("click", () => {
+        navigateToPage(page);
+      });
+      pageLi.appendChild(pageButton);
+      paginationList.appendChild(pageLi);
+    } else if (page === currentPage + 2) {
+      const pageLi = document.createElement("li");
+      pageLi.classList.add("page-item");
+      const pageButton = document.createElement("a");
+      pageButton.classList.add("page-link");
+      pageButton.href = "#";
+      pageButton.innerText = "...";
+      pageButton.addEventListener("click", () => {
+        navigateToPage(page);
+      });
+      pageLi.appendChild(pageButton);
+      paginationList.appendChild(pageLi);
+    }
   }
+
+  // Tạo phần tử <li> và nút Next (Trang tiếp theo)
+  const nextLi = document.createElement("li");
+  nextLi.classList.add("page-item");
+  const nextButton = document.createElement("a");
+  nextButton.classList.add("page-link");
+  nextButton.href = "#";
+  nextButton.innerText = "Next";
+  nextButton.disabled = currentPage === totalPages;
+  nextButton.addEventListener("click", () => {
+    if (currentPage < totalPages) {
+      navigateToPage(currentPage + 1);
+    }
+  });
+  nextLi.appendChild(nextButton);
+  paginationList.appendChild(nextLi);
+
+  // Thêm phần tử <ul> vào điều hướng phân trang
+  paginationElement.appendChild(paginationList);
 }
 
 function navigateToPage(page) {
@@ -117,7 +133,7 @@ function loads() {
           <tr>
                 <td scope="row">DG${i.id}</td>
                 <td scope="row">${i.title}</td>
-                <td scope="row"> <img style="width:20%" src="${i.img}"> </td>
+                <td scope="row"> <img style="width:10rem" src="${i.img}"> </td>
                 <td scope="row">${i.name}</td>
                 <td scope="row">${i.discount * 100}%</td>
                 <td scope="row">$${i.price}</td>
@@ -141,15 +157,18 @@ function loads() {
       console.log(xhr, status, error);
     });
 }
-function getCate() {
+function getCate(id = 0) {
   let Server = new server();
   Server.get(`action=product&function=category`)
     .then((res, req) => {
-      view = "";
+      let view = "";
       res.forEach((i) => {
-        view += `<option value="${i.id}">${i.name}</option>`;
+        view += `<option value="${i.id}" ${id == i.id ? "selected" : ""}>${
+          i.name
+        }</option>`;
       });
-      $("#cate").append(view);
+      $("#cate").html(` <option value="0" selected>All</option>` + view);
+      $("#category").html(view);
     })
     .catch((xhr, status, error) => {
       console.log(xhr, status, error);
@@ -168,26 +187,11 @@ function load(id) {
   let Server = new server();
   $(".modal-title").text("Edit Product");
 
-  Server.get(`action=product&function=category`)
-    .then((res, req) => {
-      let view = "";
-      res.forEach((i) => {
-        view += `<option value="${i.id}">${i.name}</option>`;
-      });
-      $("#category").html(view);
-    })
-    .catch((xhr, status, error) => {
-      console.log(xhr, status, error);
-    });
   Server.get(`action=product&id=${id}`)
     .then((res, req) => {
       $("#title").val(res.title);
       $("#id").val(res.id);
-      $("#category option")
-        .filter(function () {
-          return this.value == res.category_id;
-        })
-        .attr("selected", "true");
+      getCate(res.category_id);
       $("#price").val(res.price);
       $("#discount").val(res.discount);
       $(".src").text(res.source.substring(res.source.lastIndexOf("/") + 1));
@@ -378,7 +382,7 @@ function inputGallery(input) {
 }
 function delGallery(id) {
   let Server = new server();
-  Server.delete(`action=admin&function=gallery&id=${id}`)
+  Server.delete(`action=admin&function=product&type=gallery&id=${id}`)
     .then((res, req) => {
       console.log(res);
     })
@@ -479,7 +483,6 @@ function addNew(e) {
     .then((res, req) => {
       loads();
       Reset();
-      
     })
     .catch((xhr, status, error) => {
       console.log(xhr, status, error);
@@ -515,6 +518,36 @@ function Reset() {
         view += `<option value="${i.id}">${i.name}</option>`;
       });
       $("#category").html(view);
+    })
+    .catch((xhr, status, error) => {
+      console.log(xhr, status, error);
+    });
+}
+function showAddCate(element) {
+  if ($(element).is(":checked")) {
+    $("#Newscate").append(`<div class="form-floating mb-3" id="newCate">
+    <input type="text" class="form-control" id="new-cate" required>
+    <label for="cate-news">New news category name</label>
+    <div class="invalid-feedback">
+                                Please enter a valid image of the category.
+                            </div>
+    <button onclick="addCate()" class="btn btn-outline-indigo"> Add new category</button>
+
+</div>`);
+  } else {
+    $("#newCate").remove();
+  }
+}
+function addCate() {
+  let Server = new server();
+  let data = new FormData();
+  data.append("name", $("#new-cate").val());
+  Server.post("action=admin&function=product&type=category", data)
+    .then((res, req) => {
+      $("#newCate").remove();
+      $("#flexCheckDefault").prop("checked", false);
+      getCate();
+      loads();
     })
     .catch((xhr, status, error) => {
       console.log(xhr, status, error);

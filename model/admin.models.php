@@ -336,11 +336,11 @@ class admin
     {
         if ($this->check && ($this->role == 1 || $this->role == 4 || $this->role == 8)) {
             $db = new connect();
-            $result = false;
-            if ($this->check && ($this->role == 1 || $this->role == 4 || $this->role == 10)) {
-                $update = "UPDATE `product` SET `hide`= IF(`hide` = 1, 0, 1) WHERE id=" . $proudctid;
-                $result = $db->send($update);
-            }
+
+
+            $update = "UPDATE `product` SET `hide`= IF(`hide` = 1, 0, 1) WHERE id=" . $proudctid;
+            $result = $db->send($update);
+            return json_encode(array("status" => $result));
         }
     }
     function delGallery($id)
@@ -351,7 +351,13 @@ class admin
             $db->send("DELETE FROM `gallery` WHERE id=" . $id);
         }
     }
-
+    function addProductCate($name)
+    {
+        $db = new connect();
+        $insert = "INSERT INTO `category`(`id`, `name`) VALUES (default,'$name')";
+        $result = $db->send($insert);
+        echo json_encode(array("status" => $result));
+    }
     function view_Order($year = "", $month = "", $currentPage = 1)
     {
         if ($this->check) {
@@ -399,6 +405,52 @@ class admin
         $result = $db->send($insert);
         echo json_encode(array("status" => $result));
     }
-    // function view news categories
-    
+    //    update news
+    function updateNews($id, $title, $avatar, $cateNews, $content)
+    {
+        $db = new connect();
+        $update = "UPDATE `blog` SET `title`='$title',`avatar`='$avatar',`content`='$content',`newsCate_id`=' $cateNews',`created_at`= current_timestamp() WHERE id=$id";
+        $result = $db->send($update);
+        echo json_encode(array("status" => $result));
+    }
+    // view news
+    function viewsNews($page = 1, $keysearch = "", $cate = 0)
+    {
+
+        $start = ($page - 1) * 6;
+        $where = "";
+        if ($keysearch != "") {
+            $where .= " AND blog.title like '%$keysearch%'  ";
+        }
+        if ($cate != 0) {
+            $where .= " AND blog.newsCate_id=$cate";
+        }
+        $select = "SELECT blog.id AS id, title, blog.avatar , name, fullname, created_at, blog.hidden as 'hidden' FROM `blog`,`user`,`newscategory` WHERE blog.deleted=0 AND  blog.author=user.id AND blog.newsCate_id= newscategory.id $where LIMIT $start,6";
+        $db = new connect();
+
+        $result = $db->getlist($select);
+        $select = "SELECT COUNT(blog.id) FROM `blog`,`user`,`newscategory` WHERE blog.deleted=0 AND  blog.author=user.id AND blog.newsCate_id= newscategory.id $where ";
+        $count = $db->getonce($select);
+        $array = array();
+        while ($row = $result->fetch()) {
+            array_push($array, $row);
+        }
+        return json_encode(array("status" => "success", "data" => $array, "page" => ceil($count[0] / 6)));
+    }
+    function delNews($id)
+    {
+        $db = new connect();
+
+        $update = "UPDATE `blog` SET `deleted`= " . time() . " WHERE id=" . $id;
+        $result = $db->send($update);
+
+        return json_encode(array("status" => $result ? "success" : "failed"));
+    }
+    function hiddenNews($id)
+    {
+        $db = new connect();
+        $update = "UPDATE `blog` SET `hidden`= IF(`hidden` = 1, 0, 1) WHERE id=$id";
+        $result = $db->send($update);
+        return json_encode(array("status" => $result ? "success" : "failed"));
+    }
 }

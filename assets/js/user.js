@@ -36,6 +36,9 @@ function userInfo() {
         $("#upload").show();
       });
       $("#myfile").val("");
+      if (res.role_id != 2) {
+        $("#admin").show();
+      }
     })
     .catch((xhr, status, err) => {
       console.log(xhr, status, err);

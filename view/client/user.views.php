@@ -18,7 +18,7 @@
             </li>
 
             <li class="d-flex ms-auto">
-
+                <a id="admin" href="index.php?action=admin" class="btn btn-outline-info me-2" style="display:none">Administration</a>
                 <button class="btn btn-danger" type="button" onclick="logout()">Logout <i class="fa-solid fa-arrow-right-from-bracket"></i></button>
             </li>
         </ul>
@@ -60,7 +60,8 @@
                     <div class="col-lg-3 border-right shadow-lg">
                         <div class="d-flex flex-column align-items-center text-center p-3 py-5">
                             <img class="rounded-circle mt-5 avatar" style="width:10em;height:10em;object-fit: cover" src="" alt="">
-                            <input class="form-control" userId="" type="file" id="myfile" name="avatar" accept="image/png, image/gif, image/jpeg" id="updateFile">
+                            <label for="myfile" class="btn btn-light">Change avatar</label>
+                            <input class="form-control" userId=""  type="file" id="myfile" name="avatar" accept="image/png, image/gif, image/jpeg" id="updateFile" style="display:none">
                             <span class="font-weight-bold"></span>
                             <span class="text-black-50"></span>
                             <span> </span>

@@ -16,7 +16,7 @@ class news
     function viewsNews($page = 1)
     {
         $start = ($page - 1) * 6;
-        $select = "SELECT blog.id AS id, title, blog.avatar , name, fullname, created_at FROM `blog`,`user`,`newscategory` WHERE blog.author=user.id AND blog.newsCate_id= newscategory.id LIMIT $start,6";
+        $select = "SELECT blog.id AS id, title, blog.avatar , name, fullname, created_at FROM `blog`,`user`,`newscategory` WHERE blog.deleted=0 AND blog.hidden=0 AND blog.author=user.id AND blog.newsCate_id= newscategory.id LIMIT $start,6";
 
         $db = new connect();
         $result = $db->getlist($select);

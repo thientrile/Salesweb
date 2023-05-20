@@ -60,7 +60,7 @@
 
         <div class="form-floating">
             <select class="form-select" id="cate" onchange="loads()">
-                `<option value="0" selected>All</option>
+                <option value="0" selected>All</option>
 
             </select>
             <label for="cate">Category</label>
@@ -85,15 +85,9 @@
                 <th scope="col">Price</th>
                 <th scope="col">Status</th>
 
-                <th scope="col"></th>
-                <th scope="col" id="page">
-                    <ul class="pagination bg-success">
-                        <li class="page-item"><a class="page-link" href="#">Previous</a></li>
-                        <li class="page-item"><a class="page-link" href="#">1</a></li>
-                        <li class="page-item active"><a class="page-link" href="#">2</a></li>
-                        <li class="page-item"><a class="page-link" href="#">3</a></li>
-                        <li class="page-item"><a class="page-link" href="#">Next</a></li>
-                    </ul>
+              
+                <th scope="col" id="page" colspan="2">
+                   
 
                 </th>
 
@@ -145,13 +139,20 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-6" id="Newscate">
                             <div class="input-group">
                                 <span class="input-group-text">Category:</span>
                                 <select class="form-select" id="category">
 
                                 </select>
                             </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="true" id="flexCheckDefault" onchange="showAddCate(this)">
+                                <label class="form-check-label" for="flexCheckDefault">
+                                    Add category news
+                                </label>
+                            </div>
+
                         </div>
 
                     </div>
