@@ -142,8 +142,14 @@ $(document).ready(function () {
   Server.get("action=product&function=category")
     .then((res, req) => {
       let result = "";
+      let count = 0;
       for (let i of res) {
+        if (count > 3) {
+          break;
+        }
         result += `<li><a href="index.php?action=shop&cate=${i.id}">${i.name}</a></li>`;
+        count++;
+    
       }
 
       $("#category").html(result);

@@ -115,7 +115,7 @@ $(function () {
 
         if (res.status == "success") {
           $("#login > span").css("display", "none");
-          window.location.replace("http://demo.local/index.php?action=home");
+          window.location.replace("index.php?action=home");
         } else {
           $("#login > span").css("display", "flex");
         }
@@ -140,7 +140,7 @@ $(function () {
           dataType: "json",
           success: function (res, req) {
             console.log(true);
-            window.location.replace("http://demo.local/index.php?action=home");
+            window.location.replace("index.php?action=home");
           },
 
           error: function (xhr, status, error) {

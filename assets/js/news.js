@@ -103,9 +103,9 @@ function inputImage(input) {
     $("#img-prev").attr("src", reader.result);
   });
 }
-function loadcate(id = 1) {
+function loadcate(id = 0) {
   let Server = new server();
-  Server.get("action=news&function=cate")
+  Server.get("action=blog&function=cate")
     .then((res, req) => {
       let options = "";
       for (let i of res.data) {
@@ -159,7 +159,8 @@ function addCate() {
       loadcate();
     })
     .catch((rhx, status, error) => {
-      console.log(rhx, status, error);
+      console.log(rhx.responseText
+        , status, error);
     });
 }
 function showAddCate(element) {
@@ -186,9 +187,12 @@ function views() {
   )
     .then((res, req) => {
       let result = "";
+      if(res.page>1){
 
-      totalPages = res.page;
-      createPagination(currentPages, totalPages);
+        totalPages = res.page;
+        createPagination(currentPages, totalPages);
+      }
+
       for (let i of res.data) {
         result += ` <tr>
         <td>NEWS${i.id}</td>
@@ -223,7 +227,7 @@ function views() {
 function view(id) {
   let Server = new server();
 
-  Server.get(`action=news&function=views&id=${id}`)
+  Server.get(`action=blog&function=views&id=${id}`)
     .then((res, req) => {
       $("#title").val(res.title);
       $("#img-prev").attr({ src: res.avatar });
@@ -281,6 +285,7 @@ function del(e, id) {
               timer: 1000,
             });
             e.parentNode.parentNode.remove();
+            views();
             // console.log(res);
           })
           .catch((xhr, status, error) => {

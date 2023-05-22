@@ -6,12 +6,7 @@ class admin
     var $userid = null;
     var $countpage = 1;
     var $role = "";
-    var $hiddenProductUpdate = true;
-    var $hiddenProductImport = true;
-    var $hiddenProductDelete = true;
-    var $hiddenMemberUpdate = true;
-    var $hiddenMemberImport = true;
-    var $hiddenMemberDelete = true;
+ 
 
     function __construct($userid)
     {
@@ -19,55 +14,7 @@ class admin
         $this->userid = $userid;
         $this->check = $userInfor->getInfor($userid)[8] != 2;
         $this->role = $userInfor->getInfor($userid)[8];
-        switch ($this->role) {
-            case 1: {
-                    $this->hiddenProductUpdate = false;
-                    $this->hiddenProductImport = false;
-                    $this->hiddenProductDelete = false;
-                    $this->hiddenMemberUpdate = false;
-                    $this->hiddenMemberImport = false;
-                    $this->hiddenMemberDelete = false;
-
-                    break;
-                }
-            case 3: {
-                    $this->hiddenMemberUpdate = false;
-                    $this->hiddenMemberImport = false;
-                    $this->hiddenMemberDelete = false;
-                    break;
-                }
-            case 4: {
-                    $this->hiddenProductUpdate = false;
-                    $this->hiddenProductImport = false;
-                    $this->hiddenProductDelete = false;
-                    break;
-                }
-            case 5: {
-                    $this->hiddenMemberUpdate = false;
-
-                    break;
-                }
-            case 6: {
-                    $this->hiddenProductUpdate = false;
-                    break;
-                }
-            case 7: {
-                    $this->hiddenMemberImport = false;
-                    break;
-                }
-            case 8: {
-                    $this->hiddenProductImport = false;
-                    break;
-                }
-            case 9: {
-                    $this->hiddenMemberDelete = false;
-                    break;
-                }
-            case 10: {
-                    $this->hiddenProductDelete = false;
-                    break;
-                }
-        }
+       
     }
     // Admin user || member
     // new user

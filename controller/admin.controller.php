@@ -48,7 +48,7 @@ switch (isset($_GET['function']) ? $_GET['function'] : 0) {
 
                                     break;
                                 }
-                                case "category": {
+                            case "category": {
                                     echo $admin->addProductCate($_POST['name']);
                                     break;
                                 }
@@ -72,10 +72,7 @@ switch (isset($_GET['function']) ? $_GET['function'] : 0) {
             break;
         }
         // news management
-        /* `case "news": {` is a switch case statement that checks if the value of the `['function']`
-   parameter is equal to "news". If it is, the code inside the case statement will be executed. This
-   code handles different HTTP requests related to news management, such as getting news
-   information, adding or updating news, and deleting news. */
+
     case "news": {
 
 
@@ -116,6 +113,11 @@ switch (isset($_GET['function']) ? $_GET['function'] : 0) {
                         break;
                     }
             }
+            break;
+        }
+    case "Logout": {
+        
+
             break;
         }
 }

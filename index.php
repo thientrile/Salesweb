@@ -17,6 +17,9 @@
   <script defer src="./assets/js/node_modules/@fortawesome/fontawesome-free/js/brands.js"></script>
   <script defer src="./assets/js/node_modules/@fortawesome/fontawesome-free/js/solid.js"></script>
   <script defer src="./assets/js/node_modules/@fortawesome/fontawesome-free/js/fontawesome.js"></script>
+  <link href="./assets/font/fontawesome-free-6.4.0-web/css/fontawesome.css" rel="stylesheet">
+  <link href="./assets/font/fontawesome-free-6.4.0-web/css/brands.css" rel="stylesheet">
+  <link href="./assets/font/fontawesome-free-6.4.0-web/css/solid.css" rel="stylesheet">
   <script src="./assets/js/node_modules/jquery/dist/jquery.min.js"></script>
   <script src="https://cdn.tiny.cloud/1/ne7jh8amcsjb3xmqmi897dq6otm31983uforos958vktr7b4/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
   <script src="./assets/js/node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
