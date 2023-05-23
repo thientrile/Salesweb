@@ -1,6 +1,5 @@
 <?php
 $method = $_SERVER['REQUEST_METHOD'];
-
 switch ($method) {
     case "POST": {
             switch (isset($_GET['function']) ? $_GET['function'] : "0") {
@@ -21,12 +20,73 @@ switch ($method) {
                         echo json_encode(array("status" => "success"));
                         break;
                     }
+                case "codeForgot": {
+                        $email = isset($_POST["email"]) ? $_POST["email"] : ""; //lấy email
+                        $result = $User->checkEmailExit($email);
+                        if ($result) {
+                            $code = rand(1000, 9999);
+                            $mail->confirmMail($email, $code, "");
+                            $_SESSION['code'] = array("email" => $email, "code" => $code);
+                            echo json_encode(array("status" => "success"));
+                        } else {
+                            echo json_encode(array("status" => "failed"));
+                        }
+                        break;
+                    }
+                case "checkCode": {
+                        if (isset($_SESSION['code']) && isset($_POST['code']) && $_SESSION['code']['code'] == $_POST['code']) {
+                            $_SESSION['checkCode'] = array("check" => $_SESSION['code']['code'] == $_POST['code'], "email" => $_SESSION['code']['email']);
+                            echo json_encode(array("status" => "success"));
+                        } else {
+                            echo json_encode(array("status" => "failed"));
+                        }
+
+                        break;
+                    }
+                case "newPass": {
+
+                        break;
+                    }
+                case "signup": {
+                        if (isset($_SESSION['code'])) {
+                            // echo json_encode(array("status" => "success"));
+
+                            if (isset($_POST['code']) && $_POST['code'] == $_SESSION['code']['code']) {
+                                echo json_encode(array("status" => "success"));
+                                $User->userSign($_SESSION['code']['username'], $_SESSION['code']['email'], $_SESSION['code']['pswd']);
+                                $result = $User->getId($_SESSION['code']['email']);
+                                $_SESSION["s_user"] =  $result['id'];
+                                setcookie('c_user', md5($result['id']), time() + 86400);
+                            } else {
+
+                                echo json_encode(array("status" => "failed"));
+                            }
+                        } else {
+                            echo json_encode(array("status" => "failed"));
+                        }
+
+                        break;
+                    }
+                case "login": {
+                        $log_mail = isset($_POST['email']) ? $_POST['email'] : "";
+                        $log_pswd = isset($_POST['pswd']) ? $_POST['pswd'] : "";
+                        $result = $User->userLogin($log_mail, md5($log_pswd));
+                        if ($result != false) {
+
+                            $_SESSION["s_user"] =  $result['id'];
+                            setcookie('c_user', md5($result['id']), time() + 86400);
+                            echo json_encode(array("status" => "success"));
+                        } else {
+                            echo json_encode(array("status" => "fall", "error" => "Email or password is incorrect"));
+                        }
+
+                        break;
+                    }
             }
             break;
         }
     case "GET": {
-
-
+            echo json_encode(array("status" => "success", "method" => $method));
             break;
         }
     default: {

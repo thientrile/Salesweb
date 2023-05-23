@@ -1,4 +1,3 @@
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
 <link rel="stylesheet" href="assets/css/login.css">
 <link href="https://fonts.googleapis.com/css2?family=Jost:wght@500&display=swap" rel="stylesheet">
 <div class="main">
@@ -29,7 +28,7 @@
             <span class="error">Email or password is incorrect</span>
 
             <input class="form-control" type="password" name="pswd" placeholder="Password" required="" value="" oninput="checkpswd(this)">
-            <a id="forgot" style="color:#34b7ae" onclick="email()">Forgot password</a>
+            <a id="forgot" style="color:#34b7ae;cursor:pointer" onclick="email()">Forgot password</a>
 
             <button type="submit" name="login">Login</button>
 
