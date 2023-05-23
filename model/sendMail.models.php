@@ -7,51 +7,51 @@ use PHPMailer\PHPMailer\Exception;
 require 'vendor/autoload.php';
 class sendMail
 {
-    var $type = "Content-Type: text/html; charset=UTF-8\r\n";
+  var $type = "Content-Type: text/html; charset=UTF-8\r\n";
 
-    function mail(
-        $from,
-        $name,
-        $Subject,
-        $body
-    ) {
-        $mail = new PHPMailer(true);
+  function mail(
+    $from,
+    $name,
+    $Subject,
+    $body
+  ) {
+    $mail = new PHPMailer(true);
 
-        $mail->isSMTP();
-        $mail->Host       = 'smtp.gmail.com';
-        $mail->SMTPAuth   = true;
-        $mail->Username   = 'thientrile2003@gmail.com';
-        $mail->Password   = 'mjecvljrydclsbgu';
-        $mail->SMTPSecure = 'tls';
-        $mail->Port       = 587;
-
-
-        $mail->setFrom('thientrile2003@gmail.com', 'DGWORK');
-        $mail->addAddress($from, $name);
-        // $mail->addAddress('ellen@example.com');           
-        // $mail->addReplyTo('info@example.com', 'Information');
-        // $mail->addCC('cc@example.com');
-        // $mail->addBCC('bcc@example.com');
-
-        //Attachments
-        // $mail->addAttachment('/var/tmp/file.tar.gz');         //Add attachments
-        // $mail->addAttachment('/tmp/image.jpg', 'new.jpg');    //Optional name
-
-        //Content
-        $mail->isHTML(true);                                  //Set email format to HTML
-        $mail->Subject = $Subject;
-        $mail->Body    =  $body;
-        // $mail->AltBody = 'This is the body in plain text for non-HTML mail clients';
-
-        $mail->send();
-    }
-    function confirmMail($sendTo, $code,$name="")
-    {
-        $header = "Confirm Email";
+    $mail->isSMTP();
+    $mail->Host       = 'smtp.gmail.com';
+    $mail->SMTPAuth   = true;
+    $mail->Username   = 'thientrile2003@gmail.com';
+    $mail->Password   = 'lbvzopqeovpduiln';
+    $mail->SMTPSecure = 'tls';
+    $mail->Port       = 587;
 
 
+    $mail->setFrom('thientrile2003@gmail.com', 'DGWORK');
+    $mail->addAddress($from, $name);
+    // $mail->addAddress('ellen@example.com');           
+    // $mail->addReplyTo('info@example.com', 'Information');
+    // $mail->addCC('cc@example.com');
+    // $mail->addBCC('bcc@example.com');
 
-        $content = "<html>
+    //Attachments
+    // $mail->addAttachment('/var/tmp/file.tar.gz');         //Add attachments
+    // $mail->addAttachment('/tmp/image.jpg', 'new.jpg');    //Optional name
+
+    //Content
+    $mail->isHTML(true);                                  //Set email format to HTML
+    $mail->Subject = $Subject;
+    $mail->Body    =  $body;
+    // $mail->AltBody = 'This is the body in plain text for non-HTML mail clients';
+
+    $mail->send();
+  }
+  function confirmMail($sendTo, $code, $name = "")
+  {
+    $header = "Confirm Email";
+
+    $name = $name != "" ? $name : "you";
+
+    $content = "<html>
   <head>
     <title>Confirmation Email</title>
   </head>
@@ -67,6 +67,6 @@ class sendMail
   </body>
 </html>
 ";
-        $this->mail($sendTo, 'you', $header, $content);
-    }
+    return $this->mail($sendTo, 'you', $header, $content);
+  }
 }

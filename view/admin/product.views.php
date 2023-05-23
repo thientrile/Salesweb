@@ -71,7 +71,10 @@
 
     </div>
 
+
+
 </div>
+
 <div class="table-responsive-md shadow-lg mt-2 p-5 rounded-2 border-2">
     <table class="table table-hover  ">
         <thead class="table-success">
@@ -85,9 +88,9 @@
                 <th scope="col">Price</th>
                 <th scope="col">Status</th>
 
-              
+
                 <th scope="col" id="page" colspan="2">
-                   
+
 
                 </th>
 

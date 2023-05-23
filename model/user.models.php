@@ -37,17 +37,17 @@ class user
         $pass = md5($pass);
         // check exist
         $email = strtolower($email);
-        if ($this->checkEmailExit($email) == false) {
 
-            $query = "insert into user(id, avatar, fullname, balance, email, phone_number, address, pass, role_id, deleted) values (NULL,default,'$username',default,'$email',NULL,NULL,'$pass',default,default)";
-            $db->send($query);
-            $select = "SELECT MAX(id) FROM `user` ";
-            $db->getonce($select);
-            mkdir("assets/user/" . md5($db->getonce($select)[0]), 0700);
-            mkdir("assets/user/" . md5($db->getonce($select)[0]) . "/avatar", 0700);
-            copy("assets/avatar/people.png", "assets/user/" . md5($db->getonce($select)[0]) . "/avatar/people.png");
-            return true;
-        }
+
+        $select = "SELECT MAX(id) FROM `user` ";
+        $count = $db->getonce($select)[0] + 1;
+        $avatar = "assets/user/" . md5($count) . "/avatar/people.png";
+        $query = "insert into user(id, avatar, fullname, balance, email, phone_number, address, pass, role_id, deleted) values (NULL,'$avatar','$username',default,'$email',NULL,NULL,'$pass',default,default)";
+        $db->send($query);
+        mkdir("assets/user/" . md5($count), 0700);
+        mkdir("assets/user/" . md5($count) . "/avatar", 0700);
+        copy("assets/avatar/people.png", "assets/user/" . md5($count) . "/avatar/people.png");
+
         return false;
     }
     //lấy id của người dùng bằng email

@@ -115,9 +115,5 @@ switch (isset($_GET['function']) ? $_GET['function'] : 0) {
             }
             break;
         }
-    case "Logout": {
-        
-
-            break;
-        }
+    
 }

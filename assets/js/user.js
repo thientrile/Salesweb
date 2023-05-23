@@ -17,7 +17,7 @@ function userInfo() {
       $(
         "#profile > div > div.col-lg-3.border-right.shadow-lg > div > img"
       ).attr({
-        src: `./assets/user/${res.id}/avatar/${res.avatar}`,
+        src: `${res.avatar}`,
         alt: res.avatar,
       });
       $("#myfile").attr("userId", res.id);

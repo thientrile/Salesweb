@@ -1,6 +1,6 @@
 <?php
-$log_mail = isset($_POST['log-email']) ? $_POST['log-email'] : "";
-$log_pswd = isset($_POST['log-pswd']) ? $_POST['log-pswd'] : "";
+$log_mail = isset($_POST['email']) ? $_POST['email'] : "";
+$log_pswd = isset($_POST['pswd']) ? $_POST['pswd'] : "";
 $result = $User->userLogin($log_mail, md5($log_pswd));
 if ($result != false) {
 

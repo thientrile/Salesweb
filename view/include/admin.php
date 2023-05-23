@@ -183,7 +183,7 @@
                                         <i class="ti ti-list-check fs-6"></i>
                                         <p class="mb-0 fs-3">My Task</p>
                                     </a>
-                                    <a href="./authentication-login.html" class="btn btn-outline-primary mx-3 mt-2 d-block">Logout</a>
+                                    <button onclick="logout()" class="btn btn-outline-primary mx-3 mt-2 d-block">Logout</button>
                                 </div>
                             </div>
                         </li>
@@ -197,6 +197,32 @@
         </div>
     </div>
 </div>
+<script>
+    function logout() {
+        Swal.fire({
+            title: "Do you want to logout?",
+
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes, Log out!",
+        }).then((result) => {
+            if (result.isConfirmed) {
+                document.cookie =
+                    "c_user=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+                Swal.fire({
+                    icon: "success",
+                    title: "Your account has been logged out",
+                    showConfirmButton: false,
+                    timer: 1500,
+                }).then(() => {
+                    window.location.replace("index.php");
+                });
+            }
+        });
+    }
+</script>
 <script src="./assets/js/node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 <script src="./assets/js/sidebarmenu.js"></script>
 <script src="./assets/js/app.min.js"></script>

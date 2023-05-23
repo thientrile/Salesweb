@@ -24,8 +24,8 @@ if ($method == 'POST'  && isset($_SESSION["s_user"]) && !$Cart->checkCart($_SESS
 } elseif ($method == 'DELETE') {
     if (isset($_GET['id'])) {
 
-        $Cart->deleteOne($_GET['id']);
+        echo json_encode(array("status" => $Cart->deleteOne($_GET['id'])));
     } else {
-        $Cart->deleteAll($_SESSION["s_user"]);
+        echo json_encode(array("status" =>   $Cart->deleteAll($_SESSION["s_user"])));
     }
 }

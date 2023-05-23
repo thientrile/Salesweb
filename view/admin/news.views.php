@@ -50,7 +50,7 @@
     <div class="shadow-lg  p-4 ">
         <div class="d-flex justify-content-center h-100">
             <div class="searchbar">
-                <input class="search_input" id="search" oninput=" showNews()" type="text" name="" placeholder="Search...">
+                <input class="search_input" id="search" oninput=" views()" type="text" name="" placeholder="Search...">
                 <button class="search_icon btn" onclick=""><i class="fas fa-search"></i></button>
             </div>
         </div>
@@ -59,7 +59,7 @@
     <div class="shadow-lg  p-4 me-2">
 
         <div class="form-floating">
-            <select class="form-select" id="cate" onchange="showNews()">
+            <select class="form-select" id="cate" onchange="views()">
                 `<option value="0" selected>All</option>
 
             </select>
@@ -85,8 +85,8 @@
                 <th scope="col">Date Created</th>
 
 
-               
-                <th colspan="3" scope="col"id="page">
+
+                <th colspan="3" scope="col" id="page">
 
 
                 </th>

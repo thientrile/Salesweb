@@ -12,9 +12,7 @@ function loadCart() {
         for (let i of res) {
           items += ` <div class="row bg-white shadow-lg m-2 p-2 rounded bg-white">
               <div class="col-3 p-2" style="line-height: 100%;">${i.title}</div>
-              <div class="col-3"><img width="50%" src="assets/products/${
-                i.product_id
-              }/img/${i.img}" alt=""></div>
+              <div class="col-3"><img width="50%" src="${i.img}" alt=""></div>
               <div class="col-3 p-2">${
                 i.discount > 0
                   ? `         <sub style="text-decoration:line-through">${
@@ -61,7 +59,9 @@ function cartDel(e) {
     .then((res, req) => {
       loadCart();
     })
-    .catch((xhr, status, err) => {});
+    .catch((xhr, status, err) => {
+      console.log(xhr, status, err);
+    });
 }
 function carDels(e) {
   $(e).html(`<div class="spinner-border text-white"></div>`);
@@ -70,7 +70,9 @@ function carDels(e) {
     .then((res, req) => {
       loadCart();
     })
-    .catch((xhr, status, err) => {});
+    .catch((xhr, status, err) => {
+      console.log(xhr, status, err);
+    });
 }
 $(document).ready(function () {
   loadCart();
