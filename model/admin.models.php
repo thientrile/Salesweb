@@ -197,7 +197,7 @@ class admin
 
         $start = $view * $page - $view;
 
-        $select = "select product.id as id, title,img,source,category_id,description,sDescription, discount,price,created_at,updated_at, deleted, category.name as name, hide from product,category WHERE $Where  AND deleted=0 AND product.category_id=category.id ORDER BY position ASC LIMIT $start,6";
+        $select = "select product.id as id, title,img,source,category_id,description,sDescription, discount,price,created_at,updated_at, deleted, category.name as name, hide from product,category WHERE $Where  AND deleted=0 AND product.category_id=category.id ORDER BY position ASC LIMIT $start,$view";
         $this->countpage = ceil($count[0] / $view);
 
         return $cc->getlist($select);

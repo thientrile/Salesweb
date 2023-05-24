@@ -69,7 +69,7 @@ function createPagination(currentPage, totalPages) {
         pageLi.classList.add("page-item");
         const pageButton = document.createElement("a");
         pageButton.classList.add("page-link");
-        pageButton.href = `#`;
+        
         pageButton.setAttribute("onclick", `addPageQueryParam(event,${page})`);
         pageButton.innerText = page.toString();
         if (page === currentPage) {
@@ -105,7 +105,7 @@ function createPagination(currentPage, totalPages) {
     nextLi.classList.add("page-item");
     const nextButton = document.createElement("a");
     nextButton.classList.add("page-link");
-    nextButton.href = "#";
+    
     nextButton.innerText = "Next";
     nextButton.disabled = currentPage === totalPages;
     nextButton.addEventListener("click", () => {

@@ -28,16 +28,16 @@ function navigateToPage(page) {
 }
 // movies rows
 function arrow(element, id, arrow) {
- 
+
   let Server = new server()
   let data = new FormData();
-  data.append("arrow",arrow);
-Server.post(`action=admin&function=product&type=arrow&id=${id}`,data).then((res,req)=>{
-  loads()
-}).catch((xhr,status,error)=>{
-  console.log(xhr,status,error);
-})
- 
+  data.append("arrow", arrow);
+  Server.post(`action=admin&function=product&type=arrow&id=${id}`, data).then((res, req) => {
+    loads()
+  }).catch((xhr, status, error) => {
+    console.log(xhr, status, error);
+  })
+
 }
 // load products from the database
 function loads() {
