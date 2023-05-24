@@ -72,7 +72,7 @@ function loadOrders() {
           <td>#DG-${i.id}</td>
           <td>$${i.total}</td>
           <td >${created}</td>
-          <td><button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#myModal" onclick="loadOrder(${i.id},'${i.date_order}')">
+          <td><button id="DG-${i.id}" type="button" class="btn" data-bs-toggle="modal" data-bs-target="#myModal" onclick="loadOrder(${i.id},'${i.date_order}')">
                   <i class="fas fa-info me-2"></i> Get information
               </button></td>
       </tr>`;
@@ -86,7 +86,37 @@ function loadOrders() {
     })
     .catch((xhr, status, err) => {
       console.log(xhr, status, err);
+    }).finally(() => {
+      if (window.location.href.search("&id=") != -1) {
+        let id = window.location.href.split("&id=")[1];
+        let element = document.getElementById(`DG-${id}`);
+        element.onclick();
+        let openModal = new bootstrap.Modal(document.getElementById("myModal"))
+        openModal.show();
+      }
     });
+  if (window.location.href.search("function") != -1) {
+    let a = document.querySelectorAll("#body > div.creative > div > ul > li > a")
+    a.forEach((e) => {
+      if (e.getAttribute("href").split("#")[1] == window.location.href.split("function=")[1].split("&")[0]) {
+        $(e).addClass("active")
+        $(`${e.getAttribute("href")}`).addClass("active")
+        $(`${e.getAttribute("href")}`).removeClass("fade")
+      }
+      else {
+        $(e).removeClass("active")
+
+        $(`#${e.getAttribute("href").split("#")[1]}`).addClass("fade")
+        $(`#${e.getAttribute("href").split("#")[1]}`).removeClass("active")
+      }
+    })
+
+
+
+
+  }
+
+
 }
 function loadOrder(id, created) {
   let date = new Date(created);
@@ -104,14 +134,15 @@ function loadOrder(id, created) {
   Server.get(`action=payment&function=order&id=${id}`)
     .then((res, req) => {
       for (let i of res) {
+        $("#export").attr({ "onclick": `exportpdf('#DG-${i.id}')` })
         price += i.price;
         discount += i.discount;
         result += ` <tr>
         <td scope="col">#DG${i.id}</td>
         <td scope="col">${i.title}</td>
-        <td scope="col">${i.discount * i.price}</td>
-        <td scope="col">${i.price}</td>
-        <td scope="col">${i.price - i.price * i.discount}</td>
+        <td scope="col">$${i.discount * i.price}</td>
+        <td scope="col">$${i.price}</td>
+        <td scope="col">$${i.price - i.price * i.discount}</td>
     </tr>`;
       }
       $("#detail").html(result);
@@ -119,13 +150,11 @@ function loadOrder(id, created) {
         `<span class="text-black me-4">SubTotal</span>$${price}`
       );
       $(".discount").html(
-        `<span class="text-black me-4 discount">Tax(${
-          discount * 100
+        `<span class="text-black me-4 discount">Tax(${discount * 100
         }%)</span>$${price * discount}`
       );
       $(".total").html(
-        `<span class="text-black me-3"> Total Amount</span><span style="font-size: 25px;">$${
-          price - price * discount
+        `<span class="text-black me-3"> Total Amount</span><span style="font-size: 25px;">$${price - price * discount
         }</span>`
       );
     })
@@ -189,26 +218,54 @@ function update(e) {
       console.log(xhr, stauts, error);
     });
 }
+
+function exportpdf(name) {
+
+  // Tạo một instance của jsPDF
+  let doc = new jsPDF();
+
+  // Lấy ra phần tử cần in vào file PDF
+  let element = document.getElementById("myModal");
+
+  // Lấy nội dung HTML của phần tử
+  let htmlContent = element.innerHTML;
+
+  // Chuyển đổi nội dung HTML thành PDF và in vào file
+  doc.fromHTML(htmlContent, 15, 15, {
+    width: 170
+  });
+
+  // Tải về file PDF
+  doc.save(`invoid-${name}.pdf`);
+
+}
+function printHtml() {
+  let element = document.getElementById("myModal");
+  let printWindow = window.open('', '', 'width=600,height=600');
+  printWindow.document.write(element.innerHTML);
+  printWindow.document.close();
+  printWindow.onload = function () {
+    // Thực hiện lệnh in của trình duyệt
+    printWindow.print();
+  };
+}
 $(document).ready(() => {
   userInfo();
   loadOrders();
   $("#myfile").on("input", (e) => {
     const selectedFile = event.target.files[0];
     const reader = new FileReader();
-
     reader.addEventListener("load", () => {
       $(
         "#profile > div > div.col-md-3.border-right.shadow-lg > div > img"
       ).attr("src", reader.result);
     });
-
     reader.readAsDataURL(selectedFile);
     let Server = new server();
     $("#myfile").attr("userId");
     let formData = new FormData();
     formData.append("id", $("#myfile").attr("userId"));
     formData.append("File_avatar", $("#myfile")[0].files[0]);
-
     Server.post(`action=user&function=avatar`, formData)
       .then((res, req) => {
         userInfo();
@@ -220,12 +277,16 @@ $(document).ready(() => {
   $("#upload").click((e) => {
     $("#info").submit();
   });
-  // $("#body > div.creative > div > ul > li > a").click((e) => {
-  //   window.history.replaceState(
-  //     {},
-  //     "",
-  //     "index.php?action=user&function=" +
-  //       e.target.getAttribute("href").split("#")[1]
-  //   );
-  // });
-});
+  $("#body > div.creative > div > ul > li > a").click((e) => {
+    window.history.replaceState(
+      {},
+      "",
+      "index.php?action=user&function=" +
+      e.target.getAttribute("href").split("#")[1]
+    );
+
+
+
+
+  })
+})

@@ -7,7 +7,7 @@ function userInfo() {
       <div class="col-lg-3">Balance:$ ${res.balance}</div>
       <div class="col-lg-3"><button type="button" class="btn btn-info">Recharge</button></div>`);
     })
-    .catch((xhr, status, err) => {});
+    .catch((xhr, status, err) => { });
 }
 function view() {
   countCart();
@@ -24,18 +24,14 @@ function view() {
         discount += i.discount;
         items += ` <div class="row ">
               <div class="col-3 p-2" style="line-height: 100%;">${i.title}</div>
-              <div class="col-3"><img width="50%" src="assets/products/${
-                i.product_id
-              }/img/${i.img}" alt=""></div>
-              <div class="col-3 p-2">${
-                i.discount > 0
-                  ? `         <sub style="text-decoration:line-through">${
-                      i.price
-                    }</sub>$ ${i.price - i.price * i.discount}`
-                  : i.price > 0
-                  ? `$ ${i.price}`
-                  : "Free"
-              }</div>
+              <div class="col-3"><img width="50%" src="${i.img}" alt=""></div>
+              <div class="col-3 p-2">${i.discount > 0
+            ? `         <sub style="text-decoration:line-through">${i.price
+            }</sub>$ ${i.price - i.price * i.discount}`
+            : i.price > 0
+              ? `$ ${i.price}`
+              : "Free"
+          }</div>
             
           </div>         `;
       }
@@ -43,9 +39,8 @@ function view() {
       <div class="col-md-12 col-sm-2 text-center h2">Items: ${res.length}</div>
       <div class="col-md-12 col-sm-2 border-top">Price:$${price}</div>
       <div class="col-md-12 col-sm-2">Discount: $${discount * price}</div>
-      <div class="col-md-12 col-sm-2 border-top">Totals: $${
-        price - discount * price
-      }</div>
+      <div class="col-md-12 col-sm-2 border-top">Totals: $${price - discount * price
+        }</div>
       <div class="col-md-12 col-sm-2">
           <div class="row">
               <div class="col-6"><a class="btn btn-outline-info" href="index.php?action=shop">Back to shop</a> </div>
@@ -60,31 +55,24 @@ function view() {
       .then((res, req) => {
         $("#items").html(`<div class="row ">
         <div class="col-3 p-2" style="line-height: 100%;">${res.title}</div>
-        <div class="col-3"><img width="50%" src="assets/products/${
-          res.id
-        }/img/${res.img}" alt=""></div>
-        <div class="col-3 p-2">${
-          res.discount > 0
-            ? `         <sub style="text-decoration:line-through">${
-                res.price
-              }</sub>$ ${res.price - res.price * res.discount}`
+        <div class="col-3"><img width="50%" src="${res.img}" alt=""></div>
+        <div class="col-3 p-2">${res.discount > 0
+            ? `         <sub style="text-decoration:line-through">${res.price
+            }</sub>$ ${res.price - res.price * res.discount}`
             : res.price > 0
-            ? `$ ${res.price}`
-            : "Free"
-        }</div>
+              ? `$ ${res.price}`
+              : "Free"
+          }</div>
       
     </div>         `);
         $("#payment").html(`  <div class="row">
     <div class="col-md-12 col-sm-2 text-center h2">Items:1</div>
-    <div class="col-md-12 col-sm-2 border-top" value="${res.price}">Price:$${
-          res.price
-        }</div>
-    <div class="col-md-12 col-sm-2 "value="${res.discount}">Discount: $${
-          res.discount * res.price
-        }</div>
-    <div class="col-md-12 col-sm-2 border-top">Totals: $${
-      res.price - res.discount * res.price
-    }</div>
+    <div class="col-md-12 col-sm-2 border-top" value="${res.price}">Price:$${res.price
+          }</div>
+    <div class="col-md-12 col-sm-2 "value="${res.discount}">Discount: $${res.discount * res.price
+          }</div>
+    <div class="col-md-12 col-sm-2 border-top">Totals: $${res.price - res.discount * res.price
+          }</div>
     <div class="col-md-12 col-sm-2">
         <div class="row">
             <div class="col-6"><a class="btn btn-outline-info" href="index.php?action=shop">Back to shop</a> </div>
@@ -93,7 +81,7 @@ function view() {
     </div>
 </div>`);
       })
-      .catch((xhr, status, err) => {});
+      .catch((xhr, status, err) => { });
   }
 }
 function pay(e) {
@@ -109,8 +97,8 @@ function pay(e) {
             title: "Your work has been saved",
             showConfirmButton: false,
             timer: 500,
-          }).then((res) => {
-            window.location.replace("index.php?action=shop");
+          }).then(() => {
+            window.location.replace(`index.php?action=user&function=Order-History&id=${res.orderId}`);
           });
         } else {
           Swal.fire({
@@ -128,7 +116,7 @@ function pay(e) {
           });
         }
       })
-      .catch((xhr, status, err) => {})
+      .catch((xhr, status, err) => { })
       .finally(() => {
         $(e).text(`Payment`);
       });
@@ -153,8 +141,8 @@ function pay(e) {
             title: "Your work has been saved",
             showConfirmButton: false,
             timer: 500,
-          }).then((res) => {
-            window.location.replace("index.php?action=shop");
+          }).then(() => {
+            window.location.replace(`index.php?action=user&function=Order-History&id=${res.orderId}`);
           });
         } else {
           Swal.fire({

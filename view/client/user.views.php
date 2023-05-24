@@ -61,7 +61,7 @@
                         <div class="d-flex flex-column align-items-center text-center p-3 py-5">
                             <img class="rounded-circle mt-5 avatar" style="width:10em;height:10em;object-fit: cover" src="" alt="">
                             <label for="myfile" class="btn btn-light">Change avatar</label>
-                            <input class="form-control" userId=""  type="file" id="myfile" name="avatar" accept="image/png, image/gif, image/jpeg" id="updateFile" style="display:none">
+                            <input class="form-control" userId="" type="file" id="myfile" name="avatar" accept="image/png, image/gif, image/jpeg" id="updateFile" style="display:none">
                             <span class="font-weight-bold"></span>
                             <span class="text-black-50"></span>
                             <span> </span>
@@ -133,8 +133,8 @@
                                 <p style="color: #7e8d9f;font-size: 20px;">Invoice >> <strong class="id">ID: </strong></p>
                             </div>
                             <div class="col-xl-3 float-end">
-                                <a class="btn btn-light text-capitalize border-0" data-mdb-ripple-color="dark"><i class="fas fa-print text-primary"></i> Print</a>
-                                <a class="btn btn-light text-capitalize" data-mdb-ripple-color="dark"><i class="far fa-file-pdf text-danger"></i> Export</a>
+                                <a class="btn btn-light text-capitalize border-0" onclick="printHtml()" data-mdb-ripple-color="dark"><i class="fas fa-print text-primary"></i> Print</a>
+                                <a class="btn btn-light text-capitalize" id="export" data-mdb-ripple-color="dark"><i class="far fa-file-pdf text-danger"></i> Export</a>
                             </div>
                             <hr>
                         </div>

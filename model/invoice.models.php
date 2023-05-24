@@ -31,7 +31,7 @@ class invoice
             $update = "UPDATE user SET balance=balance-$total WHERE id=$this->userId";
             $db->send($update);
             $cart->deleteAll($this->userId);
-            return json_encode(array("status" => "success", "message" => "Payment success"));
+            return json_encode(array("status" => "success", "message" => "Payment success", "orderId" => $this->orderId));
         } else {
             return json_encode(array("status" => "fail", "message" => "Please add more money to your account"));
         }
@@ -58,7 +58,7 @@ class invoice
             $db->send($update);
             $query = "delete from cart where user_id=$this->userId and product_id=$product_id";
             $db->send($query);
-            return json_encode(array("status" => "success", "message" => "Payment success"));
+            return json_encode(array("status" => "success", "message" => "Payment success", "orderId" => $this->orderId));
         } else {
             return json_encode(array("status" => "fail", "message" => "Please add more money to your account"));
         }
