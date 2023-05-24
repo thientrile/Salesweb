@@ -36,6 +36,11 @@ switch ($method) {
                 case "checkCode": {
                         if (isset($_SESSION['code']) && isset($_POST['code']) && $_SESSION['code']['code'] == $_POST['code']) {
                             $_SESSION['checkCode'] = array("check" => $_SESSION['code']['code'] == $_POST['code'], "email" => $_SESSION['code']['email']);
+                            if (isset($_SESSION['code'])) {
+                                session_name("code");
+                                session_unset();
+                                session_destroy();
+                            }
                             echo json_encode(array("status" => "success"));
                         } else {
                             echo json_encode(array("status" => "failed"));
@@ -48,22 +53,26 @@ switch ($method) {
                         break;
                     }
                 case "signup": {
-                        if (isset($_SESSION['code'])) {
-                            // echo json_encode(array("status" => "success"));
 
-                            if (isset($_POST['code']) && $_POST['code'] == $_SESSION['code']['code']) {
-                                echo json_encode(array("status" => "success"));
-                                $User->userSign($_SESSION['code']['username'], $_SESSION['code']['email'], $_SESSION['code']['pswd']);
-                                $result = $User->getId($_SESSION['code']['email']);
-                                $_SESSION["s_user"] =  $result['id'];
-                                setcookie('c_user', md5($result['id']), time() + 86400);
-                            } else {
 
-                                echo json_encode(array("status" => "failed"));
+
+                        if (isset($_POST['code']) && $_POST['code'] == $_SESSION['code']['code']) {
+                            echo  $User->userSign($_SESSION['code']['username'], $_SESSION['code']['email'], $_SESSION['code']['pswd']);
+
+                            $result = $User->getId($_SESSION['code']['email']);
+                            $_SESSION["s_user"] =  $result['id'];
+
+                            setcookie('c_user', md5($result['id']), time() + 86400);
+                            if (isset($_SESSION['code'])) {
+                                session_name("code");
+                                session_unset();
+                                session_destroy();
                             }
                         } else {
+
                             echo json_encode(array("status" => "failed"));
                         }
+
 
                         break;
                     }
@@ -85,10 +94,7 @@ switch ($method) {
             }
             break;
         }
-    case "GET": {
-            echo json_encode(array("status" => "success", "method" => $method));
-            break;
-        }
+   
     default: {
             echo json_encode(array("status" => "success", "method" => $method));
             break;

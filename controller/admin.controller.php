@@ -52,6 +52,14 @@ switch (isset($_GET['function']) ? $_GET['function'] : 0) {
                                     echo $admin->addProductCate($_POST['name']);
                                     break;
                                 }
+                            case "arrow": {
+                                    if (isset($_GET['id'])) {
+                                        echo $admin->movieProduct($_GET['id'], isset($_POST['arrow']) ? $_POST['arrow'] : 1);
+                                    } else {
+                                        echo json_encode(array("staut" => "failed"));
+                                    }
+                                    break;
+                                }
                         }
                         break;
                     }
@@ -115,5 +123,4 @@ switch (isset($_GET['function']) ? $_GET['function'] : 0) {
             }
             break;
         }
-    
 }

@@ -89,7 +89,7 @@
                 <th scope="col">Status</th>
 
 
-                <th scope="col" id="page" colspan="2">
+                <th scope="col" id="page" colspan="3">
 
 
                 </th>

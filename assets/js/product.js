@@ -26,6 +26,19 @@ function navigateToPage(page) {
 
   // Gọi lại hàm tạo điều hướng phân trang với trang hiện tại mới
 }
+// movies rows
+function arrow(element, id, arrow) {
+ 
+  let Server = new server()
+  let data = new FormData();
+  data.append("arrow",arrow);
+Server.post(`action=admin&function=product&type=arrow&id=${id}`,data).then((res,req)=>{
+  loads()
+}).catch((xhr,status,error)=>{
+  console.log(xhr,status,error);
+})
+ 
+}
 // load products from the database
 function loads() {
   $("#form-data").removeClass("was-validated");
@@ -54,15 +67,17 @@ function loads() {
                 <td scope="row">${i.name}</td>
                 <td scope="row">${i.discount * 100}%</td>
                 <td scope="row">$${i.price}</td>
-                <td><button  type="button" class="btn btn-light" onclick="Hidden(this,${
-                  i.id
-                })">${i.hide == 0 ? "Show" : "Hidden"}</button></td>
-                <td scope="row"> <button onclick="load(${
-                  i.id
-                })" class="btn btn-success"data-bs-toggle="modal" data-bs-target="#myModal">Edit</button> </td>
-                <td scope="row"> <button onclick="del(this,${
-                  i.id
-                })" class="btn btn-danger">Delete</button> </td>
+                <td><button  type="button" class="btn btn-light" onclick="Hidden(this,${i.id
+          })">${i.hide == 0 ? "Show" : "Hidden"}</button></td>
+                <td ><div class="btn-group-vertical">
+                <button type="button" class="btn btn-outline-muted mb-2 btn-sm" onclick="arrow(this,${i.id},1)"><i class="fa-solid fa-arrow-up"></i></button>
+                <button type="button" class="btn btn-outline-muted btn-sm"onclick="arrow(this,${i.id},-1)"><i class="fa-solid fa-arrow-up fa-rotate-180"></i></button>
+              
+              </div></td>
+                <td scope="row"> <button onclick="load(${i.id
+          })" class="btn btn-success"data-bs-toggle="modal" data-bs-target="#myModal">Edit</button> </td>
+                <td scope="row"> <button onclick="del(this,${i.id
+          })" class="btn btn-danger">Delete</button> </td>
 
             </tr>
         `;
@@ -80,9 +95,8 @@ function getCate(id = 0) {
     .then((res, req) => {
       let view = "";
       res.forEach((i) => {
-        view += `<option value="${i.id}" ${id == i.id ? "selected" : ""}>${
-          i.name
-        }</option>`;
+        view += `<option value="${i.id}" ${id == i.id ? "selected" : ""}>${i.name
+          }</option>`;
       });
       $("#cate").html(` <option value="0" selected>All</option>` + view);
       $("#category").html(view);
@@ -367,7 +381,7 @@ function del(e, id) {
           .catch((xhr, status, error) => {
             console.log(xhr, status, error);
           })
-          .finailly(() => {});
+          .finailly(() => { });
       } else {
         $(e).text(`Delete`);
       }

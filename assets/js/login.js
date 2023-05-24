@@ -165,9 +165,7 @@ function checkSign(element, e) {
     .catch((xhr, status, error) => {
       console.log((xhr, status, error));
     })
-    .finally(() => {
-
-    });
+   
 }
 function forgotpass(element, e) {
   e.preventDefault();

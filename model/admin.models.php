@@ -6,7 +6,7 @@ class admin
     var $userid = null;
     var $countpage = 1;
     var $role = "";
- 
+
 
     function __construct($userid)
     {
@@ -14,7 +14,6 @@ class admin
         $this->userid = $userid;
         $this->check = $userInfor->getInfor($userid)[8] != 2;
         $this->role = $userInfor->getInfor($userid)[8];
-       
     }
     // Admin user || member
     // new user
@@ -180,7 +179,7 @@ class admin
         }
     }
     // Admin Proudct
-    function getProduct($pageNumber = 1, $cate = 0, $keyword = "", $view = 6)
+    function getProduct($pageNumber = 1, $cate = 0, $keyword = "", $view = 10)
     {
         $cc = new connect();
 
@@ -198,7 +197,7 @@ class admin
 
         $start = $view * $page - $view;
 
-        $select = "select product.id as id, title,img,source,category_id,description,sDescription, discount,price,created_at,updated_at, deleted, category.name as name, hide from product,category WHERE $Where  AND deleted=0 AND product.category_id=category.id LIMIT $start,6";
+        $select = "select product.id as id, title,img,source,category_id,description,sDescription, discount,price,created_at,updated_at, deleted, category.name as name, hide from product,category WHERE $Where  AND deleted=0 AND product.category_id=category.id ORDER BY position ASC LIMIT $start,6";
         $this->countpage = ceil($count[0] / $view);
 
         return $cc->getlist($select);
@@ -209,8 +208,9 @@ class admin
         $db = new connect();
         $result = false;
         if ($this->check && ($this->role == 1 || $this->role == 4 || $this->role == 8)) {
+            $count = $db->getonce("SELECT COUNT(*) FROM product")[0] + 1;
             $product_id = $db->getonce("SELECT MAX(id) FROM `product`")[0] + 1;
-            $insert = "INSERT INTO `product`(`id`, `title`, `img`, `source`, `category_id`, `description`, `sDescription`, `discount`, `price`, `created_at`, `updated_at`, `deleted`,`hide`) VALUES ('NULL','$title','assets/products/" . md5($product_id) . "/img/" . $fileAvatar['name'] . "','assets/products/" . md5($product_id) . "/src/" . $fileSrc['name'] . "','$cate','$desc','$sdesc','$discount','$price',default,default,default,default)";
+            $insert = "INSERT INTO `product`(`id`, `title`, `img`, `source`, `category_id`, `description`, `sDescription`, `discount`, `price`, `created_at`, `updated_at`, `deleted`,`hide`,`position`) VALUES ('NULL','$title','assets/products/" . md5($product_id) . "/img/" . $fileAvatar['name'] . "','assets/products/" . md5($product_id) . "/src/" . $fileSrc['name'] . "','$cate','$desc','$sdesc','$discount','$price',default,default,default,default, $count)";
             $result = $db->send($insert);
 
             mkdir("assets/products/" . md5($product_id), 0700);
@@ -304,6 +304,29 @@ class admin
         $insert = "INSERT INTO `category`(`id`, `name`) VALUES (default,'$name')";
         $result = $db->send($insert);
         echo json_encode(array("status" => $result));
+    }
+    // movies product
+    function movieProduct($id, $arrow = 1)
+    {
+
+        // với $arrow =1 là di chuyển lên còn lại là di chuyển xuống
+        $db = new connect();
+        $count = $db->getonce("SELECT COUNT(*) FROM product")[0];
+        $position = $db->getonce("SELECT position FROM `product` WHERE id=" . $id)[0];
+
+        switch ($arrow) {
+            case 1: {
+                    $db->send("UPDATE product set position=position+1 WHERE position =$position - 1 AND position+1<=(SELECT COUNT(*) FROM product )");
+                    $db->send("UPDATE product set position=position-1 WHERE id =$id AND position-1>=0");
+                    break;
+                }
+            default: {
+                    $db->send("UPDATE product set position=position-1 WHERE position =$position + 1 AND position-1>=0");
+                    $db->send("UPDATE product set position=position+1 WHERE id =$id AND position+1<=(SELECT COUNT(*) FROM product )");
+                    break;
+                }
+        }
+        return json_encode(array("status" => "success"));
     }
     function view_Order($year = "", $month = "", $currentPage = 1)
     {

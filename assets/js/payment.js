@@ -96,7 +96,7 @@ function pay(e) {
             icon: "success",
             title: "Your work has been saved",
             showConfirmButton: false,
-            timer: 500,
+            timer: 2000,
           }).then(() => {
             window.location.replace(`index.php?action=user&function=Order-History&id=${res.orderId}`);
           });
@@ -140,7 +140,7 @@ function pay(e) {
             icon: "success",
             title: "Your work has been saved",
             showConfirmButton: false,
-            timer: 500,
+            timer: 2000,
           }).then(() => {
             window.location.replace(`index.php?action=user&function=Order-History&id=${res.orderId}`);
           });
