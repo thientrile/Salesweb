@@ -83,10 +83,12 @@
 
                 <th scope="col">Author</th>
                 <th scope="col">Date Created</th>
+                <th scope="col">Status</th>
+                <th scope="col"></th>
 
 
 
-                <th colspan="3" scope="col" id="page">
+                <th colspan="2" scope="col" id="page">
 
 
                 </th>

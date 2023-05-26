@@ -76,10 +76,10 @@
 					<form action="" method="get">
 						<div class="row">
 							<div class="col-3" style="padding: 0;">
-								<select name="action" class="w-100 form-select input-group-text">
+								<select name="action" class="w-100 form-select input-group-text" id="select-search">
 									<option value="shop">Product</option>
-									<option value="Docs">Docs</option>
-									<option value="Blog">Blog</option>
+									<option value="docs">Docs</option>
+									<option value="blog">Blog</option>
 								</select>
 							</div>
 							<div class="col-9" style="padding: 0;">

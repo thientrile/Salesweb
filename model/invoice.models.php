@@ -98,7 +98,7 @@ class invoice
         while ($row = $result->fetch()) {
             array_push($array, $row);
         }
-        return json_encode($array);
+        return json_encode(array("status" => "succsee", "data" => $array, "page" => $this->countOrder));
     }
     function view_OrderDetail($orderId)
     {

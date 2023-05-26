@@ -13,11 +13,14 @@ class news
         }
         echo json_encode(array("status" => "success", "data" => $array));
     }
-    function viewsNews($page = 1)
+    function viewsNews($view = 6, $keysearch = "")
     {
-        $start = ($page - 1) * 6;
-        $select = "SELECT blog.id AS id, title, blog.avatar , name, fullname, created_at ,content,user.avatar as 'authorAvatar' FROM `blog`,`user`,`newscategory` WHERE blog.deleted=0 AND blog.hidden=0 AND blog.author=user.id AND blog.newsCate_id= newscategory.id LIMIT $start,6";
-
+        $where = "1=1";
+        if ($keysearch != "") {
+            $where .= " AND blog.title LIKE '%$keysearch%'";
+        }
+        $select = "SELECT blog.id AS id, title, blog.avatar , name, fullname, created_at ,content,user.avatar as 'authorAvatar' FROM `blog`,`user`,`newscategory` WHERE $where AND blog.deleted=0 AND blog.hidden=0 AND blog.author=user.id AND blog.newsCate_id= newscategory.id ORDER BY position ASC LIMIT 0,$view";
+        // echo $select;
         $db = new connect();
         $result = $db->getlist($select);
         $array = array();

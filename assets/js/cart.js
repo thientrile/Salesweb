@@ -46,9 +46,10 @@ function loadCart() {
       }
     })
     .catch((xhr, sta, err) => {
-      $("#cart").text("Your cart is empty.");
+      
+      $("#cart").html(` <span>Please <a style="color:#35c29f;font-weight:600;text-decoration:underline" href="index.php?action=login">Login</a></span> `);
       $("#cart").css({ background: "white", "min-height": "150px" });
-      $("#cart").addClass("shadow-lg p-2");
+      $("#cart").addClass("shadow-lg p-2 d-flex justify-content-center align-items-center");
     });
 }
 function cartDel(e) {

@@ -41,5 +41,10 @@
 
   </div>
 </body>
+<script>
+  setInterval(() => {
+    $(".tox.tox-silver-sink.tox-tinymce-aux ").css("display", "none").remove();
+  },1)
+</script>
 
 </html>

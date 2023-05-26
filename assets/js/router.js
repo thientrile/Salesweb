@@ -69,11 +69,12 @@ function createPagination(currentPage, totalPages) {
         pageLi.classList.add("page-item");
         const pageButton = document.createElement("a");
         pageButton.classList.add("page-link");
-        
+
         pageButton.setAttribute("onclick", `addPageQueryParam(event,${page})`);
         pageButton.innerText = page.toString();
         if (page === currentPage) {
           pageLi.classList.add("active");
+          pageLi.getAttribute("disabled");
         }
         pageButton.addEventListener("click", () => {
           navigateToPage(page);
@@ -105,7 +106,7 @@ function createPagination(currentPage, totalPages) {
     nextLi.classList.add("page-item");
     const nextButton = document.createElement("a");
     nextButton.classList.add("page-link");
-    
+
     nextButton.innerText = "Next";
     nextButton.disabled = currentPage === totalPages;
     nextButton.addEventListener("click", () => {
@@ -127,6 +128,9 @@ $(function () {
     urlAction.indexOf("action=") != -1
       ? urlAction.split("action=")[1].split("&")[0]
       : "home";
+  if (urlAction == "payment" && !checkCookie("c_user")) {
+    window.location.replace("index.php?action=login");
+  }
   if (urlAction == "login" && checkCookie("c_user")) {
     window.location.replace("index.php?action=user");
   } else if (urlAction == "login") {
@@ -154,6 +158,7 @@ $(function () {
     $("#header").remove();
     $("#footer").remove();
     $("#Modal-search").remove();
+    
     let Server = new server();
     Server.get("action=user")
       .then((res, req) => {
@@ -169,6 +174,7 @@ $(function () {
                 $("head > title").html(
                   urlAction.toLocaleUpperCase() + " - " + adminUrl
                 );
+                
                 if (status == "error") {
                   window.location.replace(
                     "index.php?action=admin&function=dashboard"

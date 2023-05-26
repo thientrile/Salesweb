@@ -311,7 +311,6 @@ class admin
 
         // với $arrow =1 là di chuyển lên còn lại là di chuyển xuống
         $db = new connect();
-        $count = $db->getonce("SELECT COUNT(*) FROM product")[0];
         $position = $db->getonce("SELECT position FROM `product` WHERE id=" . $id)[0];
 
         switch ($arrow) {
@@ -363,7 +362,10 @@ class admin
     function addnews($title, $avatar, $cateNews, $authorid, $content)
     {
         $db = new connect();
-        $insert = "INSERT INTO `blog` (`id`, `title`, `avatar`, `content`, `newsCate_id`, `author`, `created_at`) VALUES (NULL, '$title', '$avatar', ' $content', '$cateNews', '$authorid', current_timestamp())";
+        $title = addslashes($title);
+        $count = $db->getonce("SELECT COUNT(*) FROM `blog`")[0] + 1;
+
+        $insert = "INSERT INTO `blog`(`id`, `title`, `avatar`, `content`, `newsCate_id`, `author`, `created_at`, `deleted`, `hidden`, `position`) VALUES (NULL,'$title','$avatar','$content','$cateNews','$authorid',DEFAULT,DEFAULT,DEFAULT,'$count')";
         $result = $db->send($insert);
         echo json_encode(array("status" => $result));
     }
@@ -379,6 +381,9 @@ class admin
     function updateNews($id, $title, $avatar, $cateNews, $content)
     {
         $db = new connect();
+        $title = addslashes($title);
+        $content = addslashes($content);
+
         $update = "UPDATE `blog` SET `title`='$title',`avatar`='$avatar',`content`='$content',`newsCate_id`=' $cateNews',`created_at`= current_timestamp() WHERE id=$id";
         $result = $db->send($update);
         echo json_encode(array("status" => $result));
@@ -395,7 +400,7 @@ class admin
         if ($cate != 0) {
             $where .= " AND blog.newsCate_id=$cate";
         }
-        $select = "SELECT blog.id AS id, title, blog.avatar , name, fullname, created_at, blog.hidden as 'hidden' FROM `blog`,`user`,`newscategory` WHERE blog.deleted=0 AND  blog.author=user.id AND blog.newsCate_id= newscategory.id $where LIMIT $start,6";
+        $select = "SELECT blog.id AS id, title, blog.avatar , name, fullname, created_at, blog.hidden as 'hidden' FROM `blog`,`user`,`newscategory` WHERE blog.deleted=0 AND  blog.author=user.id AND blog.newsCate_id= newscategory.id $where ORDER BY position ASC LIMIT $start,6";
         $db = new connect();
 
         $result = $db->getlist($select);
@@ -422,5 +427,26 @@ class admin
         $update = "UPDATE `blog` SET `hidden`= IF(`hidden` = 1, 0, 1) WHERE id=$id";
         $result = $db->send($update);
         return json_encode(array("status" => $result ? "success" : "failed"));
+    }
+    function newsProduct($id, $arrow = 1)
+    {
+
+        // với $arrow =1 là di chuyển lên còn lại là di chuyển xuống
+        $db = new connect();
+        $position = $db->getonce("SELECT position FROM `blog` WHERE id=" . $id)[0];
+
+        switch ($arrow) {
+            case 1: {
+                    $db->send("UPDATE blog set position=position+1 WHERE position =$position - 1 AND position+1<=(SELECT COUNT(*) FROM blog )");
+                    $db->send("UPDATE blog set position=position-1 WHERE id =$id AND position-1>=0");
+                    break;
+                }
+            default: {
+                    $db->send("UPDATE blog set position=position-1 WHERE position =$position + 1 AND position-1>=0");
+                    $db->send("UPDATE blog set position=position+1 WHERE id =$id AND position+1<=(SELECT COUNT(*) FROM blog )");
+                    break;
+                }
+        }
+        return json_encode(array("status" => "success"));
     }
 }

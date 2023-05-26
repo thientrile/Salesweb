@@ -176,6 +176,8 @@
                                             <th scope="col">Discount</th>
                                             <th scope="col">Unit Price</th>
                                             <th scope="col">Amount</th>
+                                            <th scope="col"></th>
+                                            <th scope="col" id="page"></th>
                                         </tr>
                                     </thead>
                                     <tbody id="detail">

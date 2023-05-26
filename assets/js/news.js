@@ -28,9 +28,8 @@ function loadcate(id = 0) {
     .then((res, req) => {
       let options = "";
       for (let i of res.data) {
-        options += `<option value="${i.id}"${i.id == id ? "selected" : ""}>${
-          i.name
-        }</option>`;
+        options += `<option value="${i.id}"${i.id == id ? "selected" : ""}>${i.name
+          }</option>`;
       }
       $("#category").html(options);
       $("#cate").html(`<option value="0" selected="">All</option>` + options);
@@ -63,7 +62,7 @@ function insertNews(e) {
       createNews();
     })
     .catch((xhr, status, error) => {
-      console.log(xhr, status, error);
+      console.log(xhr.responseText, status, error);
     });
 }
 function addCate() {
@@ -96,6 +95,18 @@ function showAddCate(element) {
     $("#newCate").remove();
   }
 }
+function arrow(element, id, arrow) {
+
+  let Server = new server()
+  let data = new FormData();
+  data.append("arrow", arrow);
+  Server.post(`action=admin&function=news&type=arrow&id=${id}`, data).then((res, req) => {
+    views();
+  }).catch((xhr, status, error) => {
+    console.log(xhr, status, error);
+  })
+
+}
 function views() {
   let Server = new server();
   Server.get(
@@ -120,17 +131,18 @@ function views() {
         </td>
         <td>${i.fullname}</td>
         <td>${i.created_at}</td>
-        <td><button class="btn ${
-          i.hidden == 0 ? "btn-light-danger" : "btn-outline-light-danger"
-        } btn-light-danger" onclick="Hidden(this,${i.id})">${
-          i.hidden == 0 ? "Show" : "Hidden"
-        }</button> </td>
-        <td> <button class="btn btn-danger-light" onclick="view(${
-          i.id
-        }) " data-bs-toggle="modal" data-bs-target="#myModal">Edit</button> </td>
-        <td> <button class="btn btn-danger" onclick="del(this,${
-          i.id
-        })">Deleted</button> </td>
+        <td><button class="btn ${i.hidden == 0 ? "btn-light-danger" : "btn-outline-light-danger"
+          } btn-light-danger" onclick="Hidden(this,${i.id})">${i.hidden == 0 ? "Show" : "Hidden"
+          }</button> </td>
+        <td ><div class="btn-group-vertical">
+                <button type="button" class="btn btn-outline-muted mb-2 btn-sm" onclick="arrow(this,${i.id},1)"><i class="fa-solid fa-arrow-up"></i></button>
+                <button type="button" class="btn btn-outline-muted btn-sm"onclick="arrow(this,${i.id},-1)"><i class="fa-solid fa-arrow-up fa-rotate-180"></i></button>
+              
+              </div></td>
+        <td> <button class="btn btn-danger-light" onclick="view(${i.id
+          }) " data-bs-toggle="modal" data-bs-target="#myModal">Edit</button> </td>
+        <td> <button class="btn btn-danger" onclick="del(this,${i.id
+          })">Deleted</button> </td>
 
 
     </tr>`;
@@ -143,6 +155,7 @@ function views() {
 }
 function view(id) {
   let Server = new server();
+  $("#img").removeAttr("required");
 
   Server.get(`action=blog&function=views&id=${id}`)
     .then((res, req) => {

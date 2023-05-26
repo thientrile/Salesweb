@@ -108,6 +108,14 @@ switch (isset($_GET['function']) ? $_GET['function'] : 0) {
                                     echo $admin->hiddenNews($_POST['id']);
                                     break;
                                 }
+                            case "arrow": {
+                                    if (isset($_GET['id'])) {
+                                        echo $admin->newsProduct($_GET['id'], isset($_POST['arrow']) ? $_POST['arrow'] : 1);
+                                    } else {
+                                        echo json_encode(array("staut" => "failed"));
+                                    }
+                                    break;
+                                }
                         }
                         break;
                     }

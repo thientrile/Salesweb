@@ -35,27 +35,26 @@ function loadproducts(href = "") {
       for (let i of res.data) {
         let price =
           i.discount > 0
-            ? `         <sub style="text-decoration:line-through">${
-                i.price
-              }</sub>$ ${i.price - i.price * i.discount}`
+            ? `         <sub style="text-decoration:line-through">${i.price
+            }</sub>$ ${i.price - i.price * i.discount}`
             : i.price > 0
-            ? `$ ${i.price}`
-            : "Free";
+              ? `$ ${i.price}`
+              : "Free";
 
         result += `
           <div class="col-lg-4 col-md-6">
               <div class="card">
                   <div class="creative-img-cover">
                       <img class="card-img-top" src="${i.img}" alt="" style="width: 100%; min-height:200px" />
-                      <div class="creative-icon">
+                      <div class="creative-icon" id="creative-icon-${i.id}">
                           <span class="plus" style="--bg: #fff; --color: #34b7ae">
-                              <a href="index.php?action=shop&id=${i.id}">
+                              <a href="index.php?action=payment&id=${i.id}">
     
     
                                   <i class="fa-solid fa-plus"></i>
                               </a>
                           </span>
-                          <span class="cart" style="--bg: #34b7ae; --color: #fff"><a href="index.php?action=cart"><i class="fa-solid fa-cart-shopping"></i></a>
+                          <span class="cart" style="--bg: #34b7ae; --color: #fff;cursor:pointer"><a onclick=" toCart(${i.id})"><i class="fa-solid fa-cart-shopping"></i></a>
                           </span>
                       </div>
                   </div>
@@ -76,8 +75,9 @@ function loadproducts(href = "") {
               </div>
           </div>
     `;
+        $("#product").html(result);
+        checkLibary(i.id)
       }
-      $("#product").html(result);
     })
     .catch((xhr, statu, error) => {
       console.log(xhr, statu, error);
@@ -112,12 +112,11 @@ function loadproduct() {
           (data, req = "") => {
             let price =
               res.discount > 0
-                ? `         <sub style="text-decoration:line-through">${
-                    res.price
-                  }</sub>$ ${res.price - res.price * res.discount}`
+                ? `         <sub style="text-decoration:line-through">${res.price
+                }</sub>$ ${res.price - res.price * res.discount}`
                 : res.price > 0
-                ? `$ ${res.price}`
-                : "Free";
+                  ? `$ ${res.price}`
+                  : "Free";
             let indicators = "";
             let inner = "";
             for (let i = 0; i < data.length; i++) {
@@ -263,6 +262,19 @@ function addcart(id, e) {
       checkcart();
     });
 }
+function toCart(id) {
+  let data = new FormData()
+  let Server = new server();
+  data.append("id", id);
+  Server.post("action=cart", data).then((res, req) => {
+    // window.location.replace("index.php?action=cart");
+  })
+    .catch((xhr, status, error) => {
+      console.log(xhr);
+    }).finally(() => {
+      window.location.href = "index.php?action=cart";
+    });
+}
 function checkcart() {
   let id = window.location.href.split("id=")[1].split("&")[0];
   let Server = new server();
@@ -280,27 +292,44 @@ function checkLibary(id) {
   let Server = new server();
   Server.get(`action=payment&function=check_Library&id=${id}`)
     .then((res, req) => {
-      $("#view-btn").html(
-        checkCookie("c_user") == true
-          ? res.message == true
-            ? `<a href="index.php?action=library" class="btn btn-outline-info">View Library</a>`
-            : `  <a href="index.php?action=payment&id=${id}" class="btn btn-success px-4">Buy</a> <br> <button id="addcart" onclick="addcart(${id})" class="btn btn-warning">Add to cart</button>`
-          : `<a href="index.php?action=login" class="btn btn-primary">Login</a>`
-      );
-      checkcart();
+      if (window.location.href.search("act=detail&id=") != -1) {
+
+        $("#view-btn").html(
+          checkCookie("c_user") == true
+            ? res.message == true
+              ? `<a href="index.php?action=library" class="btn btn-outline-info">View Library</a>`
+              : `  <a href="index.php?action=payment&id=${id}" class="btn btn-success px-4">Buy</a> <br> <button id="addcart" onclick="addcart(${id})" class="btn btn-warning">Add to cart</button>`
+            : `<a href="index.php?action=login" class="btn btn-primary">Login</a>`
+        );
+        checkcart();
+      }
+      else {
+        if (res.message) {
+          $(`#creative-icon-${id}`).html(` <span class="plus" style="--bg: #fff; --color: #34b7ae"><a href="index.php?action=shop&id=${id}">
+    
+    
+      <i class="fa-solid fa-eye"></i>
+  </a> </span>`)
+        }
+      }
     })
     .catch((xhr, status, error) => {
-      $("#view-btn").html(
-        checkCookie("c_user") == true
-          ? `  <a href="index.php?action=payment&id=${id}" class="btn btn-success px-4">Buy</a> <br> <button id="addcart" onclick="addcart(${id})" class="btn btn-warning">Add to cart</button>`
-          : `<a href="index.php?action=login" class="btn btn-primary">Login</a>`
-      );
+      if (window.location.href.search("shop&id=") != -1) {
+
+        $("#view-btn").html(
+
+          checkCookie("c_user") == true
+            ? `  <a href="index.php?action=payment&id=${id}" class="btn btn-success px-4">Buy</a> <br> <button id="addcart" onclick="addcart(${id})" class="btn btn-warning">Add to cart</button>`
+            : `<a href="index.php?action=login" class="btn btn-primary">Login</a>`
+        );
+      }
       console.log(xhr, status, error);
     });
 }
 $(document).ready(function () {
   if (window.location.href.indexOf("id=") != -1) {
     loadproduct();
+
   } else {
     loadproducts();
   }

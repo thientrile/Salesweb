@@ -43,5 +43,19 @@ function countCart() {
     });
 }
 $(document).ready(() => {
+  let url = window.location.href;
   countCart();
+  if (url.search("action=") != -1) {
+    console.log(url.split("?action=")[1].split("&")[0]);
+    let modelSearchOptions = document.querySelectorAll("#select-search > option");
+
+    modelSearchOptions.forEach(item => {
+      console.log(item);
+      if (item.value == url.split("?action=")[1].split("&")[0]) {
+
+        item.setAttribute("selected", "");
+      }
+
+    })
+  }
 });

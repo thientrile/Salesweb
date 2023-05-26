@@ -48,9 +48,9 @@ function loadOrders() {
   let Server = new server();
   Server.get("action=payment&function=order")
     .then((res, req) => {
-      if (res.length > 0) {
+      if (res.data.length > 0) {
         let result = "";
-        for (let i of res) {
+        for (let i of res.data) {
           let created = new Date(i.date_order);
           let currentDate = new Date();
           let timeDiff = currentDate - created;

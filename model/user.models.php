@@ -74,11 +74,11 @@ class user
     //cập nhật ảnh đại diện của người dùng
     function upAvatar($id, $file)
     {
-        $target_dir = "assets/user/" . $id . "/avatar/";
+        $target_dir = "assets/user/" . md5($id) . "/avatar/";
         $target_file = $target_dir . basename($file["name"]);
 
         move_uploaded_file($file["tmp_name"], $target_file);
-        $update = "UPDATE `user` SET avatar='" . $file["name"] . "' WHERE id=" . $id;
+        $update = "UPDATE `user` SET avatar='assets/user/" .  md5($id) . "/avatar/" . $file["name"] . "' WHERE id=" . $id;
         $db = new connect();
         $result = $db->send($update);
         return json_encode(array("status" => $result ? "success" : "error"));
