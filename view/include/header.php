@@ -54,8 +54,8 @@
 				<a href="index.php?action=cart" class="heading-icon me-4"><i class="fa-solid fa-cart-shopping"></i>
 					<span id="countCart">0</span>
 				</a>
-				<button style="background: transparent; border: none" class="heading-icon me-4">
-					<i class="fa-solid fa-magnifying-glass" data-bs-toggle="modal" data-bs-target="#Modal-search"></i>
+				<button style="background: transparent; border: none" class="heading-icon me-4" onclick="typeSearch()" data-bs-toggle="modal" data-bs-target="#Modal-search">
+					<i class="fa-solid fa-magnifying-glass"></i>
 				</button>
 				<button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#right">
 					<i class="fa-solid fa-bars"></i>

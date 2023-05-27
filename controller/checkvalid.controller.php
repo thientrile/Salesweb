@@ -36,11 +36,7 @@ switch ($method) {
                 case "checkCode": {
                         if (isset($_SESSION['code']) && isset($_POST['code']) && $_SESSION['code']['code'] == $_POST['code']) {
                             $_SESSION['checkCode'] = array("check" => $_SESSION['code']['code'] == $_POST['code'], "email" => $_SESSION['code']['email']);
-                            if (isset($_SESSION['code'])) {
-                                session_name("code");
-                                session_unset();
-                                session_destroy();
-                            }
+
                             echo json_encode(array("status" => "success"));
                         } else {
                             echo json_encode(array("status" => "failed"));
@@ -49,7 +45,13 @@ switch ($method) {
                         break;
                     }
                 case "newPass": {
+                        if (isset($_SESSION['checkCode']) && $_SESSION['checkCode']['check']) {
+                            $User->updatePassword($_SESSION['checkCode']['email'], md5($_POST['pswd']));
 
+                            echo json_encode(array("status" => "success"));
+                        } else {
+                            echo json_encode(array("status" => "failed"));
+                        }
                         break;
                     }
                 case "signup": {
@@ -94,7 +96,7 @@ switch ($method) {
             }
             break;
         }
-   
+
     default: {
             echo json_encode(array("status" => "success", "method" => $method));
             break;

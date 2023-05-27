@@ -42,11 +42,9 @@ function countCart() {
       $("#countCart").text(0);
     });
 }
-$(document).ready(() => {
+function typeSearch() {
   let url = window.location.href;
-  countCart();
   if (url.search("action=") != -1) {
-    console.log(url.split("?action=")[1].split("&")[0]);
     let modelSearchOptions = document.querySelectorAll("#select-search > option");
 
     modelSearchOptions.forEach(item => {
@@ -58,4 +56,8 @@ $(document).ready(() => {
 
     })
   }
+}
+$(document).ready(() => {
+  countCart();
+
 });

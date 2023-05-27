@@ -242,9 +242,5 @@
         </form>
     </div>
 </div>
-<style>
-    .tox.tox-silver-sink tox-tinymce-aux {
-        display: none;
-    }
-</style>
+
 <script src="./assets/js/product.js"></script>

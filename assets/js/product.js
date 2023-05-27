@@ -346,8 +346,20 @@ function update(e) {
   let Server = new server();
   Server.post(`action=admin&function=product&id=${id}`, formData)
     .then((res, req) => {
-      load(id);
-      loads();
+      Swal.fire({
+        position: 'bottom-start',
+
+      
+        icon: 'success',
+        title: 'The product has been successfully added',
+        showConfirmButton: false,
+        timer: 1000
+      }).then(() => {
+
+        load(id);
+        loads();
+      })
+
     })
     .catch((xhr, status, error) => {
       console.log(xhr, status, error);
@@ -412,8 +424,17 @@ function addNew(e) {
   let Server = new server();
   Server.post(`action=admin&function=product`, formData)
     .then((res, req) => {
-      loads();
-      Reset();
+      Swal.fire({
+        position: 'bottom-start',
+        icon: 'success',
+        title: 'The product has been successfully added',
+        showConfirmButton: false,
+        timer: 1500
+      }).then(() => {
+
+        loads();
+        Reset();
+      })
     })
     .catch((xhr, status, error) => {
       console.log(xhr, status, error);

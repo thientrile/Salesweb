@@ -40,8 +40,8 @@ const formCode = `<div class="confirm">
 const formpswd = `<div class="password">
 <form id="new-pswd" onsubmit="changePassword(this, event)">
     <label for="pswd">Enter your new password</label>
-    <input type="text" name="pswdConfirm"oninput="checkpswd(this)">    
-    <button type="submit" name="btnPswd">Confirm</button>
+    <input type="text" name="pswd"oninput="checkpswd(this)">    
+    <button type="submit" >Confirm</button>
 </form>
 </div>`;
 
@@ -134,17 +134,36 @@ function Login(element, e) {
 function Sigin(element, e) {
   let data = new FormData(element);
   e.preventDefault();
-  let Server = new server();
-  Server.post("action=checkvalid&function=codeSigup", data)
-    .then((res, req) => {
-      if (res.status == "success") {
-        code();
-        $("#form-code").attr({ onsubmit: "checkSign(this,event)" });
-      }
-    })
-    .catch((xhr, status, error) => {
-      console.log(xhr.responseText, status, error);
-    });
+  let timerInterval
+  Swal.fire({
+    title: 'We will send a confirmation email',
+    html: 'please open your email to get the confirmation code after <b></b> mini seconds',
+    timer: 3000,
+    timerProgressBar: true,
+    didOpen: () => {
+      Swal.showLoading()
+      const b = Swal.getHtmlContainer().querySelector('b')
+      timerInterval = setInterval(() => {
+        b.textContent = Swal.getTimerLeft()
+      }, 100)
+      let Server = new server();
+      Server.post("action=checkvalid&function=codeSigup", data)
+        .then((res, req) => {
+          if (res.status == "success") {
+            code();
+            $("#form-code").attr({ onsubmit: "checkSign(this,event)" });
+
+          }
+        })
+        .catch((xhr, status, error) => {
+          console.log(xhr.responseText, status, error);
+        });
+    },
+    willClose: () => {
+      clearInterval(timerInterval)
+    }
+  })
+
 }
 function checkSign(element, e) {
   e.preventDefault();
@@ -165,25 +184,43 @@ function checkSign(element, e) {
     .catch((xhr, status, error) => {
       console.log((xhr, status, error));
     })
-   
+
 }
 function forgotpass(element, e) {
   e.preventDefault();
   let data = new FormData(element);
-  let Server = new server();
-  Server.post("action=checkvalid&function=codeForgot", data)
-    .then((res, req) => {
-      if (res.status == "success") {
-        $("#form-email .error").hide();
-        code();
-        $("#form-code").attr({ onsubmit: "checkCode(this, event)" });
-      } else {
-        $("#form-email .error").css("display", "flex");
-      }
-    })
-    .catch((xhr, status, error) => {
-      console.log(xhr.responseText);
-    });
+  let timerInterval
+  Swal.fire({
+    title: 'We will send a confirmation email',
+    html: 'please open your email to get the confirmation code after <b></b> mini seconds',
+    timer: 3000,
+    timerProgressBar: true,
+    didOpen: () => {
+      Swal.showLoading()
+      const b = Swal.getHtmlContainer().querySelector('b')
+      timerInterval = setInterval(() => {
+        b.textContent = Swal.getTimerLeft()
+      }, 100)
+      let Server = new server();
+      Server.post("action=checkvalid&function=codeForgot", data)
+        .then((res, req) => {
+          if (res.status == "success") {
+            $("#form-email .error").hide();
+            code();
+            $("#form-code").attr({ onsubmit: "checkCode(this, event)" });
+          } else {
+            $("#form-email .error").css("display", "flex");
+          }
+        })
+        .catch((xhr, status, error) => {
+          console.log(xhr.responseText);
+        });
+    },
+    willClose: () => {
+      clearInterval(timerInterval)
+    }
+  })
+
 }
 function checkCode(element, e) {
   e.preventDefault();
@@ -206,5 +243,11 @@ function checkCode(element, e) {
 function changePassword(element, e) {
   e.preventDefault();
   let data = new FormData(element);
+  let Server = new server();
+  Server.post("action=checkvalid&function=newPass", data).then((res, req) => {
+    if (res.status == "success") {
+      window.location.reload();
+    }
+  }).catch((xhr, status, error) => { })
 
 }
