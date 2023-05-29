@@ -8,11 +8,6 @@ switch (isset($_GET['function']) ? $_GET['function'] : 0) {
             echo json_encode(array("status" => "success"));
             break;
         }
-
-        /* `case "product": {` is a switch case statement that checks if the value of the `['function']`
-   parameter is equal to "product". If it is, the code inside the case statement will be executed.
-   This code handles different HTTP requests related to product management, such as getting product
-   information, adding or updating products, and deleting products or galleries. */
     case "product": {
             // Product Management
             switch ($method) {
@@ -82,12 +77,9 @@ switch (isset($_GET['function']) ? $_GET['function'] : 0) {
         // news management
 
     case "news": {
-
-
             switch ($method) {
                 case "GET": {
                         echo $admin->viewsNews(isset($_GET['page']) ? $_GET['page'] : 1, isset($_GET['keySearch']) ? $_GET['keySearch'] : "", isset($_GET['cate']) ? $_GET['cate'] : 0);
-
                         break;
                     }
                 case "POST": {
@@ -105,12 +97,17 @@ switch (isset($_GET['function']) ? $_GET['function'] : 0) {
                                     break;
                                 }
                             case "hidden": {
-                                    echo $admin->hiddenNews($_POST['id']);
+                                    if (isset($_POST['cate_id'])) {
+                                        echo $admin->hiddenProductCate($_POST['cate_id']);
+                                    } else {
+
+                                        echo $admin->hiddenNews($_POST['id']);
+                                    }
                                     break;
                                 }
                             case "arrow": {
                                     if (isset($_GET['id'])) {
-                                        echo $admin->newsProduct($_GET['id'], isset($_POST['arrow']) ? $_POST['arrow'] : 1);
+                                        echo $admin->newsPosition($_GET['id'], isset($_POST['arrow']) ? $_POST['arrow'] : 1);
                                     } else {
                                         echo json_encode(array("staut" => "failed"));
                                     }
