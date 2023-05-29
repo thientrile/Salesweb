@@ -1,5 +1,4 @@
-<style>
-    .searchbar {
+<style>    .searchbar {
         margin-bottom: auto;
         margin-top: auto;
         height: 40px;
@@ -68,13 +67,12 @@
     </div>
     <div class="shadow-lg  p-4  d-flex justify-content-center">
         <button onclick="Reset()" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#myModal">Add product <i class="fa-solid fa-plus mx-2"></i></button>
+    </div>
+    <div class="shadow-lg  p-4  d-flex justify-content-center">
+        <button onclick="" class="btn  btn-outline-success" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">Category manager<i class="fa-solid fa-bars mx-2"></i></i></button>
 
     </div>
-
-
-
 </div>
-
 <div class="table-responsive-md shadow-lg mt-2 p-5 rounded-2 border-2">
     <table class="table table-hover  ">
         <thead class="table-success">
@@ -242,5 +240,13 @@
         </form>
     </div>
 </div>
-
+<div class="offcanvas offcanvas-end" data-bs-backdrop="static" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
+    <div class="offcanvas-header">
+        <h5 class="offcanvas-title" id="offcanvasRightLabel">Offcanvas right</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body">
+        ...
+    </div>
+</div>
 <script src="./assets/js/product.js"></script>
