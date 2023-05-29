@@ -290,6 +290,18 @@ class admin
             return json_encode(array("status" => $result));
         }
     }
+    function hiddenProductCate($cate_id)
+    {
+        $db = new connect();
+
+
+        $update = "UPDATE `category` SET hidden = IF(hidden = 1, 0, 1) WHERE id = $cate_id;
+
+        UPDATE `product` SET hide = (SELECT hidden FROM `category` WHERE id = $cate_id) WHERE category_id = $cate_id;
+        ";
+        $result = $db->send($update);
+        return json_encode(array("status" => $result));
+    }
     function delGallery($id)
     {
         if ($this->check && ($this->role == 1 || $this->role == 4 || $this->role == 6)) {
@@ -428,7 +440,7 @@ class admin
         $result = $db->send($update);
         return json_encode(array("status" => $result ? "success" : "failed"));
     }
-    function newsProduct($id, $arrow = 1)
+    function newsPosition($id, $arrow = 1)
     {
 
         // với $arrow =1 là di chuyển lên còn lại là di chuyển xuống
