@@ -1,5 +1,5 @@
-var totalPages = 1;
-var currentPages = 1;
+// var totalPages = 1;
+// var currentPages = 1;
 
 
 function navigateToPage(page) {
@@ -27,12 +27,21 @@ function loadcate(id = 0) {
   Server.get("action=blog&function=cate")
     .then((res, req) => {
       let options = "";
+      let managenment = "";
       for (let i of res.data) {
-        options += `<option value="${i.id}"${i.id == id ? "selected" : ""}>${i.name
+        options += `<option value="${i.id}"${i.id == id ? "selected" : ""}>${i.id != 0 ? i.name : "--Select--"
           }</option>`;
+        managenment += i.id == 0 ? "" : `<tr>
+          
+          <td>${i.name}</td>
+          <td><button type="button" class="btn" onclick=" hiddenCate(${i.id}) ">${i.hidden == 0 ? `<i class="fa-solid fa-eye"></i>` : `<i class="fa-solid fa-eye-slash"></i>`}</button></td>
+         <td><button type="button" class="btn btn-outline-danger" onclick="delCate(${i.id})">Deleted</button></td>
+          
+        </tr>`;
       }
+      $("#cate-management").html(managenment);
       $("#category").html(options);
-      $("#cate").html(`<option value="0" selected="">All</option>` + options);
+      $("#cate").html(options);
     })
     .catch((xhr, status, error) => {
       console.log(xhr, status, error);
@@ -231,16 +240,51 @@ function del(e, id) {
 }
 function Hidden(e, id) {
   let data = new FormData();
-  let text = $(e).text() == "Hidden" ? "Show" : "Hidden";
+
   data.append("id", id);
   let Server = new server();
   Server.post("action=admin&function=news&type=hidden", data)
     .then((res, req) => {
-      $(e).text(text);
+      views();
     })
     .catch((xhr, status, error) => {
       console.log(xhr, status, error);
     });
+}
+function hiddenCate(id) {
+  let data = new FormData();
+  data.append("id", id);
+  let Server = new server();
+  Server.post("action=admin&function=news&type=hiddenCate", data).then((res, req) => {
+    loadcate();
+    views();
+  }).catch((xhr, status, error) => {
+    console.log(xhr);
+  })
+}
+function delCate(id) {
+  let data = new FormData();
+  let Server = new server();
+  Server.delete(`action=admin&function=news&type=cate&id=${id}`, data).then((res, req) => {
+
+    loadcate();
+    views();
+
+  }).catch((xhr, status, error) => {
+    console.log(xhr.responseText);
+  })
+}
+function managerCate(e, form) {
+  e.preventDefault()
+  let data = new FormData(form);
+  let Server = new server();
+  Server.post("action=admin&function=news&type=category", data).then((res, req) => {
+
+    loadcate();
+    form.reset();
+  }).catch((xhr, status, error) => {
+    console.log(xhr);
+  })
 }
 $(function () {
   loadcate();

@@ -12,8 +12,8 @@ class admin
     {
         $userInfor = new user();
         $this->userid = $userid;
-        $this->check = $userInfor->getInfor($userid)[8] != 2;
-        $this->role = $userInfor->getInfor($userid)[8];
+        $this->check = $userInfor->getInfor($userid)['role_id'] != 2;
+        $this->role = $userInfor->getInfor($userid)['role_id'];
     }
     // Admin user || member
     // new user
@@ -37,30 +37,29 @@ class admin
             if ($this->checkEmailExit($email) == false) {
 
                 $query = "insert into user(id, avatar, fullname, balance, email, phone_number, address, pass, role_id, deleted) values (NULL,default,'$username',default,'$email','$phonenumber','$address','$pass','$type',default)";
-                $db->send($query);
+                $result = $db->send($query);
                 $select = "SELECT id FROM `user` where email = '$email' and deleted=0";
                 $db->getonce($select);
                 mkdir("assets/user/" . md5($db->getonce($select)[0]), 0700);
                 mkdir("assets/user/" . md5($db->getonce($select)[0]) . "/avatar", 0700);
-                copy("assets/avatar/people.png", "assets/user/" . md5($db->getonce($select)[0]) . "/avatar/people.png");
-                return true;
+                return json_encode(array("status" => $result ? "success" : "failed"));
             }
         }
 
-        return false;
+        return json_encode(array("status" =>  "failed"));;
     }
     // display list all users
-    function viewListUser($pageNumber = 1, $keyword = "", $role_id = "")
+    function viewListUser($pageNumber = 1, $keyword = "", $role_id = 0)
     {
         $db = new connect();
-
         $result = null;
+        $views = 6;
         if ($this->check) {
             $Where = "1=1";
             if ($keyword != "") {
-                $Where .= " AND (fullname LIKE '%$keyword%' OR email LIKE '%$keyword%' or id LIKE '%$keyword%')";
+                $Where .= " AND (fullname LIKE '%$keyword%' OR email LIKE '%$keyword%' or user.id LIKE '%$keyword%')";
             }
-            if ($role_id != "") {
+            if ($role_id != 0) {
                 $Where .= " AND role_id='$role_id'";
             }
             if ($this->role % 2 == 0) {
@@ -71,16 +70,17 @@ class admin
                 $Where .= " AND role_id >3";
             }
             $count = $db->getonce("SELECT COUNT(*) FROM `user` WHERE $Where and deleted =0 and id <>" . $this->userid);
-            $page = $pageNumber > 0 && ($pageNumber <= ceil($count[0] / 6)) ? $pageNumber : 1;
-
-            $start = 6 * $page - 6;
-            $end = 6 * $page;
-            $select = "SELECT * FROM `user` WHERE $Where and deleted =0 and id <>" . $this->userid . " LIMIT $start,$end";
-
+            $page = $pageNumber > 0 && ($pageNumber <= ceil($count[0] / $views)) ? $pageNumber : 1;
+            $start =  $views * $page -  $views;
+            $select = "SELECT user.id as id, avatar, fullname,balance,email,phone_number,address,role_id,role.name as roleName, deleted FROM `user`,`role` WHERE $Where and user.role_id=role.id  and deleted =0 and user.id <>" . $this->userid . " LIMIT $start, $views";
             $result = $db->getlist($select);
-            $this->countpage = ceil($count[0] / 6);
+            $this->countpage = ceil($count[0] /  $views);
+            $arrray = array();
+            while ($row = $result->fetch()) {
+                array_push($arrray, $row);
+            }
         }
-        return $result;
+        return json_encode(array("status" => "success", "data" => $arrray, "page" => $this->countpage));
     }
     // show account permissions
     function viewRole($roleid)
@@ -113,9 +113,13 @@ class admin
 
                 $select = "SELECT * FROM `role` WHERE $Where";
                 $result = $db->getlist($select);
+                $array = array();
+                while ($row = $result->fetch()) {
+                    array_push($array, $row);
+                }
             }
         }
-        return $result;
+        return json_encode(array("stauts" => "success", "data" => $array));
     }
 
     // delete account
@@ -124,21 +128,22 @@ class admin
         $db = new connect();
         $result = false;
         if ($this->check && ($this->role == 1 || $this->role == 3 || $this->role == 9)) {
-            $update = "UPDATE `user` SET `deleted`=1 WHERE id=" . $userid;
+            $update = "UPDATE `user` SET `deleted`= ".time()." WHERE id= $userid;" ;
             $result = $db->send($update);
         }
-        return $result;
+        return json_encode(array("status" => $result ? "success" : "failed"));
     }
     // update avatar user
+
     function updateAvatar($id, $file)
     {
-        if ($this->check && ($this->role == 1 || $this->role == 3 || $this->role == 5)) {
+        if ($this->check && ($this->role == 1 || $this->role == 3 || $this->role == 5) && !empty($file['name'])) {
 
             $target_dir = "assets/user/" . md5($id) . "/avatar/";
             $target_file = $target_dir . basename($file["name"]);
 
             move_uploaded_file($file["tmp_name"], $target_file);
-            $update = "UPDATE `user` SET avatar='" . $file["name"] . "' WHERE id=" . $id;
+            $update = "UPDATE `user` SET avatar='assets/user/" . md5($id) . "/avatar/" . $file["name"] . "' WHERE id=" . $id;
             $db = new connect();
             $db->send($update);
         }
@@ -302,6 +307,23 @@ class admin
         $result = $db->send($update);
         return json_encode(array("status" => $result));
     }
+    function delProductCate($cateid)
+    {
+        $db = new connect();
+        $query = "UPDATE `product` SET `category_id`=0 WHERE category_id=$cateid;DELETE FROM `category` WHERE id='$cateid'";
+        $result = $db->send($query);
+        return json_encode(array("status" => $result));
+    }
+    function addProductCate($name)
+    {
+        if (empty($name)) {
+            return json_encode(array("status" => "failed"));
+        }
+        $db = new connect();
+        $insert = "INSERT INTO `category`(`id`, `name`) VALUES (default,'$name')";
+        $result = $db->send($insert);
+        return json_encode(array("status" => $result));
+    }
     function delGallery($id)
     {
         if ($this->check && ($this->role == 1 || $this->role == 4 || $this->role == 6)) {
@@ -310,13 +332,7 @@ class admin
             $db->send("DELETE FROM `gallery` WHERE id=" . $id);
         }
     }
-    function addProductCate($name)
-    {
-        $db = new connect();
-        $insert = "INSERT INTO `category`(`id`, `name`) VALUES (default,'$name')";
-        $result = $db->send($insert);
-        echo json_encode(array("status" => $result));
-    }
+
     // movies product
     function movieProduct($id, $arrow = 1)
     {
@@ -460,5 +476,24 @@ class admin
                 }
         }
         return json_encode(array("status" => "success"));
+    }
+    function hiddenNewsCate($cate_id)
+    {
+        $db = new connect();
+
+
+        $update = "UPDATE `newscategory` SET hidden = IF(hidden = 1, 0, 1) WHERE id = $cate_id;
+
+        UPDATE `blog` SET `hidden` = (SELECT hidden FROM `newscategory` WHERE id = $cate_id) WHERE newsCate_id = $cate_id;
+        ";
+        $result = $db->send($update);
+        return json_encode(array("status" => $result));
+    }
+    function delNewsCate($cateid)
+    {
+        $db = new connect();
+        $query = "UPDATE `blog` SET `newsCate_id`=0 WHERE newsCate_id=$cateid;DELETE FROM `newscategory` WHERE id='$cateid'";
+        $result = $db->send($query);
+        return json_encode(array("status" => $result));
     }
 }

@@ -55,6 +55,10 @@ switch (isset($_GET['function']) ? $_GET['function'] : 0) {
                                     }
                                     break;
                                 }
+                            case "hiddenCate": {
+                                    echo $admin->hiddenProductCate($_POST['id']);
+                                    break;
+                                }
                         }
                         break;
                     }
@@ -66,6 +70,10 @@ switch (isset($_GET['function']) ? $_GET['function'] : 0) {
                                 }
                             case "gallery": {;
                                     echo json_encode(array("status" =>   $admin->delGallery($_GET['id']) ? "success" : "failed"));
+                                    break;
+                                }
+                            case "cate": {
+                                    echo json_encode($admin->delProductCate(isset($_GET['id']) && $_GET['id'] != 0 ? $_GET['id'] : ""));
                                     break;
                                 }
                         }
@@ -97,12 +105,8 @@ switch (isset($_GET['function']) ? $_GET['function'] : 0) {
                                     break;
                                 }
                             case "hidden": {
-                                    if (isset($_POST['cate_id'])) {
-                                        echo $admin->hiddenProductCate($_POST['cate_id']);
-                                    } else {
 
-                                        echo $admin->hiddenNews($_POST['id']);
-                                    }
+                                    echo $admin->hiddenNews($_POST['id']);
                                     break;
                                 }
                             case "arrow": {
@@ -113,6 +117,10 @@ switch (isset($_GET['function']) ? $_GET['function'] : 0) {
                                     }
                                     break;
                                 }
+                            case "hiddenCate": {
+                                    echo $admin->hiddenNewsCate($_POST['id']);
+                                    break;
+                                }
                         }
                         break;
                     }
@@ -120,6 +128,68 @@ switch (isset($_GET['function']) ? $_GET['function'] : 0) {
                         switch (isset($_GET['type']) ? $_GET['type'] : "0") {
                             default: {
                                     echo $admin->delNews($_GET['id']);
+                                    break;
+                                }
+                            case "cate": {
+                                    echo json_encode($admin->delNewsCate(isset($_GET['id']) && $_GET['id'] != 0 ? $_GET['id'] : ""));
+                                    break;
+                                }
+                        }
+                        break;
+                    }
+            }
+            break;
+        }
+    case "member": {
+
+            switch ($method) {
+
+                default: {
+                        switch (isset($_GET['type']) ? $_GET['type'] : "0") {
+                            default: {
+                                    if (isset($_GET['id'])) {
+                                        echo json_encode(array("status" => "success", "data" => $User->getInfor($_GET['id'])));
+                                    } else {
+
+                                        echo $admin->viewListUser(isset($_GET['page']) && $_GET['page'] != "" ? (int) $_GET['page'] : 1, isset($_GET['keySearch']) ? $_GET['keySearch'] : "", isset($_GET['role']) ? $_GET['role'] : 0);
+                                    }
+                                    break;
+                                }
+                            case "role": {
+                                    echo $admin->viewRoles();
+                                    break;
+                                }
+                        }
+
+                        break;
+                    }
+                case "POST": {
+                        switch (isset($_GET['type']) ? $_GET['type'] : "0") {
+                            default: {
+                                    if (isset($_GET['id'])) {
+
+                                        $admin->updateAvatar($_GET['id'], $_FILES['avatar']);
+                                        $admin->updateUsername($_GET['id'], $_POST['username']);
+                                        $admin->updatePhonenumber($_GET['id'], $_POST['phone']);
+                                        $admin->updateAddress($_GET['id'], $_POST['address']);
+                                        $admin->updateRole($_GET['id'], $_POST['role']);
+                                        echo json_encode(array('success' => "success"));
+                                    } else {
+                                        echo $admin->userRegister($_POST['username'], $_POST['email'], $_POST['pswd'], $_POST['phone'], $_POST['address'], $_POST['role']);
+                                    }
+                                    break;
+                                }
+                        }
+                        break;
+                    }
+                case "DELETE": {
+                        switch (isset($_GET['type']) ? $_GET['type'] : "0") {
+                            default: {
+                                    if (isset($_GET['id'])) {
+                                        echo $admin->deleteUser($_GET['id']);
+                                    } else {
+                                        // echo $admin->userRegister($_POST['username'], $_POST['email'], $_POST['pswd'], $_POST['phone'], $_POST['address'], $_POST['role']);
+                                    }
                                     break;
                                 }
                         }

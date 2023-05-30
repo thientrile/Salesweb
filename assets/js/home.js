@@ -101,7 +101,7 @@ function checkLibary(id) {
     .then((res, req) => {
 
       if (res.message) {
-        $(`#creative-icon-${id}`).html(` <span class="plus" style="--bg: #fff; --color: #34b7ae"><a href="index.php?action=shop&id=${id}">
+        $(`#creative-icon-${id}`).html(` <span class="plus" style="--bg: #fff; --color: #34b7ae"><a href="index.php?action=shop&act=detail&id=${id}">
   
   
     <i class="fa-solid fa-eye"></i>

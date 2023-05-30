@@ -94,12 +94,21 @@ function getCate(id = 0) {
   Server.get(`action=product&function=category`)
     .then((res, req) => {
       let view = "";
+      let managenment = "";
       res.forEach((i) => {
-        view += `<option value="${i.id}" ${id == i.id ? "selected" : ""}>${i.name
+        view += `<option value="${i.id}" ${id == i.id ? "selected" : ""}>${i.id == 0 ? "--Select--" : i.name
           }</option>`;
+        managenment += i.id == 0 ? "" : `<tr>
+          
+          <td>${i.name}</td>
+          <td><button type="button" class="btn" onclick=" hiddenCate(${i.id}) ">${i.hidden == 0 ? `<i class="fa-solid fa-eye"></i>` : `<i class="fa-solid fa-eye-slash"></i>`}</button></td>
+         <td><button type="button" class="btn btn-outline-danger" onclick="delCate(${i.id})">Deleted</button></td>
+          
+        </tr>`;
       });
-      $("#cate").html(` <option value="0" selected>All</option>` + view);
+      $("#cate").html(view);
       $("#category").html(view);
+      $("#cate-management").html(managenment);
     })
     .catch((xhr, status, error) => {
       console.log(xhr, status, error);
@@ -349,7 +358,7 @@ function update(e) {
       Swal.fire({
         position: 'bottom-start',
 
-      
+
         icon: 'success',
         title: 'The product has been successfully added',
         showConfirmButton: false,
@@ -504,6 +513,40 @@ function addCate() {
     .catch((xhr, status, error) => {
       console.log(xhr, status, error);
     });
+}
+function managerCate(e, form) {
+  e.preventDefault()
+  let data = new FormData(form);
+  let Server = new server();
+  Server.post("action=admin&function=product&type=category", data).then((res, req) => {
+    getCate();
+    form.reset();
+  }).catch((xhr, status, error) => {
+    console.log(xhr);
+  })
+}
+function hiddenCate(id) {
+  let data = new FormData();
+  data.append("id", id);
+  let Server = new server();
+  Server.post("action=admin&function=product&type=hiddenCate", data).then((res, req) => {
+    getCate();
+    loads()
+  }).catch((xhr, status, error) => {
+    console.log(xhr);
+  })
+}
+function delCate(id) {
+  let data = new FormData();
+  let Server = new server();
+  Server.delete(`action=admin&function=product&type=cate&id=${id}`, data).then((res, req) => {
+
+    getCate();
+    loads();
+
+  }).catch((xhr, status, error) => {
+    console.log(xhr.responseText);
+  })
 }
 $(function () {
   getCate();

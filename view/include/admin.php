@@ -19,14 +19,14 @@
                         <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
                         <span class="hide-menu">Home</span>
                     </li>
-                    <li class="sidebar-item">
+                    <!-- <li class="sidebar-item">
                         <a class="sidebar-link  " href="index.php?action=admin&function=dashboard" aria-expanded="false">
                             <span>
                                 <i class="ti ti-layout-dashboard"></i>
                             </span>
                             <span class="hide-menu">Dashboard</span>
                         </a>
-                    </li>
+                    </li> -->
                     <li class="nav-small-cap">
                         <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
                         <span class="hide-menu">Management</span>
@@ -39,22 +39,7 @@
                             <span class="hide-menu">Product </span>
                         </a>
                     </li>
-                    <!-- <li class="sidebar-item">
-                        <a class="sidebar-link" href="index.php?action=admin&function=member" aria-expanded="false">
-                            <span>
-                                <i class="fa-solid fa-people-group"></i>
-                            </span>
-                            <span class="hide-menu">MEMBER</span>
-                        </a>
-                    </li> -->
-                    <li class="sidebar-item">
-                        <a class="sidebar-link" href="index.php?action=admin&function=category" aria-expanded="false">
-                            <span>
-                                <i class="ti ti-category"></i>
-                            </span>
-                            <span class="hide-menu">Category</span>
-                        </a>
-                    </li>
+
 
                     <li class="sidebar-item">
                         <a class="sidebar-link" href="index.php?action=admin&function=news" aria-expanded="false">
@@ -65,19 +50,20 @@
                         </a>
                     </li>
                     <li class="sidebar-item">
-                        <a class="sidebar-link" href="./ui-typography.html" aria-expanded="false">
+                        <a class="sidebar-link" href="index.php?action=admin&function=member" aria-expanded="false">
                             <span>
-                                <i class="ti ti-typography"></i>
+                                <i class="fa-solid fa-people-group"></i>
                             </span>
-                            <span class="hide-menu">Typography</span>
+                            <span class="hide-menu">MEMBER</span>
                         </a>
                     </li>
+
                     <li class="nav-small-cap">
                         <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
                         <span class="hide-menu">PAGE</span>
                     </li>
                     <li class="sidebar-item">
-                        <a class="sidebar-link" target="_blank" href="index.php?action=home" aria-expanded="false">
+                        <a class="sidebar-link" href="index.php?action=home" aria-expanded="false">
                             <span>
                                 <i class="fa-solid fa-house"></i>
                             </span>
@@ -85,7 +71,7 @@
                         </a>
                     </li>
                     <li class="sidebar-item">
-                        <a class="sidebar-link" target="_blank" href="index.php?action=shop" aria-expanded="false">
+                        <a class="sidebar-link"  href="index.php?action=shop" aria-expanded="false">
                             <span>
                                 <i class="fa-solid fa-shop fa-beat"></i>
                             </span>
@@ -93,7 +79,7 @@
                         </a>
                     </li>
                     <li class="sidebar-item">
-                        <a class="sidebar-link" target="_blank" href="index.php?action=libary" aria-expanded="false">
+                        <a class="sidebar-link"  href="index.php?action=libary" aria-expanded="false">
                             <span>
                                 <i class="fa-solid fa-book"></i>
                             </span>
@@ -101,7 +87,7 @@
                         </a>
                     </li>
                     <li class="sidebar-item">
-                        <a class="sidebar-link" target="_blank" href="index.php?action=cart" aria-expanded="false">
+                        <a class="sidebar-link"  href="index.php?action=cart" aria-expanded="false">
                             <span>
                                 <i class="fa-solid fa-cart-shopping"></i>
                             </span>
@@ -109,7 +95,7 @@
                         </a>
                     </li>
                     <li class="sidebar-item">
-                        <a class="sidebar-link" target="_blank" href="index.php?action=user" aria-expanded="false">
+                        <a class="sidebar-link"  href="index.php?action=user" aria-expanded="false">
                             <span>
                                 <i class="fa-solid fa-user"></i>
                             </span>
@@ -179,9 +165,9 @@
                                         <i class="ti ti-mail fs-6"></i>
                                         <p class="mb-0 fs-3">My Account</p>
                                     </a> -->
-                                    <a href="javascript:void(0) "onclick=" logout()" class="d-flex align-items-center gap-2 dropdown-item btn btn-outline-primary">
-                                    <i class="fa-solid fa-right-from-bracket"></i>    
-                                    <p class="mb-0 fs-3">Logout</p>
+                                    <a href="javascript:void(0) " onclick=" logout()" class="d-flex align-items-center gap-2 dropdown-item btn btn-outline-primary">
+                                        <i class="fa-solid fa-right-from-bracket"></i>
+                                        <p class="mb-0 fs-3">Logout</p>
                                     </a>
                                     <!-- <button onclick="logout()" class="btn btn-outline-primary mx-3 mt-2 d-block">Logout</button> -->
                                 </div>

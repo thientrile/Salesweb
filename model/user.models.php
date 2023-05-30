@@ -25,7 +25,7 @@ class user
         // check exist
         $db = new connect();
         $email = strtolower($email);
-        $check = $db->getlist("select * from user where email='$email'and deleted=0");
+        $check = $db->getlist("select * from user where email='$email'");
         $set = $check->fetch();
         return $set;
     }
@@ -67,7 +67,7 @@ class user
     function getInfor($id)
     {
         $db = new connect();
-        $select = "select * from user where id='$id'and deleted=0";
+        $select = "SELECT user.id as id, avatar, fullname,balance,email,phone_number,address,role_id,role.name as roleName, deleted FROM `user`,`role` WHERE user.role_id=role.id and user.id=$id and deleted=0";
         $result = $db->getonce($select);
         return $result;
     }

@@ -28,7 +28,7 @@ function loadproducts(href = "") {
 </div>`);
   let Server = new server();
   Server.get(`action=product&${url}&page=${currentPages}`)
-    .then((res, req) => {
+    .then((res, _req) => {
       let result = "";
       totalPages = res.page;
       createPagination(currentPages, res.page);
@@ -99,7 +99,7 @@ function loadproduct() {
   let id = window.location.href.split("id=")[1].split("&")[0];
   let Server = new server();
   Server.get(`action=product&id=${id}`)
-    .then((res, req) => {
+    .then((res, _req) => {
       if (res) {
         $("body > header > title").text("SHOP - " + res.title);
         let img = res.img;
@@ -109,7 +109,7 @@ function loadproduct() {
           .addClass("text-center")
           .css("font-size:", "1em");
         Server.get(`action=product&id=${id}&function=gallery`).then(
-          (data, req = "") => {
+          (data, _req = "") => {
             let price =
               res.discount > 0
                 ? `         <sub style="text-decoration:line-through">${res.price
@@ -218,7 +218,7 @@ function loadproduct() {
         window.location.replace("index.php?action=shop");
       }
     })
-    .catch((xhr, stauts, error) => {
+    .catch((_xhr, _stauts, error) => {
       console.log(error);
     });
 }
@@ -251,11 +251,11 @@ function addcart(id, e) {
   formData.append("id", id);
   let Server = new server();
   Server.post("action=cart", formData)
-    .then((res, req) => {
+    .then((_res, _req) => {
       checkcart();
       countCart();
     })
-    .catch((xhr, sta, err) => {
+    .catch((_xhr, _sta, err) => {
       console.log(err);
     })
     .finally(() => {
@@ -266,10 +266,10 @@ function toCart(id) {
   let data = new FormData()
   let Server = new server();
   data.append("id", id);
-  Server.post("action=cart", data).then((res, req) => {
+  Server.post("action=cart", data).then((_res, _req) => {
     // window.location.replace("index.php?action=cart");
   })
-    .catch((xhr, status, error) => {
+    .catch((xhr, _status, _error) => {
       console.log(xhr);
     }).finally(() => {
       window.location.href = "index.php?action=cart";
@@ -278,7 +278,7 @@ function toCart(id) {
 function checkcart() {
   let id = window.location.href.split("id=")[1].split("&")[0];
   let Server = new server();
-  Server.get(`action=cart&id=${id}`).then((res, req) => {
+  Server.get(`action=cart&id=${id}`).then((res, _req) => {
     if (res.result == true) {
       $("#addcart").text(`View cart`);
       $("#addcart").attr("onclick", "location.href='index.php?action=cart'");
@@ -291,7 +291,7 @@ function checkcart() {
 function checkLibary(id) {
   let Server = new server();
   Server.get(`action=payment&function=check_Library&id=${id}`)
-    .then((res, req) => {
+    .then((res, _req) => {
       if (window.location.href.search("act=detail&id=") != -1) {
 
         $("#view-btn").html(
@@ -305,7 +305,7 @@ function checkLibary(id) {
       }
       else {
         if (res.message) {
-          $(`#creative-icon-${id}`).html(` <span class="plus" style="--bg: #fff; --color: #34b7ae"><a href="index.php?action=shop&id=${id}">
+          $(`#creative-icon-${id}`).html(` <span class="plus" style="--bg: #fff; --color: #34b7ae"><a href="index.php?action=shop&act=detail&id=${id}">
     
     
       <i class="fa-solid fa-eye"></i>

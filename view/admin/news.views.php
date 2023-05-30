@@ -70,6 +70,10 @@
         <button onclick="createNews()" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#myModal">Add news <i class="fa-solid fa-plus mx-2"></i></button>
 
     </div>
+    <div class="shadow-lg  p-4  d-flex justify-content-center">
+        <button onclick="loadcate();" class="btn  btn-outline-success" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">Category manager<i class="fa-solid fa-bars mx-2"></i></i></button>
+
+    </div>
 
 </div>
 <div class="table-responsive-md shadow-lg mt-2 p-5 rounded-2 border-2">
@@ -179,5 +183,31 @@
         </form>
     </div>
 </div>
+<div class="offcanvas offcanvas-end" data-bs-scroll="true" data-bs-backdrop="static" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
+    <div class="offcanvas-header">
+        <h5 class="offcanvas-title mx-auto" id="offcanvasRightLabel">News Category Management</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body">
+        <form onsubmit="managerCate(event,this)">
 
+            <div class="form-floating input-group mb-3">
+                <input type="Text" class="form-control" name="name" id="addcate">
+                <label for="addcate">Add new category</label>
+                <button class="btn btn-outline-secondary" type="submit" onclick="">Add</button>
+            </div>
+        </form>
+        <table class="table">
+            <thead class="table-dark">
+                <tr>
+                    <th>Name</th>
+                    <th>Status</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody id="cate-management">
+            </tbody>
+        </table>
+    </div>
+</div>
 <script src="./assets/js/news.js"></script>
