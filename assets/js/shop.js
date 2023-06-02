@@ -51,7 +51,7 @@ function loadproducts() {
                               </a>
                           </span>
                           <span class="cart" style="--bg: #34b7ae; --color: #fff;cursor:pointer">
-                              <a ${i.multiple ? `href="index.php?action=shop&id=${i.id}"` : ` onclick=" toCart(${i.id})"`}>
+                              <a ${i.multiple ? `href="index.php?action=shop&id=${i.id}"` : ` onclick=" toCart(${i.options[0].id})"`}>
                                   <i class="fa-solid fa-cart-shopping"></i>
                               </a>
                           </span>
@@ -98,6 +98,53 @@ function loadproduct() {
   let Server = new server();
   Server.get(`action=product&id=${id}`)
     .then((res, _req) => {
+      let options = res.options
+      let btn = `   <button type="button" class="btn btn-outline-warning" id="cart" onclick="addToCart(${options[options.length - 1].id})"><i class="fa-solid fa-cart-plus"></i></button>
+      <button type="button" class="btn btn-success mt-2"><i class="fa-solid fa-credit-card" id="payment" onclick="payment(${options[options.length - 1].id})"></i></button>`;
+      let price = ""
+
+
+
+      let cart = 0;
+
+      let checkout = 0;
+      for (let i = 0; i < options.length; i++) {
+        if (!options[i].check) {
+          if (res.multiple) {
+
+            price += `<div class="form-check">
+                <input type="radio" class="form-check-input" id="radio${options[i].id}" name="product_item"  value="${options[i].id}" onchange="getprice(${options[i].price})"${!options[i].check ? "checked" : ""} >
+                <label  class="form-check-label" for="radio${options[i].id}"> ${options[i].name + " " + options[i].value + " - " + formatCurrency(options[i].price)}                  
+                </label>
+              </div>`;
+          }
+
+
+        }
+        else if (options[i].check) {
+          checkout++
+          console.log(checkout);
+          if (checkout == options.length) {
+            btn = ` <button type="button" class="btn btn-outline-warning" id="library" onclick="window.location.href('index.php?action=library')">View Library</button>`
+          }
+
+        }
+        else if (options[i].cart) {
+          cart++;
+          console.log(options[i].cart);
+          if (cart == options.length) {
+            btn = `   <button type="button" class="btn btn-outline-warning" id="cart" onclick="window.location.href('index.php?action=cart')">View Cart</button>
+            <button type="button" class="btn btn-success mt-2"><i class="fa-solid fa-credit-card" id="payment" onclick="payment(${options[options.length - 1].id})"></i></button>`;
+          }
+
+        }
+
+
+
+      }
+
+
+
       if (res) {
         $("body > header > title").text("SHOP - " + res.title);
         let img = res.img;
@@ -106,23 +153,9 @@ function loadproduct() {
           .html(res.sDescription)
           .addClass("text-center")
           .css("font-size:", "1em");
-        let price = ""
 
-        let options = res.options
-        if (res.multiple) {
-          let d = 0;
-          for (let i = 0; i < options.length; i++) {
-            if (!options[i].check) {
-              price += `<div class="form-check">
-                <input type="radio" class="form-check-input" id="radio${options[i].id}" name="product_item"  value="${options[i].id}" onchange="getprice(${options[i].price})"${d == 0 ? "checked" : ""} >
-                <label  class="form-check-label" for="radio${options[i].id}"> ${options[i].name + " " + options[i].value + " - " + formatCurrency(options[i].price)}                  
-                </label>
-              </div>`;
-              d++;
-            }
 
-          }
-        }
+
         Server.get(`action=product&id=${id}&function=gallery`).then(
           (data, _req = "") => {
 
@@ -185,13 +218,14 @@ function loadproduct() {
                       <div class="card mt-4 border border-3" style="width:100%;">
                           <div class="card-header text-center">Item Details</div>
                           <div class="card-body d-block  px-5">
-                          <h1 id="rePrice" class="text-center">${res.options[0].price == 0 ? "Free" : formatCurrency(res.options[0].price)}</h1>
+                          <h1 id="rePrice" class="text-center">${res.options[res.options.length - 1].price == 0 ? "Free" : formatCurrency(res.options[res.options.length - 1].price)}</h1>
                            
                              ${price}
                           
                             
                              
-                              <div id="view-btn"></div>
+                              <div id="view-btn"class="d-flex justify-content-center flex-column ">
+                           ${btn}</div>
   
                               
                           </div>
@@ -227,6 +261,7 @@ function loadproduct() {
 
           }
         );
+
       } else {
         window.location.replace("index.php?action=shop");
       }

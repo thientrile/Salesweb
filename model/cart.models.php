@@ -2,10 +2,11 @@
 
 class cart
 {
-   function addCart($userId, $id)
+   function addCart($userId, $product_item_id)
    {
       $db = new connect();
-      $query = "insert into cart(id, user_id, product_id) values (NULL,$userId,$id)";
+      $product_id = $db->send("SELECT product_id FROM product_item WHERE id=$product_item_id")[0];
+      $query = "insert into cart(`id`, `user_id`, `product_id`, `product_item_id`) values (NULL,$userId, $product_id,$product_item_id)";
       return $db->send($query);
    }
    function deletecart($id)
@@ -23,10 +24,10 @@ class cart
       return $result;
    }
    //    kiểm tra xem sản phẩm đã thêm vào giỏ hàng chữa
-   function checkCart($userId, $id)
+   function checkCart($userId, $product_item_id)
    {
       $db = new connect();
-      $select = "SELECT COUNT(*) FROM cart WHERE user_id=$userId and product_id=$id";
+      $select = "SELECT COUNT(*) FROM cart WHERE user_id=$userId and product_item_id=$product_item_id";
       $result = $db->getonce($select);
       if ($result['COUNT(*)'] == 0) {
          return false;
@@ -36,7 +37,7 @@ class cart
    function viewCart($userId)
    {
       $db = new connect();
-      $select = "select cart.id as id , product_id, title, img, discount, price   from cart, product where user_id=$userId and product_id=product.id";
+      $select = "select cart.id as id , product_id, title, img, discount  from cart, product where user_id=$userId and product_id=product.id";
 
       $result = $db->getlist($select);
       return $result;
