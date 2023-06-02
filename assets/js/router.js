@@ -32,94 +32,99 @@ function addPageQueryParam(event, currentPage) {
     window.history.replaceState(null, "", newUrl);
   }
 }
-
+function formatCurrency(amount) {
+  return amount.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
+}
 function createPagination(currentPage, totalPages) {
   const paginationElement = document.getElementById("page");
 
   // Xóa nội dung điều hướng phân trang hiện tại
   paginationElement.innerHTML = "";
-  if (totalPages > 1) {
-    const paginationList = document.createElement("ul");
-    paginationList.classList.add("pagination");
 
-    // Tạo phần tử <li> và nút Previous (Trang trước)
-    const previousLi = document.createElement("li");
-    previousLi.classList.add("page-item");
-    const previousButton = document.createElement("a");
-    previousButton.classList.add("page-link");
-    previousButton.href = "#";
-    previousButton.innerText = "Previous";
-    previousButton.disabled = currentPage === 1;
-    previousButton.addEventListener("click", () => {
-      if (currentPage > 1) {
-        navigateToPage(currentPage - 1);
-      }
-    });
-    previousLi.appendChild(previousButton);
-    paginationList.appendChild(previousLi);
+  const paginationList = document.createElement("ul");
+  paginationList.classList.add("pagination");
 
-    // Tạo phần tử <li> cho từng trang
-    for (let page = 1; page <= totalPages; page++) {
-      if (
-        page === currentPage ||
-        (page >= currentPage - 1 && page <= currentPage + 1) ||
-        (page === totalPages && page >= currentPage + 2)
-      ) {
-        const pageLi = document.createElement("li");
-        pageLi.classList.add("page-item");
-        const pageButton = document.createElement("a");
-        pageButton.classList.add("page-link");
-
-        pageButton.setAttribute("onclick", `addPageQueryParam(event,${page})`);
-        pageButton.innerText = page.toString();
-        if (page === currentPage) {
-          pageLi.classList.add("active");
-          pageLi.getAttribute("disabled");
-        }
-        pageButton.addEventListener("click", () => {
-          navigateToPage(page);
-        });
-        pageLi.appendChild(pageButton);
-        paginationList.appendChild(pageLi);
-      } else if (page === currentPage + 2) {
-        const pageLi = document.createElement("li");
-        pageLi.classList.add("page-item");
-        const pageButton = document.createElement("a");
-        pageButton.classList.add("page-link");
-        pageButton.href = `#`;
-        pageButton.setAttribute(
-          "onclick",
-          `addPageQueryParam(event,${currentPage})`
-        );
-
-        pageButton.innerText = "...";
-        pageButton.addEventListener("click", () => {
-          navigateToPage(page);
-        });
-        pageLi.appendChild(pageButton);
-        paginationList.appendChild(pageLi);
-      }
+  // Tạo phần tử <li> và nút Previous (Trang trước)
+  const previousLi = document.createElement("li");
+  previousLi.classList.add("page-item");
+  const previousButton = document.createElement("a");
+  previousButton.classList.add("page-link");
+  previousButton.href = "#";
+  previousButton.innerText = "Previous";
+  previousButton.disabled = currentPage === 1;
+  
+  previousButton.addEventListener("click", (e) => {
+    if (currentPage > 1) {
+      navigateToPage(currentPage - 1);
+      addPageQueryParam(e, currentPage - 1)
     }
+  });
+  previousLi.appendChild(previousButton);
+  paginationList.appendChild(previousLi);
 
-    // Tạo phần tử <li> và nút Next (Trang tiếp theo)
-    const nextLi = document.createElement("li");
-    nextLi.classList.add("page-item");
-    const nextButton = document.createElement("a");
-    nextButton.classList.add("page-link");
+  // Tạo phần tử <li> cho từng trang
+  for (let page = 1; page <= totalPages; page++) {
+    if (
+      page === currentPage ||
+      (page >= currentPage - 1 && page <= currentPage + 1) ||
+      (page === totalPages && page >= currentPage + 2)
+    ) {
+      const pageLi = document.createElement("li");
+      pageLi.classList.add("page-item");
+      const pageButton = document.createElement("a");
+      pageButton.classList.add("page-link");
 
-    nextButton.innerText = "Next";
-    nextButton.disabled = currentPage === totalPages;
-    nextButton.addEventListener("click", () => {
-      if (currentPage < totalPages) {
-        navigateToPage(currentPage + 1);
+      pageButton.setAttribute("onclick", `addPageQueryParam(event,${page})`);
+      pageButton.innerText = page.toString();
+      if (page === currentPage) {
+        pageLi.classList.add("active");
+        pageLi.getAttribute("disabled");
       }
-    });
-    nextLi.appendChild(nextButton);
-    paginationList.appendChild(nextLi);
+      pageButton.addEventListener("click", () => {
+        navigateToPage(page);
+      });
+      pageLi.appendChild(pageButton);
+      paginationList.appendChild(pageLi);
+    } else if (page === currentPage + 2) {
+      const pageLi = document.createElement("li");
+      pageLi.classList.add("page-item");
+      const pageButton = document.createElement("a");
+      pageButton.classList.add("page-link");
+      pageButton.href = `#`;
+      pageButton.setAttribute(
+        "onclick",
+        `addPageQueryParam(event,${currentPage})`
+      );
 
-    // Thêm phần tử <ul> vào điều hướng phân trang
-    paginationElement.appendChild(paginationList);
+      pageButton.innerText = "...";
+      pageButton.addEventListener("click", () => {
+        navigateToPage(page);
+      });
+      pageLi.appendChild(pageButton);
+      paginationList.appendChild(pageLi);
+    }
   }
+
+  // Tạo phần tử <li> và nút Next (Trang tiếp theo)
+  const nextLi = document.createElement("li");
+  nextLi.classList.add("page-item");
+  const nextButton = document.createElement("a");
+  nextButton.classList.add("page-link");
+
+  nextButton.innerText = "Next";
+  nextButton.disabled = currentPage === totalPages;
+  nextButton.addEventListener("click", (e) => {
+    if (currentPage < totalPages) {
+      navigateToPage(currentPage + 1);
+      addPageQueryParam(e, currentPage + 1)
+    }
+  });
+  nextLi.appendChild(nextButton);
+  paginationList.appendChild(nextLi);
+
+  // Thêm phần tử <ul> vào điều hướng phân trang
+  paginationElement.appendChild(paginationList);
+
   // Tạo phần tử <ul> chứa điều hướng phân trang
 }
 $(function () {
@@ -158,7 +163,7 @@ $(function () {
     $("#header").remove();
     $("#footer").remove();
     $("#Modal-search").remove();
-    
+
     let Server = new server();
     Server.get("action=user")
       .then((res, req) => {
@@ -174,7 +179,7 @@ $(function () {
                 $("head > title").html(
                   urlAction.toLocaleUpperCase() + " - " + adminUrl
                 );
-                
+
                 if (status == "error") {
                   window.location.replace(
                     "index.php?action=admin&function=dashboard"

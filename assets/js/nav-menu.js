@@ -1,4 +1,15 @@
+$(document).ready(() => {
+  countCart();
+
+});
 // change the color of the navbar when the user scrolls the page
+
+/* This code is changing the color and style of the navbar when the user scrolls the page. It first
+gets the element with the ID "nav-menu" and then adds or removes certain classes based on the user's
+scroll position. If the user has scrolled down the page, it adds the classes "navbar-white",
+"bg-white", and "shadow" to the navbar and removes the class "navbar-dark". If the user has scrolled
+back to the top of the page, it removes those classes and adds the class "navbar-dark" back to the
+navbar. */
 let navMenu = document.getElementById("nav-menu");
 
 window.onscroll = function () {
@@ -15,6 +26,10 @@ window.onscroll = function () {
   }
 };
 // nav-menu active class
+/* This code is adding an "active" class to the navigation link that matches the current URL action. It
+does this by first getting the current URL using `window.location.href`, and then checking if it
+contains the string "action=". If it does, it extracts the value of the action parameter using
+`split()` and sets it to the `urlAction` variable. If it doesn't, it sets `urlAction` to "home". */
 window.addEventListener("DOMContentLoaded", function () {
   let urlAction = window.location.href;
   urlAction =
@@ -32,6 +47,10 @@ window.addEventListener("DOMContentLoaded", function () {
   });
 });
 
+/**
+ * The function counts the number of items in the user's cart using a server request and updates the
+ * count displayed on the webpage.
+ */
 function countCart() {
   let Server = new server();
   Server.get("action=cart")
@@ -42,6 +61,9 @@ function countCart() {
       $("#countCart").text(0);
     });
 }
+/**
+ * The function selects an option in a dropdown menu based on the value in the URL.
+ */
 function typeSearch() {
   let url = window.location.href;
   if (url.search("action=") != -1) {
@@ -57,7 +79,4 @@ function typeSearch() {
     })
   }
 }
-$(document).ready(() => {
-  countCart();
 
-});

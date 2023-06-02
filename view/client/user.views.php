@@ -59,7 +59,7 @@
                 <div class="row">
                     <div class="col-lg-3 border-right shadow-lg">
                         <div class="d-flex flex-column align-items-center text-center p-3 py-5">
-                            <img class="rounded-circle mt-5 avatar" style="width:10em;height:10em;object-fit: cover" src="" alt="">
+                            <img class="rounded-circle mt-5 avatar"id="image-Avatar" style="width:10em;height:10em;object-fit: cover" src="" alt="">
                             <label for="myfile" class="btn btn-light">Change avatar</label>
                             <input class="form-control" userId="" type="file" id="myfile" name="avatar" accept="image/png, image/gif, image/jpeg" id="updateFile" style="display:none">
                             <span class="font-weight-bold"></span>

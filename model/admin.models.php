@@ -128,7 +128,7 @@ class admin
         $db = new connect();
         $result = false;
         if ($this->check && ($this->role == 1 || $this->role == 3 || $this->role == 9)) {
-            $update = "UPDATE `user` SET `deleted`= ".time()." WHERE id= $userid;" ;
+            $update = "UPDATE `user` SET `deleted`= " . time() . " WHERE id= $userid;";
             $result = $db->send($update);
         }
         return json_encode(array("status" => $result ? "success" : "failed"));
@@ -202,10 +202,21 @@ class admin
 
         $start = $view * $page - $view;
 
-        $select = "select product.id as id, title,img,source,category_id,description,sDescription, discount,price,created_at,updated_at, deleted, category.name as name, hide from product,category WHERE $Where  AND deleted=0 AND product.category_id=category.id ORDER BY position ASC LIMIT $start,$view";
+        $select = "select product.id as id, title,img,category_id, discount, deleted, category.name as name, hide from product,category WHERE $Where  AND deleted=0 AND product.category_id=category.id ORDER BY position ASC LIMIT $start,$view";
         $this->countpage = ceil($count[0] / $view);
 
-        return $cc->getlist($select);
+        $result = $cc->getlist($select);
+        $array = array();
+        while ($row = $result->fetch()) {
+            $select_items = "SELECT * FROM `product_item` WHERE product_id=" . $row['id'];
+            $resutl_items = $cc->getlist($select_items);
+            $option = array();
+            while ($item = $resutl_items->fetch()) {
+                array_push($option, array("price"=>$item['price'],"sources"=>$item['sources']));
+            }
+            array_push($array, array("id" => $row['id'], "title" => $row['title'], "img" => $row['img'], "discount" => $row['discount'], "deleted" => $row['deleted'], "name" => $row['name'], "hide" => $row['hide'], "options" => $option,"multiple"=>sizeof($option)>1));
+        }
+        echo json_encode(array("status" => "success", "data" => $array,"page"=> ceil($count[0] / $view)));
     }
     // insert product
     function insertProduct($title, $fileAvatar, $fileSrc, $cate, $desc, $sdesc, $discount, $price, $filesGallery)

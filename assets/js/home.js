@@ -120,13 +120,11 @@ $(document).ready(function () {
       let result = "";
 
       for (let i of res.data) {
-        let price =
-          i.discount > 0
-            ? `         <sub style="text-decoration:line-through">${i.price
-            }</sub>$ ${i.price - i.price * i.discount}`
-            : i.price > 0
-              ? `$ ${i.price}`
-              : "Free";
+        let price = [];
+        for (let j of i.options) {
+
+          price.push(formatCurrency(j.price));
+        }
 
         result += `
           <div class="col-lg-4 col-md-6">
@@ -178,8 +176,11 @@ $(document).ready(function () {
         if (count > 3) {
           break;
         }
-        result += `<li><a href="index.php?action=shop&cate=${i.id}">${i.name}</a></li>`;
-        count++;
+        if (i.id != 0) {
+
+          result += `<li><a href="index.php?action=shop&cate=${i.id}">${i.name}</a></li>`;
+          count++;
+        }
 
       }
 

@@ -1,45 +1,43 @@
 
+/**
+ * The function updates the text of an HTML element with the formatted price value or "Free" if the
+ * price is zero.
+ * @param price - The price of a product or service, which is passed as an argument to the function.
+ */
+function getprice(price) {
+  $("#rePrice").text(price != 0 ? formatCurrency(price) : "Free")
 
+
+}
+/**
+ * The function navigates to a specific page and loads products while creating pagination.
+ * @param page - The page parameter is a number that represents the current page that the user wants to
+ * navigate to.
+ */
 function navigateToPage(page) {
   currentPages = page;
-  loadproducts((href = ""));
+  loadproducts();
   createPagination(page, totalPages);
-  // Thực hiện các tác vụ cần thiết khi chuyển đến trang mới
-  // ở đây, bạn có thể gọi hàm tải dữ liệu mới, v.v.
 
-  // Gọi lại hàm tạo điều hướng phân trang với trang hiện tại mới
 }
-function loadproducts(href = "") {
+/**
+ * The function loads products from a server and displays them on a webpage with pagination and options
+ * to add to cart or view details.
+ */
+function loadproducts() {
   let url =
-    href != ""
-      ? href.split("action=shop&")[1]
-      : window.location.href.split("action=shop&")[1];
-
-  $(".creative").html(` <div class="container translate-top">
-  <div class="row" id="product">
-  <div class="col-12 d-flex justify-content-center">
-  <div class="spinner-border text-info "></div></div>
+    window.location.href.split("action=shop&")[1];
 
 
-  </div>
- 
-
-
-</div>`);
   let Server = new server();
   Server.get(`action=product&${url}&page=${currentPages}`)
     .then((res, _req) => {
       let result = "";
       totalPages = res.page;
       createPagination(currentPages, res.page);
-      for (let i of res.data) {
-        let price =
-          i.discount > 0
-            ? `         <sub style="text-decoration:line-through">${i.price
-            }</sub>$ ${i.price - i.price * i.discount}`
-            : i.price > 0
-              ? `$ ${i.price}`
-              : "Free";
+
+      res.data.forEach((i) => {
+        const price = i.options.map((j) => formatCurrency(j.price)).join(", ");
 
         result += `
           <div class="col-lg-4 col-md-6">
@@ -48,42 +46,42 @@ function loadproducts(href = "") {
                       <img class="card-img-top" src="${i.img}" alt="" style="width: 100%; min-height:200px" />
                       <div class="creative-icon" id="creative-icon-${i.id}">
                           <span class="plus" style="--bg: #fff; --color: #34b7ae">
-                              <a href="index.php?action=payment&id=${i.id}">
-    
-    
+                              <a href="index.php?${i.multiple ? `action=shop&id=${i.id}` : `action=payment&id=${i.options[0].id}`}">
                                   <i class="fa-solid fa-plus"></i>
                               </a>
                           </span>
-                          <span class="cart" style="--bg: #34b7ae; --color: #fff;cursor:pointer"><a onclick=" toCart(${i.id})"><i class="fa-solid fa-cart-shopping"></i></a>
+                          <span class="cart" style="--bg: #34b7ae; --color: #fff;cursor:pointer">
+                              <a ${i.multiple ? `href="index.php?action=shop&id=${i.id}"` : ` onclick=" toCart(${i.id})"`}>
+                                  <i class="fa-solid fa-cart-shopping"></i>
+                              </a>
                           </span>
                       </div>
                   </div>
-    
+
                   <div class="card-body">
                       <a href="index.php?action=shop&cate=${i.category_id}" class="heading-note">${i.name}</a>
                       <br>
                       <a href="index.php?action=shop&act=detail&id=${i.id}" class="card-title h5 text-dark" style="text-decoration: none;">${i.title}</a>
                       <p class="card-text card-price">
                           <span>
-                          ${price}
-    
-    
-    
+                              ${price}
                           </span>
                       </p>
                   </div>
               </div>
           </div>
     `;
-        $("#product").html(result);
-        checkLibary(i.id)
-      }
+      });
+      $("#product").html(result);
     })
     .catch((xhr, statu, error) => {
       console.log(xhr, statu, error);
     });
 }
 
+/**
+ * The function loads a product page with details and media content from a server response.
+ */
 function loadproduct() {
   $(".creative").html(` <div class="container translate-top">
   <div class="row" id="product">
@@ -108,15 +106,27 @@ function loadproduct() {
           .html(res.sDescription)
           .addClass("text-center")
           .css("font-size:", "1em");
+        let price = ""
+
+        let options = res.options
+        if (res.multiple) {
+          let d = 0;
+          for (let i = 0; i < options.length; i++) {
+            if (!options[i].check) {
+              price += `<div class="form-check">
+                <input type="radio" class="form-check-input" id="radio${options[i].id}" name="product_item"  value="${options[i].id}" onchange="getprice(${options[i].price})"${d == 0 ? "checked" : ""} >
+                <label  class="form-check-label" for="radio${options[i].id}"> ${options[i].name + " " + options[i].value + " - " + formatCurrency(options[i].price)}                  
+                </label>
+              </div>`;
+              d++;
+            }
+
+          }
+        }
         Server.get(`action=product&id=${id}&function=gallery`).then(
           (data, _req = "") => {
-            let price =
-              res.discount > 0
-                ? `         <sub style="text-decoration:line-through">${res.price
-                }</sub>$ ${res.price - res.price * res.discount}`
-                : res.price > 0
-                  ? `$ ${res.price}`
-                  : "Free";
+
+
             let indicators = "";
             let inner = "";
             for (let i = 0; i < data.length; i++) {
@@ -174,10 +184,13 @@ function loadproduct() {
                   <div class="col-md-4">
                       <div class="card mt-4 border border-3" style="width:100%;">
                           <div class="card-header text-center">Item Details</div>
-                          <div class="card-body d-flex justify-content-center align-items-center flex-column">
-                              <h3 class="">
-                            ${price}
-                              </h3>
+                          <div class="card-body d-block  px-5">
+                          <h1 id="rePrice" class="text-center">${res.options[0].price == 0 ? "Free" : formatCurrency(res.options[0].price)}</h1>
+                           
+                             ${price}
+                          
+                            
+                             
                               <div id="view-btn"></div>
   
                               
@@ -211,7 +224,7 @@ function loadproduct() {
                   </div>
               </div>
             </div>`);
-            checkLibary(res.id);
+
           }
         );
       } else {
@@ -219,10 +232,17 @@ function loadproduct() {
       }
     })
     .catch((_xhr, _stauts, error) => {
-      console.log(error);
+      console.log(_xhr);
     });
 }
 
+/**
+ * The function determines the file type based on the file extension.
+ * @param filename - a string representing the name of a file, including its extension.
+ * @returns a string indicating the type of file based on the file extension. It returns "audio" if the
+ * file extension is .mp3, .wav, or .ogg, "video" if the file extension is .mp4, .mov, or .avi, and
+ * "image" if the file extension is .jpg, .jpeg, .png, or .gif. If the
+ */
 function getFileType(filename) {
   if (
     filename.endsWith(".mp3") ||
@@ -245,88 +265,14 @@ function getFileType(filename) {
     return "image";
   }
 }
-function addcart(id, e) {
-  $(e).html(`<div class="spinner-border text-white"></div>`);
-  let formData = new FormData();
-  formData.append("id", id);
-  let Server = new server();
-  Server.post("action=cart", formData)
-    .then((_res, _req) => {
-      checkcart();
-      countCart();
-    })
-    .catch((_xhr, _sta, err) => {
-      console.log(err);
-    })
-    .finally(() => {
-      checkcart();
-    });
-}
-function toCart(id) {
-  let data = new FormData()
-  let Server = new server();
-  data.append("id", id);
-  Server.post("action=cart", data).then((_res, _req) => {
-    // window.location.replace("index.php?action=cart");
-  })
-    .catch((xhr, _status, _error) => {
-      console.log(xhr);
-    }).finally(() => {
-      window.location.href = "index.php?action=cart";
-    });
-}
-function checkcart() {
-  let id = window.location.href.split("id=")[1].split("&")[0];
-  let Server = new server();
-  Server.get(`action=cart&id=${id}`).then((res, _req) => {
-    if (res.result == true) {
-      $("#addcart").text(`View cart`);
-      $("#addcart").attr("onclick", "location.href='index.php?action=cart'");
-    } else {
-      $("#addcart").text(`Add to cart`);
-      $("#addcart").attr("onclick", `addcart(${id},this)`);
-    }
-  });
-}
-function checkLibary(id) {
-  let Server = new server();
-  Server.get(`action=payment&function=check_Library&id=${id}`)
-    .then((res, _req) => {
-      if (window.location.href.search("act=detail&id=") != -1) {
 
-        $("#view-btn").html(
-          checkCookie("c_user") == true
-            ? res.message == true
-              ? `<a href="index.php?action=library" class="btn btn-outline-info">View Library</a>`
-              : `  <a href="index.php?action=payment&id=${id}" class="btn btn-success px-4">Buy</a> <br> <button id="addcart" onclick="addcart(${id})" class="btn btn-warning">Add to cart</button>`
-            : `<a href="index.php?action=login" class="btn btn-primary">Login</a>`
-        );
-        checkcart();
-      }
-      else {
-        if (res.message) {
-          $(`#creative-icon-${id}`).html(` <span class="plus" style="--bg: #fff; --color: #34b7ae"><a href="index.php?action=shop&act=detail&id=${id}">
-    
-    
-      <i class="fa-solid fa-eye"></i>
-  </a> </span>`)
-        }
-      }
-    })
-    .catch((xhr, status, error) => {
-      if (window.location.href.search("shop&id=") != -1) {
 
-        $("#view-btn").html(
 
-          checkCookie("c_user") == true
-            ? `  <a href="index.php?action=payment&id=${id}" class="btn btn-success px-4">Buy</a> <br> <button id="addcart" onclick="addcart(${id})" class="btn btn-warning">Add to cart</button>`
-            : `<a href="index.php?action=login" class="btn btn-primary">Login</a>`
-        );
-      }
-      console.log(xhr, status, error);
-    });
-}
-$(document).ready(function () {
+/* The above code is using jQuery to check if the current URL contains the string "id=". If it does, it
+calls the function "loadproduct()", otherwise it calls the function "loadproducts()". This code is
+likely used to determine whether to load a single product or multiple products on a page, based on
+the presence of an ID parameter in the URL. */
+$(function () {
   if (window.location.href.indexOf("id=") != -1) {
     loadproduct();
 

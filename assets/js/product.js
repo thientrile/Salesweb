@@ -39,6 +39,7 @@ function arrow(element, id, arrow) {
   })
 
 }
+
 // load products from the database
 function loads() {
   $("#form-data").removeClass("was-validated");
@@ -49,24 +50,31 @@ function loads() {
     ).val()}&page=${currentPages}`
   )
     .then((res, req) => {
+     
       let view = "";
       let data = res.data;
       totalPages = res.page;
-      if (res.page > 1) {
-        createPagination(currentPages, res.page);
-      } else {
-        $("#page").html("");
-      }
+
+
+      createPagination(currentPages, res.page);
+
 
       for (let i of data) {
+        let price = [];
+        for (let j of i.options) {
+
+          price.push(formatCurrency(j.price));
+        }
         view += `
+         
+         
           <tr>
                 <td scope="row">DG${i.id}</td>
                 <td scope="row">${i.title}</td>
                 <td scope="row"> <img style="width:10rem" src="${i.img}"> </td>
                 <td scope="row">${i.name}</td>
                 <td scope="row">${i.discount * 100}%</td>
-                <td scope="row">$${i.price}</td>
+                <td scope="row">${price.join(" ")}</td>
                 <td><button  type="button" class="btn btn-light" onclick="Hidden(this,${i.id
           })">${i.hide == 0 ? "Show" : "Hidden"}</button></td>
                 <td ><div class="btn-group-vertical">
@@ -94,10 +102,14 @@ function getCate(id = 0) {
   Server.get(`action=product&function=category`)
     .then((res, req) => {
       let view = "";
+      let cate="";
       let managenment = "";
       res.forEach((i) => {
+        console.log(i.id == 0 ? "--Select--" : i.name);
         view += `<option value="${i.id}" ${id == i.id ? "selected" : ""}>${i.id == 0 ? "--Select--" : i.name
           }</option>`;
+          cate+=`<option value="${i.id}" >${i.id == 0 ? "--Select--" : i.name
+        }</option>`
         managenment += i.id == 0 ? "" : `<tr>
           
           <td>${i.name}</td>
@@ -106,7 +118,7 @@ function getCate(id = 0) {
           
         </tr>`;
       });
-      $("#cate").html(view);
+      $("#cate").html( cate);
       $("#category").html(view);
       $("#cate-management").html(managenment);
     })

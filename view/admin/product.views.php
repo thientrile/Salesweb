@@ -162,6 +162,11 @@
                         </div>
                     </div>
                     <div class="row mt-3">
+                        <div class="form-check">
+
+                            <input class="form-checkbox-input" type="checkbox" name="multiple" vaule="true" id="multiple">
+                            <label for="multiple" class="form-check-label">Products with many variations</label>
+                        </div>
                         <div class="col-md-6">
                             <div class="input-group">
                                 <span class="input-group-text">Price</span>
@@ -172,13 +177,15 @@
                             </div>
                         </div>
                         <div class="col-md-6">
-                            <div class="input-group">
-                                <span class="input-group-text">Discount</span>
-                                <input type="text" required value="0" min=0 max=1 id="discount" class="form-control">
+                            <div class="border border-1 p-2 rounded-2">
+                                <label class="btn btn-info" for="src">Choose source</label>
+                                <input class="form-control" type="file" name="src" id="src" class="form-control" onchange="inputSrc(this)" style="display:none">
+                                <span class="src"></span>
                                 <div class="invalid-feedback">
-                                    Please enter a valid discount.
+                                    Please enter a valid source of the product.
                                 </div>
                             </div>
+
                         </div>
                     </div>
                     <div class="row mt-3">
@@ -187,12 +194,11 @@
                             <textarea id="sdesc"></textarea>
                         </div>
                         <div class="col-md-6 mt-3">
-                            <div class="border border-1 p-2 rounded-2">
-                                <label class="btn btn-info" for="src">Choose source</label>
-                                <input class="form-control" type="file" name="src" id="src" class="form-control" onchange="inputSrc(this)" style="display:none">
-                                <span class="src"></span>
+                            <div class="input-group">
+                                <span class="input-group-text">Discount</span>
+                                <input type="text" required value="0" min=0 max=1 id="discount" class="form-control">
                                 <div class="invalid-feedback">
-                                    Please enter a valid source of the product.
+                                    Please enter a valid discount.
                                 </div>
                             </div>
                             <div class="border boder-1 mt-3 p-2 rounded-2">

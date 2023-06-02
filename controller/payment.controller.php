@@ -14,7 +14,7 @@ if ($method == 'POST') {
         switch ($_GET['function']) {
             case "check_Library":
                 $resutl = $checkout->check_Library($_GET['id']);
-                echo $resutl;
+                echo json_encode(array("status" => "success", "message" => $resutl));
                 break;
             case "view_Library":
                 $result = $checkout->view_Library(isset($_GET['page']) ? $_GET['page'] : 1);

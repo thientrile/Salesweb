@@ -64,12 +64,12 @@ class invoice
         }
     }
     // Libary
-    function check_Library($product_id)
+    function check_Library($product_item_id)
     {
         $db = new connect();
-        $select = "SELECT COUNT(*) FROM `order_details` WHERE product_id=" . $product_id . " and order_id IN( SELECT id FROM `order` WHERE user_id=" . $this->userId . ")";
+        $select = "SELECT COUNT(*) FROM `order_details` WHERE product_item_id=" . $product_item_id . " and order_id IN( SELECT id FROM `order` WHERE user_id=" . $this->userId . ")";
         $result = $db->getonce($select);
-        return  json_encode(array("status" => "success", "message" => $result[0] > 0 ? true : false));
+        return  $result[0]>0;
     }
     function view_Library($currentPage = 1)
     {

@@ -6,7 +6,18 @@
     </div>
 </div>
 <div class="creative">
+    <div class="container translate-top">
+        <div class="row" id="product">
+            <div class="col-12 d-flex justify-content-center">
+                <div class="spinner-border text-info "></div>
+            </div>
 
+
+        </div>
+
+
+
+    </div>
 
 </div>
 <div id="page" class="d-flex justify-content-center">

@@ -13,12 +13,9 @@ switch (isset($_GET['function']) ? $_GET['function'] : 0) {
             switch ($method) {
                 case "GET": {
                         $result = $admin->getProduct(isset($_GET['page']) && $_GET['page'] != "" ? (int) $_GET['page'] : 1, isset($_GET['cate']) && $_GET['cate'] != "" ? $_GET['cate'] : 0, isset($_GET['keySearch']) ? $_GET['keySearch'] : "");
-                        $array = array();
-                        while ($row = $result->fetch()) {
-                            array_push($array, $row);
-                        }
+                        
 
-                        echo json_encode(array("status" => "success", "data" => $array, "page" => $admin->countpage));
+                        echo $result;
                         break;
                     }
                 case "POST": {
