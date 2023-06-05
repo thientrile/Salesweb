@@ -11,20 +11,19 @@ function loadCart() {
         let items = "";
         for (let i of res) {
           items += ` <div class="row bg-white shadow-lg m-2 p-2 rounded bg-white">
-              <div class="col-3 p-2" style="line-height: 100%;">${i.title}</div>
-              <div class="col-3"><img width="50%" src="${i.img}" alt=""></div>
-              <div class="col-3 p-2">${
-                i.discount > 0
-                  ? `         <sub style="text-decoration:line-through">${
-                      i.price
-                    }</sub>$ ${i.price - i.price * i.discount}`
-                  : i.price > 0
-                  ? `$ ${i.price}`
-                  : "Free"
-              }</div>
-              <div class="col-3 p-2 "> <button cartId="${
-                i.id
-              }" class="btn btn-danger m-auto cartDel" onclick="cartDel(this)">Delete</button> </div>
+              <div class="col-2 p-2" style="line-height: 100%;">${i.title}</div>
+              <div class="col-2"><img width="50%" src="${i.img}" alt=""></div>
+              <div class="col-2 p-2"> ${i.variation}</div>
+              <div class="col-2 p-2">${i.discount > 0
+              ? `         <sub style="text-decoration:line-through">${i.price
+              }</sub>$ ${i.price - i.price * i.discount}`
+              : i.price > 0
+                ? `$ ${i.price}`
+                : "Free"
+            }</div>
+             
+              <div class="col-2 p-2 "> <button cartId="${i.id
+            }" class="btn btn-danger m-auto cartDel" onclick="cartDel(this)">Delete</button> </div>
           </div>         `;
         }
         items += ` <div class="row bg-white shadow-lg m-2 p-2 rounded bg-white">
@@ -46,7 +45,7 @@ function loadCart() {
       }
     })
     .catch((xhr, sta, err) => {
-      
+
       $("#cart").html(` <span>Please <a style="color:#35c29f;font-weight:600;text-decoration:underline" href="index.php?action=login">Login</a></span> `);
       $("#cart").css({ background: "white", "min-height": "150px" });
       $("#cart").addClass("shadow-lg p-2 d-flex justify-content-center align-items-center");

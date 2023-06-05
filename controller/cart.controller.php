@@ -1,10 +1,10 @@
 <?php
 
 $method = $_SERVER['REQUEST_METHOD'];
-if ($method == 'POST'  && isset($_SESSION["s_user"]) && !$Cart->checkCart($_SESSION["s_user"], $_POST['id'])) {
+if ($method == 'POST'  && isset($_SESSION["s_user"])) {
 
-    $Cart->addCart($_SESSION["s_user"], $_POST['id']);
-    echo json_encode(array("status" => "success"));
+
+    echo json_encode(array("status" => $Cart->addCart($_SESSION["s_user"], $_POST['id']) ? "success" : "failed"));
 } elseif ($method == 'GET' && isset($_SESSION["s_user"])) {
 
 
@@ -12,14 +12,16 @@ if ($method == 'POST'  && isset($_SESSION["s_user"]) && !$Cart->checkCart($_SESS
 
         $result = $Cart->checkCart($_SESSION["s_user"], $_GET['id']);
         $array = array("result" => $result);
+        echo json_encode($array);
     } else {
         $array = array();
         $result = $Cart->viewCart($_SESSION["s_user"]);
+        $array = array();
         while ($row = $result->fetch()) {
-            array_push($array, $row);
+            array_push($array, array("id" => $row['id'], "title" => $row['title'], "img" => $row['img'], "price" => $row['price'], "discount" => $row['discount'], "variation" => $row['name'] . " " . $row['value']));
         }
+        echo json_encode($array);
     }
-    echo json_encode($array);
 } elseif ($method == 'PUT') {
 } elseif ($method == 'DELETE') {
     if (isset($_GET['id'])) {

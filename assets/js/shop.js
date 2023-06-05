@@ -7,7 +7,30 @@
 function getprice(price) {
   $("#rePrice").text(price != 0 ? formatCurrency(price) : "Free")
 
+  let product_item_id = $("input[name='product_item']:checked").val()
+  $("#cart").attr({ onclick: `addToCart(${product_item_id})` })
+  $("#payment").attr({ onclick: `payment(${product_item_id})` })
 
+
+}
+function addToCart(id) {
+  let data = new FormData();
+  $("#cart").html(`<div class="spinner-border text-light"></div>`)
+  data.append("id", id);
+  let Server = new server();
+  Server.post("action=cart", data).then((res, req) => {
+    if (res.status == "success") {
+      countCart()
+    }
+  }).catch((xhr, status, error) => {
+    console.log(xhr.responseText);
+  }).finally(() => {
+    loadproduct();
+
+  })
+}
+function payment(id) {
+  window.location.href = `index.php?action=payment&id=${id}`;
 }
 /**
  * The function navigates to a specific page and loads products while creating pagination.
@@ -83,24 +106,14 @@ function loadproducts() {
  * The function loads a product page with details and media content from a server response.
  */
 function loadproduct() {
-  $(".creative").html(` <div class="container translate-top">
-  <div class="row" id="product">
-  <div class="col-12 d-flex justify-content-center">
-  <div class="spinner-border text-info "></div></div>
 
-
-  </div>
- 
-
-
-</div>`);
   let id = window.location.href.split("id=")[1].split("&")[0];
   let Server = new server();
   Server.get(`action=product&id=${id}`)
     .then((res, _req) => {
       let options = res.options
       let btn = `   <button type="button" class="btn btn-outline-warning" id="cart" onclick="addToCart(${options[options.length - 1].id})"><i class="fa-solid fa-cart-plus"></i></button>
-      <button type="button" class="btn btn-success mt-2"><i class="fa-solid fa-credit-card" id="payment" onclick="payment(${options[options.length - 1].id})"></i></button>`;
+      <button type="button" class="btn btn-success mt-2"id="payment" onclick="payment(${options[options.length - 1].id})"><i class="fa-solid fa-credit-card"  ></i></button>`;
       let price = ""
 
 
@@ -108,39 +121,45 @@ function loadproduct() {
       let cart = 0;
 
       let checkout = 0;
+
       for (let i = 0; i < options.length; i++) {
         if (!options[i].check) {
           if (res.multiple) {
 
             price += `<div class="form-check">
-                <input type="radio" class="form-check-input" id="radio${options[i].id}" name="product_item"  value="${options[i].id}" onchange="getprice(${options[i].price})"${!options[i].check ? "checked" : ""} >
-                <label  class="form-check-label" for="radio${options[i].id}"> ${options[i].name + " " + options[i].value + " - " + formatCurrency(options[i].price)}                  
+                <input type="radio" class="form-check-input" id="radio${options[i].id}" name="product_item"  value="${options[i].id}" onchange="getprice(${options[i].price},)"${!options[i].check ? "checked" : ""} >
+                <label   for="radio${options[i].id}"> ${options[i].name + " " + options[i].value + " - " + formatCurrency(options[i].price)} ${options[i].cart ? `<span style="transform: translateY(-50%);" class="badge rounded-pill bg-warning">in cart</span>` : ""}                  
                 </label>
               </div>`;
           }
 
 
         }
-        else if (options[i].check) {
-          checkout++
-          console.log(checkout);
-          if (checkout == options.length) {
-            btn = ` <button type="button" class="btn btn-outline-warning" id="library" onclick="window.location.href('index.php?action=library')">View Library</button>`
-          }
 
-        }
-        else if (options[i].cart) {
+        if (options[i].cart) {
           cart++;
-          console.log(options[i].cart);
+          // console.log(options[i].cart);
           if (cart == options.length) {
-            btn = `   <button type="button" class="btn btn-outline-warning" id="cart" onclick="window.location.href('index.php?action=cart')">View Cart</button>
+            btn = `   <button type="button" class="btn btn-outline-warning" id="cart" onclick="window.location.href='index.php?action=cart'"><i class="fa-solid fa-cart-shopping"></i></button>
             <button type="button" class="btn btn-success mt-2"><i class="fa-solid fa-credit-card" id="payment" onclick="payment(${options[options.length - 1].id})"></i></button>`;
           }
 
+
+        }
+        if (options[i].check) {
+          checkout++
+          // console.log(checkout);
+          if (checkout == options.length) {
+            btn = ` <button type="button" class="btn btn-outline-warning" id="library" onclick="window.location.href='index.php?action=library'"><i class="fa-regular fa-floppy-disk"></i></button>`
+          }
+
         }
 
 
 
+      }
+      if (!checkCookie('c_user')) {
+        btn = `<a href="action=login" class="btn btn-success">Login</a>`;
       }
 
 

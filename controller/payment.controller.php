@@ -3,7 +3,7 @@ $method = $_SERVER['REQUEST_METHOD'];
 if ($method == 'POST') {
 
     if (isset($_POST['id'])) {
-        $result = $checkout->order_One($_POST['id'], $_POST['discount'], $_POST['price']);
+        $result = $checkout->order_One($_POST['id']);
         echo $result;
     } else {
         $resutl = $checkout->order();

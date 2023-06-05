@@ -22,8 +22,13 @@ if (isset($_GET['function']) && $_GET['function'] == "category") {
         }
         echo json_encode($array);
     } else {
+
+
         echo $product->viewProductDetails($_GET['id']);
     }
+} else if (isset($_GET['options'])) {
+
+    echo $product->options($_GET['options']);
 } else {
 
 

@@ -51,8 +51,9 @@ function view() {
       $("#items").html(items);
     });
   } else {
-    Server.get(`action=product&id=${id}`)
+    Server.get(`action=product&options=${id}`)
       .then((res, req) => {
+        console.log(res);
         $("#items").html(`<div class="row ">
         <div class="col-3 p-2" style="line-height: 100%;">${res.title}</div>
         <div class="col-3"><img width="50%" src="${res.img}" alt=""></div>

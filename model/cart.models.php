@@ -4,10 +4,15 @@ class cart
 {
    function addCart($userId, $product_item_id)
    {
-      $db = new connect();
-      $product_id = $db->send("SELECT product_id FROM product_item WHERE id=$product_item_id")[0];
-      $query = "insert into cart(`id`, `user_id`, `product_id`, `product_item_id`) values (NULL,$userId, $product_id,$product_item_id)";
-      return $db->send($query);
+      if (!$this->checkCart($userId, $product_item_id)) {
+
+         $db = new connect();
+         $product_id = $db->getonce("SELECT product_id FROM product_item WHERE id=$product_item_id")[0];
+
+         $query = "insert into cart(`id`, `user_id`, `product_id`, `product_item_id`) values (NULL,$userId, $product_id,$product_item_id)";
+         return $db->send($query);
+      }
+      return false;
    }
    function deletecart($id)
    {
@@ -37,10 +42,12 @@ class cart
    function viewCart($userId)
    {
       $db = new connect();
-      $select = "select cart.id as id , product_id, title, img, discount  from cart, product where user_id=$userId and product_id=product.id";
+      $select = "SELECT cart.id as id,cart.product_id, cart.product_item_id, product.title, product.img, product_item.price, discount,name, value FROM `cart` LEFT JOIN product ON product_id= product.id LEFT JOIN product_item ON product_item_id= product_item.id LEFT JOIN product_cofiguration ON product_item.id= product_cofiguration.product_item_id LEFT JOIN variation_option ON variation_option.id = product_cofiguration.variation_option_id LEFT JOIN variation ON variation.id= variation_option.variation_id  WHERE cart.user_id=$userId";
 
-      $result = $db->getlist($select);
-      return $result;
+    
+     
+      return  $db->getlist($select);
+      
    }
    function deleteOne($id)
    {

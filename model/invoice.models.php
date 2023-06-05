@@ -25,7 +25,7 @@ class invoice
             $this->orderId = $result[0];
             $c = $cart->viewCart($this->userId);
             while ($item = $c->fetch()) {
-                $inserts = "INSERT INTO `order_details`(`id`, `order_id`, `product_id`, `price`, `discount`) VALUES (NULL,$this->orderId,$item[1],$item[5],$item[4])";
+                $inserts = "INSERT INTO `order_details`(`id`, `order_id`, `product_id`, `product_item_id`, `price`, `discount`) VALUES (NULL,$this->orderId,$item[1],$item[2],$item[5],$item[6])";
                 $db->send($inserts);
             }
             $update = "UPDATE user SET balance=balance-$total WHERE id=$this->userId";
@@ -36,10 +36,12 @@ class invoice
             return json_encode(array("status" => "fail", "message" => "Please add more money to your account"));
         }
     }
-    function order_One($product_id, $discount, $price)
+    function order_One($product_item_id)
     {
         $db = new connect();
-
+        $row = $db->getonce("SELECT price, discount, product_id, product_item.id FROM `product_item` RIGHT JOIN product ON product_id=product.id WHERE product_item.id=$product_item_id");
+        $price = $row['price'];
+        $discount = $row['discount'];
         $total = $price - $price * $discount;
         $user = new user();
         $balance = $user->getInfor($this->userId)[3];
@@ -49,14 +51,13 @@ class invoice
             $select = "SELECT MAX(id) FROM `order`";
             $result = $db->getonce($select);
             $this->orderId = $result[0];
-            // echo $this->orderId;
-
-            $inserts = "INSERT INTO `order_details`(`id`, `order_id`, `product_id`, `price`, `discount`) VALUES (NULL,$this->orderId,$product_id,$price,$discount)";
+          
+            $inserts = "INSERT INTO `order_details`(`id`, `order_id`, `product_id`, `product_item_id`, `price`, `discount`) VALUES (NULL,$this->orderId,$row[2],$row[3],$price,$discount)";
             $db->send($inserts);
 
             $update = "UPDATE user SET balance=balance-$total WHERE id=$this->userId";
             $db->send($update);
-            $query = "delete from cart where user_id=$this->userId and product_id=$product_id";
+            $query = "delete from cart where user_id=$this->userId and product_item_id=$product_item_id";
             $db->send($query);
             return json_encode(array("status" => "success", "message" => "Payment success", "orderId" => $this->orderId));
         } else {
@@ -69,7 +70,7 @@ class invoice
         $db = new connect();
         $select = "SELECT COUNT(*) FROM `order_details` WHERE product_item_id=" . $product_item_id . " and order_id IN( SELECT id FROM `order` WHERE user_id=" . $this->userId . ")";
         $result = $db->getonce($select);
-        return  $result[0]>0;
+        return  $result[0] > 0;
     }
     function view_Library($currentPage = 1)
     {
