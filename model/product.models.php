@@ -30,7 +30,7 @@ class product
 
 
             $option = array();
-            $select_items = "SELECT product_item.id, price,sources,name,value  FROM `product_item` LEFT JOIN product_cofiguration ON product_item.id=product_cofiguration.product_item_id LEFT JOIN
+            $select_items = "SELECT DISTINCT product_item.id, price,sources,name,value  FROM `product_item` LEFT JOIN product_cofiguration ON product_item.id=product_cofiguration.product_item_id LEFT JOIN
                 variation_option ON product_cofiguration.variation_option_id= variation_option.id LEFT JOIN variation ON variation.id=variation_option.variation_id WHERE product_id=" . $row['id'];
             $resutl_items = $cc->getlist($select_items);
             while ($item = $resutl_items->fetch()) {
@@ -60,7 +60,7 @@ class product
 
 
         $option = array();
-        $select_items = "SELECT product_item.id, price,sources,name,value  FROM `product_item` LEFT JOIN product_cofiguration ON product_item.id=product_cofiguration.product_item_id LEFT JOIN
+        $select_items = "SELECT DISTINCT product_item.id, price,sources,name,value  FROM `product_item` LEFT JOIN product_cofiguration ON product_item.id=product_cofiguration.product_item_id LEFT JOIN
             variation_option ON product_cofiguration.variation_option_id= variation_option.id LEFT JOIN variation ON variation.id=variation_option.variation_id WHERE product_id=$productsId";
         $resutl_items = $cc->getlist($select_items);
         while ($item = $resutl_items->fetch()) {

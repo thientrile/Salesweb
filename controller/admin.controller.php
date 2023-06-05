@@ -12,10 +12,20 @@ switch (isset($_GET['function']) ? $_GET['function'] : 0) {
             // Product Management
             switch ($method) {
                 case "GET": {
-                        $result = $admin->getProduct(isset($_GET['page']) && $_GET['page'] != "" ? (int) $_GET['page'] : 1, isset($_GET['cate']) && $_GET['cate'] != "" ? $_GET['cate'] : 0, isset($_GET['keySearch']) ? $_GET['keySearch'] : "");
-                        
+                        switch (isset($_GET['type']) ? $_GET['type'] : "0") {
+                            default: {
+                                    echo $admin->getProduct(isset($_GET['page']) && $_GET['page'] != "" ? (int) $_GET['page'] : 1, isset($_GET['cate']) && $_GET['cate'] != "" ? $_GET['cate'] : 0, isset($_GET['keySearch']) ? $_GET['keySearch'] : "");
 
-                        echo $result;
+
+
+                                    break;
+                                }
+                            case "variables": {
+                                    echo $admin->getVariables(isset($_GET['cate_id']) ? $_GET['cate_id'] : 0);
+                                    break;
+                                }
+                        }
+
                         break;
                     }
                 case "POST": {

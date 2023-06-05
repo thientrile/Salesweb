@@ -50,7 +50,7 @@ function loads() {
     ).val()}&page=${currentPages}`
   )
     .then((res, req) => {
-     
+
       let view = "";
       let data = res.data;
       totalPages = res.page;
@@ -65,6 +65,7 @@ function loads() {
 
           price.push(formatCurrency(j.price));
         }
+        ;
         view += `
          
          
@@ -76,7 +77,7 @@ function loads() {
                 <td scope="row">${i.discount * 100}%</td>
                 <td scope="row">${price.join(" ")}</td>
                 <td><button  type="button" class="btn btn-light" onclick="Hidden(this,${i.id
-          })">${i.hide == 0 ? "Show" : "Hidden"}</button></td>
+          })">${i.hidden == 0 ? "Show" : "Hidden"}</button></td>
                 <td ><div class="btn-group-vertical">
                 <button type="button" class="btn btn-outline-muted mb-2 btn-sm" onclick="arrow(this,${i.id},1)"><i class="fa-solid fa-arrow-up"></i></button>
                 <button type="button" class="btn btn-outline-muted btn-sm"onclick="arrow(this,${i.id},-1)"><i class="fa-solid fa-arrow-up fa-rotate-180"></i></button>
@@ -102,14 +103,14 @@ function getCate(id = 0) {
   Server.get(`action=product&function=category`)
     .then((res, req) => {
       let view = "";
-      let cate="";
+      let cate = "";
       let managenment = "";
       res.forEach((i) => {
-        console.log(i.id == 0 ? "--Select--" : i.name);
+
         view += `<option value="${i.id}" ${id == i.id ? "selected" : ""}>${i.id == 0 ? "--Select--" : i.name
           }</option>`;
-          cate+=`<option value="${i.id}" >${i.id == 0 ? "--Select--" : i.name
-        }</option>`
+        cate += `<option value="${i.id}" >${i.id == 0 ? "--Select--" : i.name
+          }</option>`
         managenment += i.id == 0 ? "" : `<tr>
           
           <td>${i.name}</td>
@@ -118,13 +119,67 @@ function getCate(id = 0) {
           
         </tr>`;
       });
-      $("#cate").html( cate);
+      $("#cate").html(cate);
+      $(".cate").html(cate);
       $("#category").html(view);
       $("#cate-management").html(managenment);
     })
     .catch((xhr, status, error) => {
       console.log(xhr, status, error);
     });
+}
+function addProductItems() {
+
+  let number = new Date().getTime();
+  $("#variation").append(`<div id="var-${number}">
+  <button type="button" class="btn-close" onclick="this.parentNode.remove()"></button>
+  <div class="row">
+      <div class="col-md-4">
+          <div class="row">
+              <div class="col-4">
+                  <select class="form-select cate"onchange="getVariation(${number})" id="cate-${number}">
+
+                  </select>
+              </div>
+              <div class="col-4">
+                  <select class="form-select variables"id="variables-${number}">
+
+                  </select>
+              </div>
+              <div class="col-4">
+                  <select class="form-select  variables-value"id="variables-value-${number}">
+
+                  </select>
+              </div>
+          </div>
+
+      </div>
+
+  </div>
+  <div class="row mt-3">
+
+      <div class="col-md-6">
+          <div class="input-group">
+              <span class="input-group-text">Price</span>
+              <input type="text" name="price[]" required value="0" id="price" class="form-control">
+              <div class="invalid-feedback">
+                  Please enter a valid price.
+              </div>
+          </div>
+      </div>
+      <div class="col-md-6">
+          <div class="border border-1 p-2 rounded-2">
+              <label class="btn btn-info" for="src${number}">Choose source</label>
+              <input class="form-control" type="file" name="src[]" id="src${number}" class="form-control" onchange="inputSrc(this,'src-${number}')" style="display:none">
+              <span class="src"id="src-${number}"></span>
+              <div class="invalid-feedback">
+                  Please enter a valid source of the product.
+              </div>
+          </div>
+      </div>
+  </div>
+</div>`)
+  getCate();
 }
 function load(id) {
   $("#form-data").removeClass("was-validated");
@@ -134,7 +189,7 @@ function load(id) {
   arrGallery = [];
   loadGallery(id);
   $("#reset").attr({ onclick: `load(${id})` });
-  $("#form-data").attr({ onsubmit: "update(event)" });
+  $("#form-data").attr({ onsubmit: "update(event,this)" });
   $("#function").text("Update");
   let Server = new server();
   $(".modal-title").text("Edit Product");
@@ -144,9 +199,68 @@ function load(id) {
       $("#title").val(res.title);
       $("#id").val(res.id);
       getCate(res.category_id);
-      $("#price").val(res.price);
       $("#discount").val(res.discount);
-      $(".src").text(res.source.substring(res.source.lastIndexOf("/") + 1));
+      let options = "";
+      let variables = res.options
+      // console.log(res.options);
+      variables.forEach((items) => {
+
+        options += `
+        
+        <div id="var-${items.id}">
+        <button type="button" class="btn-close"></button>
+        <div class="row">
+        <div class="col-md-4">
+            <div class="row">
+                <div class="col-4">
+                    <select class="form-select cate"onchange="getVariation(${items.id})" id="cate-${items.id}" >
+
+                    </select>
+                </div>
+                <div class="col-4">
+                    <select class="form-select variables" id="variables-${items.id}">
+
+                    </select>
+                </div>
+                <div class="col-4">
+                    <select class="form-select  variables-value"id="variables-value-${items.id}">
+
+                    </select>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+    <div class="row mt-3">
+
+        <div class="col-md-6">
+            <div class="input-group">
+                <span class="input-group-text">Price</span>
+                <input type="text" name="price[]" required value="${items.price}" id="price-${items.id}" class="form-control">
+                <div class="invalid-feedback">
+                    Please enter a valid price.
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="border border-1 p-2 rounded-2">
+                <label class="btn btn-info" for="src-${items.id}">Choose source</label>
+                <input class="form-control" type="file" name="src[]" id="src-${items.id}" class="form-control" onchange="inputSrc(this,'src-name-${items.id}')" style="display:none">
+                <span class="src"id="src-name-${items.id}">${items.sources.substring(items.sources.lastIndexOf("/") + 1)}</span>
+                <div class="invalid-feedback">
+                    Please enter a valid source of the product.
+                </div>
+            </div>
+
+        </div>
+    </div>
+        </div>
+        `;
+
+      })
+
+      $("#variation").html(options);
       tinymce.get("sdesc").setContent(res.sDescription);
       tinymce.get("desc").setContent(res.description);
       $("#img-prev").attr({
@@ -157,6 +271,24 @@ function load(id) {
     .catch((xhr, status, error) => {
       console.log(xhr, status, error);
     });
+}
+function getVariation(number = 0) {
+  let Server = new server();
+  let id = $(`#cate-${number}`).val()
+  Server.get(`action=admin&function=product&type=variables&cate_id=${id}`).then((res, req) => {
+    let variable = ""
+    for (let i of res.variation) {
+      variable += `<option value="${i.id}">${i.id == 0 ? "Default" : i.name}</option>`
+    }
+    let options = "";
+    for (let i of res.variable_options) {
+      options += `<option value="${i.id}">${i.id == 0 ? "Default" : i.value}</option>`
+    }
+    $(`#variables-${number}`).html(variable);
+    $(`#variables-value-${number}`).html(options)
+  }).catch((xhr, status, error) => {
+    console.log(xhr);
+  })
 }
 function loadGallery(id) {
   let Server = new server();
@@ -249,9 +381,9 @@ function getFileType(filename) {
     return "image";
   }
 }
-function inputSrc(input) {
+function inputSrc(input, id) {
   let file = input.files;
-  $(".src").text(file[0].name);
+  $(`#${id}`).text(file[0].name);
 }
 function inputImage(input) {
   let file = input.files;
@@ -345,18 +477,20 @@ function delGallery(id) {
 function delimage(index) {
   arrGallery.splice(index, 1);
 }
-function update(e) {
+function update(e, form) {
   e.preventDefault();
-  let formData = new FormData();
+  let formData = new FormData(form);
+
   let id = $("#id").val();
   formData.append("title", $("#title").val());
   formData.append("img", $("#img").prop("files")[0]);
-  formData.append("src", $("#src").prop("files")[0]);
+
   formData.append("type", $("#category").val());
   formData.append("desc", tinymce.get("desc").getContent());
   formData.append("sdesc", tinymce.get("sdesc").getContent());
   formData.append("discount", $("#discount").val());
-  formData.append("price", $("#price").val());
+
+
   if (arrGallery.length > 0) {
     arrGallery.forEach((file) => {
       formData.append("gallery[]", file);
@@ -364,6 +498,7 @@ function update(e) {
   } else {
     formData.append("gallery[]", $("#gallery").prop("files")[0]);
   }
+
   let Server = new server();
   Server.post(`action=admin&function=product&id=${id}`, formData)
     .then((res, req) => {
@@ -426,7 +561,6 @@ function del(e, id) {
 function addNew(e) {
   e.preventDefault();
   let formData = new FormData();
-
   formData.append("title", $("#title").val());
   formData.append("img", $("#img").prop("files")[0]);
   formData.append("src", $("#src").prop("files")[0]);
@@ -464,6 +598,7 @@ function addNew(e) {
 
 function Reset() {
   arrGallery = [];
+  getCate()
   $("#form-data").removeClass("was-validated");
   $("#form-data").attr({ onsubmit: "addNew(event)" });
   $("#title").val("");
@@ -472,6 +607,53 @@ function Reset() {
   $("#price").val("0");
   $("#discount").val("0").attr({ required: "true" });
   $(".src").text("");
+  $("#variation").html(`<div class="row">
+  <button type="button" class="btn-close"></button>
+  <div class="col-md-4">
+      <div class="row">
+          <div class="col-4">
+              <select class="form-select cate" id="cate-1" onclick="getVariation(1)">
+
+              </select>
+          </div>
+          <div class="col-4">
+              <select class="form-select variables" id="variables-1">
+
+              </select>
+          </div>
+          <div class="col-4">
+              <select class="form-select  variables-value" id="variables-value-1">
+
+              </select>
+          </div>
+      </div>
+
+  </div>
+
+</div>
+<div class="row mt-3">
+
+  <div class="col-md-6">
+      <div class="input-group">
+          <span class="input-group-text">Price</span>
+          <input type="text"name="price[]" required value="0"  class="form-control">
+          <div class="invalid-feedback">
+              Please enter a valid price.
+          </div>
+      </div>
+  </div>
+  <div class="col-md-6">
+      <div class="border border-1 p-2 rounded-2">
+          <label class="btn btn-info" for="src">Choose source</label>
+          <input class="form-control" type="file" name="src[]" id="src" class="form-control" onchange="inputSrc(this,'src')" style="display:none">
+          <span class="src"></span>
+          <div class="invalid-feedback">
+              Please enter a valid source of the product.
+          </div>
+      </div>
+
+  </div>
+</div>`)
   tinymce.get("sdesc").setContent("");
   tinymce.get("desc").setContent("");
   $("#img-prev").attr({
@@ -587,10 +769,7 @@ $(function () {
     image_dimensions: false,
 
     file_picker_callback: function (callback, value, meta) {
-      if (meta.filetype === "image") {
-        // Mở hộp thoại chọn ảnh
-        // Để đơn giản, ví dụ này sử dụng hộp thoại mặc định của trình duyệt
-        // Bạn có thể sử dụng thư viện tải lên tệp tin của riêng mình
+      if (meta.filetype === "image") {     
         var input = document.createElement("input");
         input.setAttribute("type", "file");
         input.setAttribute("accept", "image/*");
@@ -609,10 +788,7 @@ $(function () {
         };
         input.click();
       }
-      if (meta.filetype === "media") {
-        // Mở hộp thoại chọn video
-        // Để đơn giản, ví dụ này sử dụng hộp thoại mặc định của trình duyệt
-        // Bạn có thể sử dụng thư viện tải lên tệp tin của riêng mình
+      if (meta.filetype === "media") {        
         var input = document.createElement("input");
         input.setAttribute("type", "file");
         input.setAttribute("accept", "video/mp4");

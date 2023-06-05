@@ -196,27 +196,59 @@ class admin
         if ($keyword != "") {
             $Where .= " AND title LIKE '%$keyword%'";
         }
-        $count =  $cc->getonce('SELECT COUNT(*) FROM `product`WHERE ' . $Where . '  AND deleted=0 ');
+        $count =  $cc->getonce('SELECT COUNT(*) FROM `product`WHERE ' . $Where . '  AND deleted=0');
 
-        $page = $pageNumber > 0 && ($pageNumber <= ceil($count[0] / $view)) ? $pageNumber : 1;
 
-        $start = $view * $page - $view;
+        $start = ($pageNumber - 1) * $view;
 
-        $select = "select product.id as id, title,img,category_id, discount, deleted, category.name as name, hide from product,category WHERE $Where  AND deleted=0 AND product.category_id=category.id ORDER BY position ASC LIMIT $start,$view";
+        $select = "select product.id as id, title,img,category_id, discount, category.name as name,hide from product,category WHERE $Where   AND product.category_id=category.id AND deleted=0  ORDER BY position ASC LIMIT $start,$view";
         $this->countpage = ceil($count[0] / $view);
 
         $result = $cc->getlist($select);
         $array = array();
         while ($row = $result->fetch()) {
-            $select_items = "SELECT * FROM `product_item` WHERE product_id=" . $row['id'];
+            $select_items = "SELECT * FROM `product_item` WHERE deleted=0 AND product_id=" . $row['id'];
             $resutl_items = $cc->getlist($select_items);
+
+
             $option = array();
+            $select_items = "SELECT DISTINCT product_item.id, price,sources,name,value  FROM `product_item` LEFT JOIN product_cofiguration ON product_item.id=product_cofiguration.product_item_id LEFT JOIN
+                variation_option ON product_cofiguration.variation_option_id= variation_option.id LEFT JOIN variation ON variation.id=variation_option.variation_id WHERE product_id=" . $row['id'];
+            $resutl_items = $cc->getlist($select_items);
             while ($item = $resutl_items->fetch()) {
-                array_push($option, array("price"=>$item['price'],"sources"=>$item['sources']));
+                $check = false;
+
+                $checkCart = false;
+                if (isset($_SESSION['s_user'])) {
+                    $checkLibary = new invoice($_SESSION['s_user']);
+                    $check = $checkLibary->check_Library($item['id']);
+                    $Cart = new cart();
+                    $checkCart = $Cart->checkCart($_SESSION['s_user'], $item['id']);
+                }
+                array_push($option, array("id" => $item['id'], "price" => $item['price'], "sources" => $item['sources'], "name" => $item['name'], "value" => $item['value'], "checked" => $check, "cart" => $checkCart));
             }
-            array_push($array, array("id" => $row['id'], "title" => $row['title'], "img" => $row['img'], "discount" => $row['discount'], "deleted" => $row['deleted'], "name" => $row['name'], "hide" => $row['hide'], "options" => $option,"multiple"=>sizeof($option)>1));
+
+            array_push($array, array("id" => $row['id'], "title" => $row['title'], "img" => $row['img'], "discount" => $row['discount'], "name" => $row['name'], "hidden" => $row['hide'], "options" => $option, "multiple" => $resutl_items->rowCount() > 1));
         }
-        echo json_encode(array("status" => "success", "data" => $array,"page"=> ceil($count[0] / $view)));
+        return json_encode(array("status" => "success", "data" => $array, "page" => ceil($count[0] / $view)));
+    }
+    // get variables
+    function getVariables($cate_id = 0)
+    {
+        $cc = new connect();
+        $select = "SELECT * FROM `variation` WHERE category_id =$cate_id";
+        $variables = array();
+        $result = $cc->getlist($select);
+        while ($row = $result->fetch()) {
+            array_push($variables, array("id" => $row['id'], "name" => $row['name']));
+        }
+        $select = "SELECT * FROM `variation` LEFT JOIN variation_option ON variation_option.variation_id= variation.id WHERE category_id=$cate_id ";
+        $variable_options = array();
+        $result = $cc->getlist($select);
+        while ($row = $result->fetch()) {
+            array_push($variable_options, array("id" => $row['id'], "value" => $row['value']));
+        }
+        return json_encode(array("variation" => $variables, "variable_options" => $variable_options));
     }
     // insert product
     function insertProduct($title, $fileAvatar, $fileSrc, $cate, $desc, $sdesc, $discount, $price, $filesGallery)

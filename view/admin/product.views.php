@@ -74,12 +74,13 @@
         </div>
     </div>
     <div class="shadow-lg  p-4  d-flex justify-content-center">
-        <button onclick="Reset()" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#myModal">Add product <i class="fa-solid fa-plus mx-2"></i></button>
-    </div>
-    <div class="shadow-lg  p-4  d-flex justify-content-center">
         <button onclick="getCate()" class="btn  btn-outline-success" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">Category manager<i class="fa-solid fa-bars mx-2"></i></i></button>
 
     </div>
+    <div class="shadow-lg  p-4  d-flex justify-content-center">
+        <button onclick="Reset()" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#myModal">Add product <i class="fa-solid fa-plus mx-2"></i></button>
+    </div>
+
 </div>
 <div class="table-responsive-md shadow-lg mt-2 p-5 rounded-2 border-2">
     <table class="table table-hover  ">
@@ -140,7 +141,7 @@
                         <div class="col-md-6">
                             <div class="input-group">
                                 <span class="input-group-text">Title</span>
-                                <input type="text" required id="title" class="form-control" placeholder="Enter product title" required>
+                                <input type="text" required id="title"name="title" class="form-control" placeholder="Enter product title" required>
                                 <div class="invalid-feedback">
                                     Please enter a valid title.
                                 </div>
@@ -161,32 +162,12 @@
                             </div>
                         </div>
                     </div>
-                    <div class="row mt-3">
-                        <div class="form-check">
+                    <div class="mt-3" id="variation">
 
-                            <input class="form-checkbox-input" type="checkbox" name="multiple" vaule="true" id="multiple">
-                            <label for="multiple" class="form-check-label">Products with many variations</label>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="input-group">
-                                <span class="input-group-text">Price</span>
-                                <input type="text" required value="0" id="price" class="form-control">
-                                <div class="invalid-feedback">
-                                    Please enter a valid price.
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="border border-1 p-2 rounded-2">
-                                <label class="btn btn-info" for="src">Choose source</label>
-                                <input class="form-control" type="file" name="src" id="src" class="form-control" onchange="inputSrc(this)" style="display:none">
-                                <span class="src"></span>
-                                <div class="invalid-feedback">
-                                    Please enter a valid source of the product.
-                                </div>
-                            </div>
 
-                        </div>
+                    </div>
+                    <div class="mt-3">
+                        <button type="button" class="btn btn-outline-success" onclick="addProductItems()">Add variation</button>
                     </div>
                     <div class="row mt-3">
                         <div class="col-md-6">
@@ -208,7 +189,6 @@
                                     Please enter a valid image of the product.
                                 </div>
                                 <img src="" class="mt-3" id="img-prev" alt="" width="100%" style="object-fit: cover;max-height:320px">
-
                             </div>
                         </div>
                     </div>
@@ -217,7 +197,6 @@
                         <textarea id="desc"></textarea>
                     </div>
                     <div class="mt-3">
-
                         <label class="h5" for="gallery">Gallery</label>
                         <br>
                         <label class="btn btn-outline-primary" for="gallery">Select image gallery</label>
@@ -248,7 +227,6 @@
     </div>
     <div class="offcanvas-body">
         <form onsubmit="managerCate(event,this)">
-
             <div class="form-floating input-group mb-3">
                 <input type="Text" class="form-control" name="name" id="addcate">
                 <label for="addcate">Add new category</label>
