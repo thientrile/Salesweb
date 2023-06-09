@@ -1,3 +1,150 @@
+function multipleVar() {
+  if ($('#multiple').is(':checked')) {
+    $("#keys").html(`  <div class="mt-3">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="input-group">
+                <span class="input-group-text">Name</span>
+                <input type="text" class="form-control">
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="input-group">
+                <span class="input-group-text">Value</span>
+                <input type="text" class="form-control">
+            </div>
+        </div>
+        <div class="col-md-4"> <button type="button" class="btn btn-outline-success" onclick="addVariables()">Add variation</button></div>
+    </div>
+
+</div>`);
+    $("#variation").html('');
+  } else {
+    $("#keys").html(``);
+    $("#variation").html(`<div class="row">
+   
+    
+  <div class="row mt-3">
+  
+    <div class="col-md-6">
+        <div class="input-group">
+            <span class="input-group-text">Price</span>
+            <input type="text"name="price" required value="0"  class="form-control">
+            <div class="invalid-feedback">
+                Please enter a valid price.
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="border border-1 p-2 rounded-2">
+            <label class="btn btn-info" for="src">Choose source</label>
+            <input class="form-control" type="file" name="src" id="src" class="form-control" onchange="inputSrc(this,'src-1')" style="display:none" required>
+            <span class="src"id="src-1"></span>
+            <div class="invalid-feedback">
+                Please enter a valid source of the product.
+            </div>
+        </div>
+  
+    </div>
+  </div>`)
+
+  }
+}
+
+var variables = [];
+function delvariables(element, name, id) {
+  element.parentNode.remove()
+  let i = variables.findIndex((item) => { return item.name == name })
+  let j = variables[i].data.findIndex((item) => { return item.id == id })
+  variables[i].data.splice(j, 1)
+  if (variables[i].data.length == 0) {
+    variables.splice(i, 1)
+
+  }
+
+
+
+}
+function addVariables() {
+  let name = $("#keys > div > div > div:nth-child(1) > div > input").val().trim() != '' ? $("#keys > div > div > div:nth-child(1) > div > input").val().trim().split(",") : '';
+
+
+  let value = $("#keys > div > div > div:nth-child(2) > div > input").val().trim() != '' ? $("#keys > div > div > div:nth-child(2) > div > input").val().trim().split(",") : ""
+
+  if (name != '' && value != '') {
+
+    let result = []
+
+    for (let i = 0; i < name.length; i++) {
+      variables.push({ name: name[i], data: [] })
+      for (let j = 0; j < value.length; j++) {
+        result.push({ name: name[i], value: value[j] })
+        let number = (new Date).getTime() + Math.floor(Math.random() * (new Date).getTime());
+        variables[variables.length - 1].data.push({ value: value[j], price: 0, sources: "", id: number })
+        $("#variation").append(`
+        <div id="var-${number}">
+        <input  type="hidden" name="product-item-id[]" value="${number}">
+            <button type="button" class="btn-close" onclick="delvariables(this,'${name[i]}',${number})"></button>
+         <div class="row">
+         <div class="col-md-4">
+             <div class="row">                
+                 <div class="col-2">
+                 <span class="badge rounded-pill bg-success">${name[i]}</span>
+               
+                 </div>
+                 <div class="col-2">
+                
+                 ${value[j]}
+                 </div>
+             </div>
+         </div>
+     </div>
+        <div class="row mt-3">
+            <div class="col-md-6">
+                <div class="input-group">
+                    <span class="input-group-text">Price</span>
+                    <input type="text"value="0"  required value="" id="price-${number}" class="form-control">
+                    <div class="invalid-feedback">
+                        Please enter a valid price.
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="border border-1 p-2 rounded-2">
+                    <label class="btn btn-info" for="src-${number}">Choose source</label>
+                    <input class="form-control" type="file"  id="src-${number}" class="form-control" onchange="inputSrc(this,'src-name-${number}')" style="display:none"  required>
+                    <span class="src"id="src-name-${number}"></span>
+                    <div class="invalid-feedback">
+                        Please enter a valid source of the product.
+                    </div>
+                </div>
+  
+            </div>
+        </div>
+            </div>`)
+
+      }
+    }
+
+
+    $("#keys > div > div > div:nth-child(1) > div > input").val(null)
+
+    $("#keys > div > div > div:nth-child(2) > div > input").val(null)
+
+  }
+
+
+
+}
+function getVariables() {
+  for (let i of variables) {
+    for (let j of i.data) {
+      j.price = $(`#price-${j.id}`).val();
+      j.sources = $(`#src-${j.id}`).prop("files")[0];
+    }
+  }
+}
+
 function Hidden(e, id) {
   let text = $(e).text() == "Hidden" ? "Show" : "Hidden";
   let Server = new server();
@@ -14,7 +161,6 @@ function Hidden(e, id) {
 }
 
 var arrGallery = [];
-// pagination
 
 
 function navigateToPage(page) {
@@ -130,34 +276,19 @@ function getCate(id = 0) {
 }
 function addProductItems() {
 
+  let Server = new server();
+  Server.get("action=admin&function=product&type=variableOptions&optionsId=2")
   let number = new Date().getTime();
   $("#variation").append(`<div id="var-${number}">
   <button type="button" class="btn-close" onclick="this.parentNode.remove()"></button>
   <div class="row">
       <div class="col-md-4">
-          <div class="row">
-              <div class="col-4">
-                  <select class="form-select cate"onchange="getVariation(${number})" id="cate-${number}">
-
-                  </select>
-              </div>
-              <div class="col-4">
-                  <select class="form-select variables"id="variables-${number}">
-
-                  </select>
-              </div>
-              <div class="col-4">
-                  <select class="form-select  variables-value"id="variables-value-${number}">
-
-                  </select>
-              </div>
+          <div class="row">             
+             
           </div>
-
       </div>
-
   </div>
   <div class="row mt-3">
-
       <div class="col-md-6">
           <div class="input-group">
               <span class="input-group-text">Price</span>
@@ -179,7 +310,7 @@ function addProductItems() {
       </div>
   </div>
 </div>`)
-  getCate();
+  getVariation(number)
 }
 function load(id) {
   $("#form-data").removeClass("was-validated");
@@ -200,38 +331,39 @@ function load(id) {
       $("#id").val(res.id);
       getCate(res.category_id);
       $("#discount").val(res.discount);
+      $("#multiple").prop('checked', res.multiple)
       let options = "";
       let variables = res.options
-      // console.log(res.options);
+      multipleVar()
+
       variables.forEach((items) => {
 
         options += `
         
         <div id="var-${items.id}">
-        <button type="button" class="btn-close"></button>
-        <div class="row">
-        <div class="col-md-4">
-            <div class="row">
-                <div class="col-4">
-                    <select class="form-select cate"onchange="getVariation(${items.id})" id="cate-${items.id}" >
+       <input type="hidden" name="product-item-id[]" value="${items.id}">
+     ${res.multiple ? ` <button type="button" class="btn-close"></button> 
+     
+     
+     <div class="row">
+     <div class="col-md-4">
+     
+         <div class="row">                
+             <div class="col-2">
+             <span class="badge rounded-pill bg-success"> ${items.name}</span>
+            <input type="hidden" name="variation-name[]" value="${items.name}">
+               
+             </div>
+             <div class="col-2">
+             <input type="hidden" name="variation-value[]" value="${items.value}">
+             ${items.value}
+            
+             </div>
+         </div>
 
-                    </select>
-                </div>
-                <div class="col-4">
-                    <select class="form-select variables" id="variables-${items.id}">
+     </div>
 
-                    </select>
-                </div>
-                <div class="col-4">
-                    <select class="form-select  variables-value"id="variables-value-${items.id}">
-
-                    </select>
-                </div>
-            </div>
-
-        </div>
-
-    </div>
+ </div>`: ""}
     <div class="row mt-3">
 
         <div class="col-md-6">
@@ -258,9 +390,10 @@ function load(id) {
         </div>
         `;
 
+        $("#variation").html(options);
+
       })
 
-      $("#variation").html(options);
       tinymce.get("sdesc").setContent(res.sDescription);
       tinymce.get("desc").setContent(res.description);
       $("#img-prev").attr({
@@ -272,24 +405,7 @@ function load(id) {
       console.log(xhr, status, error);
     });
 }
-function getVariation(number = 0) {
-  let Server = new server();
-  let id = $(`#cate-${number}`).val()
-  Server.get(`action=admin&function=product&type=variables&cate_id=${id}`).then((res, req) => {
-    let variable = ""
-    for (let i of res.variation) {
-      variable += `<option value="${i.id}">${i.id == 0 ? "Default" : i.name}</option>`
-    }
-    let options = "";
-    for (let i of res.variable_options) {
-      options += `<option value="${i.id}">${i.id == 0 ? "Default" : i.value}</option>`
-    }
-    $(`#variables-${number}`).html(variable);
-    $(`#variables-value-${number}`).html(options)
-  }).catch((xhr, status, error) => {
-    console.log(xhr);
-  })
-}
+
 function loadGallery(id) {
   let Server = new server();
   Server.get(`action=product&id=${id}&function=gallery`)
@@ -545,11 +661,12 @@ function del(e, id) {
               timer: 1000,
             });
             e.parentNode.parentNode.remove();
+            loads()
           })
           .catch((xhr, status, error) => {
             console.log(xhr, status, error);
           })
-          .finailly(() => { });
+
       } else {
         $(e).text(`Delete`);
       }
@@ -558,17 +675,25 @@ function del(e, id) {
       console.log(error);
     });
 }
-function addNew(e) {
+
+function addNew(e, form) {
   e.preventDefault();
-  let formData = new FormData();
-  formData.append("title", $("#title").val());
-  formData.append("img", $("#img").prop("files")[0]);
-  formData.append("src", $("#src").prop("files")[0]);
-  formData.append("type", $("#category").val());
+  let formData = new FormData(form);
+  getVariables()
+  let index = 0;
+  for (let i of variables) {
+    for (let j of i.data) {
+      formData.append("src[]", j.sources);
+      j.sources = index++;
+
+    }
+  }
+
   formData.append("desc", tinymce.get("desc").getContent());
   formData.append("sdesc", tinymce.get("sdesc").getContent());
-  formData.append("discount", $("#discount").val());
-  formData.append("price", $("#price").val());
+  formData.append("multiple", $('#multiple').is(':checked'))
+  formData.append("variables", JSON.stringify(variables))
+
   if (arrGallery.length > 0) {
     arrGallery.forEach((file) => {
       formData.append("gallery[]", file);
@@ -576,6 +701,10 @@ function addNew(e) {
   } else {
     formData.append("gallery[]", $("#gallery").prop("files")[0]);
   }
+
+
+  $("#form-data > div.modal-header > button").hide();
+  $("#function").html(`<div class="spinner-border text-light"></div>`)
   let Server = new server();
   Server.post(`action=admin&function=product`, formData)
     .then((res, req) => {
@@ -586,9 +715,12 @@ function addNew(e) {
         showConfirmButton: false,
         timer: 1500
       }).then(() => {
+        $("#function").text("Add New")
+  $("#form-data > div.modal-header > button").show();
 
         loads();
         Reset();
+      
       })
     })
     .catch((xhr, status, error) => {
@@ -599,8 +731,9 @@ function addNew(e) {
 function Reset() {
   arrGallery = [];
   getCate()
+  variables = [];
   $("#form-data").removeClass("was-validated");
-  $("#form-data").attr({ onsubmit: "addNew(event)" });
+  $("#form-data").attr({ onsubmit: "addNew(event,this)" });
   $("#title").val("");
   $("#id").val("");
   $("#function").text("Add new");
@@ -608,35 +741,13 @@ function Reset() {
   $("#discount").val("0").attr({ required: "true" });
   $(".src").text("");
   $("#variation").html(`<div class="row">
-  <button type="button" class="btn-close"></button>
-  <div class="col-md-4">
-      <div class="row">
-          <div class="col-4">
-              <select class="form-select cate" id="cate-1" onclick="getVariation(1)">
-
-              </select>
-          </div>
-          <div class="col-4">
-              <select class="form-select variables" id="variables-1">
-
-              </select>
-          </div>
-          <div class="col-4">
-              <select class="form-select  variables-value" id="variables-value-1">
-
-              </select>
-          </div>
-      </div>
-
-  </div>
-
-</div>
+ 
 <div class="row mt-3">
 
   <div class="col-md-6">
       <div class="input-group">
           <span class="input-group-text">Price</span>
-          <input type="text"name="price[]" required value="0"  class="form-control">
+          <input type="text"name="price" required value="0"  class="form-control">
           <div class="invalid-feedback">
               Please enter a valid price.
           </div>
@@ -645,8 +756,8 @@ function Reset() {
   <div class="col-md-6">
       <div class="border border-1 p-2 rounded-2">
           <label class="btn btn-info" for="src">Choose source</label>
-          <input class="form-control" type="file" name="src[]" id="src" class="form-control" onchange="inputSrc(this,'src')" style="display:none">
-          <span class="src"></span>
+          <input class="form-control" type="file" name="src" id="src" class="form-control" onchange="inputSrc(this,'src-1')" style="display:none">
+          <span class="src"id="src-1"></span>
           <div class="invalid-feedback">
               Please enter a valid source of the product.
           </div>
@@ -654,6 +765,7 @@ function Reset() {
 
   </div>
 </div>`)
+  multipleVar()
   tinymce.get("sdesc").setContent("");
   tinymce.get("desc").setContent("");
   $("#img-prev").attr({
@@ -769,7 +881,7 @@ $(function () {
     image_dimensions: false,
 
     file_picker_callback: function (callback, value, meta) {
-      if (meta.filetype === "image") {     
+      if (meta.filetype === "image") {
         var input = document.createElement("input");
         input.setAttribute("type", "file");
         input.setAttribute("accept", "image/*");
@@ -788,7 +900,7 @@ $(function () {
         };
         input.click();
       }
-      if (meta.filetype === "media") {        
+      if (meta.filetype === "media") {
         var input = document.createElement("input");
         input.setAttribute("type", "file");
         input.setAttribute("accept", "video/mp4");

@@ -141,7 +141,7 @@
                         <div class="col-md-6">
                             <div class="input-group">
                                 <span class="input-group-text">Title</span>
-                                <input type="text" required id="title"name="title" class="form-control" placeholder="Enter product title" required>
+                                <input type="text" required id="title" name="title" class="form-control" placeholder="Enter product title" required>
                                 <div class="invalid-feedback">
                                     Please enter a valid title.
                                 </div>
@@ -150,7 +150,7 @@
                         <div class="col-md-6" id="Newscate">
                             <div class="input-group">
                                 <span class="input-group-text">Category:</span>
-                                <select class="form-select" id="category">
+                                <select class="form-select" name="category" id="category">
 
                                 </select>
                             </div>
@@ -162,13 +162,21 @@
                             </div>
                         </div>
                     </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="true" id="multiple"  onchange="multipleVar()">
+                        <label class="form-check-label" for="multiple">
+                            Multiple variables
+                        </label>
+                    </div>
+                    <div id="keys">
+
+                    </div>
+
                     <div class="mt-3" id="variation">
 
 
                     </div>
-                    <div class="mt-3">
-                        <button type="button" class="btn btn-outline-success" onclick="addProductItems()">Add variation</button>
-                    </div>
+
                     <div class="row mt-3">
                         <div class="col-md-6">
                             <label for="sdesc" class="form-label">Product summary</label>
@@ -177,14 +185,14 @@
                         <div class="col-md-6 mt-3">
                             <div class="input-group">
                                 <span class="input-group-text">Discount</span>
-                                <input type="text" required value="0" min=0 max=1 id="discount" class="form-control">
+                                <input type="text" name="discount" required value="0" min=0 max=1 id="discount" class="form-control">
                                 <div class="invalid-feedback">
                                     Please enter a valid discount.
                                 </div>
                             </div>
                             <div class="border boder-1 mt-3 p-2 rounded-2">
                                 <label class="btn btn-outline-success" for="img">Choose a representative image of the product</label>
-                                <input class="form-control" type="file" name="img" id="img" onchange=" inputImage(this)" style="display:none" accept="image/*">
+                                <input class="form-control" type="file" name="avatar" id="img" onchange=" inputImage(this)" style="display:none" accept="image/*">
                                 <div class="invalid-feedback">
                                     Please enter a valid image of the product.
                                 </div>
@@ -200,7 +208,7 @@
                         <label class="h5" for="gallery">Gallery</label>
                         <br>
                         <label class="btn btn-outline-primary" for="gallery">Select image gallery</label>
-                        <input class="form-control" name="gallery" onchange="inputGallery(this)" type="file" name="gallery" id="gallery" multiple accept="image/*, video/*, audio/*" style="display:none">
+                        <input class="form-control" onchange="inputGallery(this)" type="file" name="gallery" id="gallery" multiple accept="image/*, video/*, audio/*" style="display:none">
                         <div class="invalid-feedback">
                             Please enter a valid gallery of the product.
                         </div>

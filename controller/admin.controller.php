@@ -21,7 +21,11 @@ switch (isset($_GET['function']) ? $_GET['function'] : 0) {
                                     break;
                                 }
                             case "variables": {
-                                    echo $admin->getVariables(isset($_GET['cate_id']) ? $_GET['cate_id'] : 0);
+                                    echo $admin->getVariables();
+                                    break;
+                                }
+                            case "variableOptions": {
+                                    echo $admin->getVariablesOptions($_GET['optionsId']);
                                     break;
                                 }
                         }
@@ -39,8 +43,8 @@ switch (isset($_GET['function']) ? $_GET['function'] : 0) {
                                     } else {
 
 
-                                        $admin->insertProduct($_POST['title'], empty($_FILES['img']) ? null : $_FILES['img'], empty($_FILES['src']) ? null : $_FILES['src'], $_POST['type'], $_POST['desc'], $_POST['sdesc'], $_POST['discount'], $_POST['price'],  empty($_FILES['gallery']) ? null : $_FILES['gallery']);
-                                        echo json_encode(array("staut" => "success"));
+                                      echo  $admin->insertProduct($_POST,$_FILES);
+                                        
                                     }
                                     break;
                                 }

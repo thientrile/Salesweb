@@ -39,8 +39,8 @@ function payment(id) {
  */
 function navigateToPage(page) {
   currentPages = page;
-  loadproducts();
   createPagination(page, totalPages);
+  loadproducts();
 
 }
 /**
@@ -58,11 +58,10 @@ function loadproducts() {
       let result = "";
       totalPages = res.page;
       createPagination(currentPages, res.page);
-
-      res.data.forEach((i) => {
-        const price = i.options.map((j) => formatCurrency(j.price)).join(", ");
-
-        result += `
+      for (let i of res.data) {
+        try {
+          const price = i.options.map((j) => formatCurrency(j.price)).join(", ");
+          result += `
           <div class="col-lg-4 col-md-6">
               <div class="card">
                   <div class="creative-img-cover">
@@ -94,7 +93,11 @@ function loadproducts() {
               </div>
           </div>
     `;
-      });
+        } catch (exceptionVar) {
+          console.log(exceptionVar);
+        }
+
+      };
       $("#product").html(result);
     })
     .catch((xhr, statu, error) => {
