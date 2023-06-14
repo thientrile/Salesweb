@@ -25,8 +25,7 @@ class product
         $result = $cc->getlist($select);
         $array = array();
         while ($row = $result->fetch()) {
-            $select_items = "SELECT * FROM `product_item` WHERE deleted=0 AND product_id=" . $row['id'];
-            $resutl_items = $cc->getlist($select_items);
+           
 
 
             $option = array();
@@ -54,14 +53,13 @@ class product
     {
         $cc = new connect();
         $result = $cc->getonce("select product.id as id, title,img,category_id,description,sDescription, discount,created_at,updated_at, category.name as name from product,category where product.category_id=category.id AND product.id=" . $productsId);
-        $select_items = "SELECT * FROM `product_item` WHERE deleted=0 AND product_id=" . $productsId;
-        $resutl_items = $cc->getlist($select_items);
+        
 
 
 
         $option = array();
         $select_items = "SELECT DISTINCT product_item.id, price,sources,name,value  FROM `product_item` LEFT JOIN product_cofiguration ON product_item.id=product_cofiguration.product_item_id LEFT JOIN
-            variation_option ON product_cofiguration.variation_option_id= variation_option.id LEFT JOIN variation ON variation.id=variation_option.variation_id WHERE product_id=$productsId";
+            variation_option ON product_cofiguration.variation_option_id= variation_option.id LEFT JOIN variation ON variation.id=variation_option.variation_id WHERE deleted=0 AND product_id=$productsId";
         $resutl_items = $cc->getlist($select_items);
         while ($item = $resutl_items->fetch()) {
             $check = false;

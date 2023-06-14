@@ -57,7 +57,7 @@
     <div class="shadow-lg  p-4 ">
         <div class="d-flex justify-content-center h-100">
             <div class="searchbar">
-                <input class="search_input" id="search" oninput="loads()" type="text" name="" placeholder="Search...">
+                <input class="search_input" id="search" oninput="loads()" type="search" name="" placeholder="Search...">
                 <button class="search_icon btn" onclick="loads()"><i class="fas fa-search"></i></button>
             </div>
         </div>
@@ -116,6 +116,8 @@
                 <td></td>
                 <td></td>
                 <td></td>
+                <td></td>
+                <td></td>
 
             </tr>
 
@@ -163,19 +165,16 @@
                         </div>
                     </div>
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="true" id="multiple"  onchange="multipleVar()">
+                        <input class="form-check-input" type="checkbox" value="true" id="multiple" onchange="multipleVar()">
                         <label class="form-check-label" for="multiple">
                             Multiple variables
                         </label>
                     </div>
-                    <div id="keys">
-
+                    <div id="keys"></div>
+                    <div class="row" id="var">
+                        
                     </div>
-
-                    <div class="mt-3" id="variation">
-
-
-                    </div>
+                    <div class="mt-3" id="Option"></div>
 
                     <div class="row mt-3">
                         <div class="col-md-6">

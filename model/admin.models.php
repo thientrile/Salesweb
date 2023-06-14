@@ -207,18 +207,15 @@ class admin
         $result = $cc->getlist($select);
         $array = array();
         while ($row = $result->fetch()) {
-            $select_items = "SELECT * FROM `product_item` WHERE deleted=0 AND product_id=" . $row['id'];
-            $resutl_items = $cc->getlist($select_items);
 
-
+            $product_id = $row['id'];
             $option = array();
-            $select_items = "SELECT DISTINCT product_item.id, price,sources,name,value  FROM `product_item` LEFT JOIN product_cofiguration ON product_item.id=product_cofiguration.product_item_id LEFT JOIN
-                variation_option ON product_cofiguration.variation_option_id= variation_option.id LEFT JOIN variation ON variation.id=variation_option.variation_id WHERE product_id=" . $row['id'];
+            $select_items = "SELECT DISTINCT price FROM `product_item` WHERE product_id=$product_id  AND deleted=0 HAVING price =(SELECT MIN(price) FROM `product_item` WHERE product_id=$product_id ) OR price =(SELECT MAX(price) FROM `product_item` WHERE product_id=$product_id );";
             $resutl_items = $cc->getlist($select_items);
             while ($item = $resutl_items->fetch()) {
 
 
-                array_push($option, array("id" => $item['id'], "price" => $item['price'], "sources" => $item['sources'], "name" => $item['name'], "value" => $item['value']));
+                array_push($option, array( "price" => $item['price']));
             }
 
             array_push($array, array("id" => $row['id'], "title" => $row['title'], "img" => $row['img'], "discount" => $row['discount'], "name" => $row['name'], "hidden" => $row['hide'], "options" => $option, "multiple" => $resutl_items->rowCount() > 1));
@@ -227,36 +224,6 @@ class admin
     }
     // get variables
 
-    // insert product
-    // function insertProduct($title, $fileAvatar, $fileSrc, $cate, $desc, $sdesc, $discount, $price, $filesGallery)
-    // {
-    //     $db = new connect();
-    //     $result = false;
-    //     if ($this->check && ($this->role == 1 || $this->role == 4 || $this->role == 8)) {
-    //         $count = $db->getonce("SELECT COUNT(*) FROM product")[0] + 1;
-    //         $product_id = $db->getonce("SELECT MAX(id) FROM `product`")[0] + 1;
-    //         // $result = $price;
-    //         $insert = "INSERT INTO `product`(`id`, `title`, `img`,  `category_id`, `description`, `sDescription`, `discount`, `created_at`, `updated_at`, `deleted`,`hide`,`position`) VALUES ('NULL','$title','assets/products/" . md5($product_id) . "/img/" . $fileAvatar['name'] . "','assets/products/" . md5($product_id) . "/src/" . $fileSrc['name'] . "','$cate','$desc','$sdesc','$discount','$price',default,default,default,default, $count)";
-    //         $result = $db->send($insert);
-
-    //         mkdir("assets/products/" . md5($product_id), 0700);
-    //         mkdir("assets/products/" . md5($product_id) . "/img", 0700);
-
-    //         move_uploaded_file($fileAvatar["tmp_name"], "assets/products/" . md5($product_id) . "/img/" . basename($fileAvatar["name"]));
-    //         mkdir("assets/products/" . md5($product_id) . "/src", 0700);
-    //         move_uploaded_file($fileSrc["tmp_name"], "assets/products/" . md5($product_id) . "/src/" . basename($fileSrc["name"]));
-    //         // add gallery
-    //         mkdir("assets/products/" . md5($product_id) . "/gallery", 0700);
-
-
-    //         foreach ($filesGallery['tmp_name'] as $key => $tmp_name) {
-    //             $insert = "INSERT INTO `gallery`(`id`, `product_id`, `thumnali`, `type`) VALUES ('NULL','$product_id',' assets/products/" . md5($product_id) . "/gallery/" . $filesGallery["name"][$key] . "','" . pathinfo($filesGallery["name"][$key], PATHINFO_EXTENSION) . "')";
-    //             $db->send($insert);
-    //             move_uploaded_file($tmp_name, "assets/products/" . md5($product_id) . "/gallery/" . basename($filesGallery["name"][$key]));
-    //         }
-    //     }
-    //     return $result;
-    // }
     function insertProduct($post, $files)
     {
         $db = new connect();
@@ -293,32 +260,33 @@ class admin
             move_uploaded_file($src['tmp_name'][0], $sources);
         } else {
             $dataJson = json_decode($post['variables'], true);
-            foreach ($dataJson as $items) {
-                $name = $items['name'];
+            for ($i = 0; $i < count($dataJson); $i++) {
+                $price = $post['price'][$i];
+                $sources = "assets/products/" . md5($id) . "/src/" . uniqid() . '.' . pathinfo($src['name'][$i], PATHINFO_EXTENSION);
+                $db->send("INSERT INTO `product_item`(`id`, `product_id`, `price`, `sources`, `deleted`) VALUES ('NULL','$id',' $price ',' $sources','0')");
 
-                if ($db->getonce("SELECT COUNT(id) FROM `variation` WHERE name LIKE '$name'")[0] == 0) {
-                    $db->send("INSERT INTO `variation`(`id`, `category_id`, `name`) VALUES ('NULL','0','$name')");
-                }
-                $variables_id = $db->getonce("SELECT id FROM `variation` WHERE name LIKE '$name'")[0];
-                foreach ($items['data'] as $dataItems) {
-                    $value = $dataItems['value'];
-                    $price = $dataItems['price'];
-                    $sources = "assets/products/" . md5($id) . "/src/" . uniqid() . '.' . pathinfo($src['name'][$dataItems['sources']], PATHINFO_EXTENSION);
-                    $result =  $db->send("INSERT INTO `product_item`(`id`, `product_id`, `price`, `sources`, `deleted`) VALUES ('NULL','$id','$price','$sources','0')");
-                    if ($result) {
-                        if ($db->getonce("SELECT COUNT(id) FROM `variation_option` WHERE variation_id=$variables_id AND value LIKE '$value'")[0] == 0) {
-                            $db->send("INSERT INTO `variation_option`(`id`, `variation_id`, `value`) VALUES ('NULL',' $variables_id ',' $value')");
-                        }
-                        move_uploaded_file($src['tmp_name'][$dataItems['sources']], $sources);
-                        $variation_option_id = $db->getonce("SELECT MAX(id) FROM `variation_option` WHERE variation_id=$variables_id AND value LIKE '%$value%'")[0];
-                        $product_items_id = $db->getonce("SELECT MAX(id) FROM `product_item` WHERE 1")[0];
-                        $db->send("INSERT INTO `product_cofiguration`(`id`, `variation_option_id`, `product_item_id`) VALUES ('NULL','$variation_option_id ','$product_items_id')");
+                $product_items = $db->getonce("SELECT MAX(id) FROM `product_item` WHERE 1")[0];
+                move_uploaded_file($src['tmp_name'][$i], $sources);
+                $keys = array_keys($dataJson[$i]);
+                $parent_id = 0;
+
+                for ($j = 0; $j < count($keys); $j++) {
+                    $name = $keys[$j];
+                    $value = $dataJson[$i][$keys[$j]];
+
+                    if ($db->getonce("SELECT  COUNT(id) FROM `variation` WHERE category_id=$category_id AND name LIKE '$name'")[0] == 0) {
+
+                        $db->send("INSERT INTO `variation`(`id`, `category_id`, `name`) VALUES ('NULL','$category_id','$name')");
                     }
+                    $variation_id = $db->getonce("SELECT DISTINCT id FROM `variation` WHERE category_id=$category_id AND name LIKE '$name'")[0];
+                    $db->send("INSERT INTO `variation_option`(`id`, `variation_id`, `value`, `parent_id`, `product_item_id`) VALUES ('NULL','$variation_id','$value','$parent_id','$product_items')");
+
+                    $parent_id = $db->getonce("SELECT DISTINCT `id` FROM `variation_option` WHERE variation_id=$variation_id AND value LIKE '$value' AND parent_id=$parent_id AND product_item_id=$product_items")[0];
                 }
+                $db->send("INSERT INTO `product_cofiguration`(`id`, `variation_option_id`, `product_item_id`) VALUES ('NULL','$parent_id','$product_items')");
             }
         }
-
-        return json_encode(array($files, $post));
+        return json_encode(array($post, $files));
     }
     // delted product
     function deleteProduct($proudctid)
@@ -331,33 +299,24 @@ class admin
         }
         return $result;
     }
-    function updateProduct($id, $title, $fileAvatar, $fileSrc, $cate, $desc, $sdesc, $discount, $price, $filesGallery)
+    function updateProduct($GET, $POST, $FILES)
+
     {
         $db = new connect();
-        $result = false;
-        if ($this->check && ($this->role == 1 || $this->role == 4 || $this->role == 6)) {
-            $current_time = date("Y-m-d H:i:s");
-            $up = " `title`='$title',`category_id`='$cate',`description`='$desc',`sDescription`='$sdesc',`discount`='$discount',`price`=' $price',`updated_at`=' $current_time'";
-            $product_id = $id;
-            if ($fileAvatar != null) {
-                $up .= ",`img`='assets/products/" . md5($product_id) . "/img/" . $fileAvatar['name'] . "'";
-                move_uploaded_file($fileAvatar["tmp_name"], "assets/products/" . md5($product_id) . "/img/" . basename($fileAvatar["name"]));
-            }
-            if ($fileSrc != null) {
-                $up .= ",`source`='assets/products/" . md5($product_id) . "/src/"  . $fileSrc['name'] . "'";
-                move_uploaded_file($fileSrc["tmp_name"], "assets/products/" . md5($product_id) . "/src/" . basename($fileSrc["name"]));
-            }
-            $update = "UPDATE `product` SET $up  WHERE id=" . $id;
-            $result = $db->send($update);
-            if ($filesGallery != null) {
-                foreach ($filesGallery['tmp_name'] as $key => $tmp_name) {
-                    $insert = "INSERT INTO `gallery`(`id`, `product_id`, `thumnali`, `type`) VALUES ('NULL','$product_id','assets/products/" . md5($product_id) . "/gallery/" . $filesGallery["name"][$key] . "','" . pathinfo($filesGallery["name"][$key], PATHINFO_EXTENSION) . "')";
-                    $db->send($insert);
-                    move_uploaded_file($tmp_name, "assets/products/" . md5($product_id) . "/gallery/" . basename($filesGallery["name"][$key]));
-                }
-            }
-        }
-        return $result;
+        $id = $GET['id'];
+        // $check = $db->getonce("SELECT COUNT(id) FROM `product_item` WHERE product_id=$id AND deleted=0")[0] > 1;
+        // $multiple = $POST['multiple'];
+        // if (strtolower($multiple) === "true") {
+        //     $multiple = true;
+        // } else {
+        //     $multiple = false;
+        // }
+        // if ($check != $multiple) {
+        //     $db->send("UPDATE `product_item` SET `deleted`='" . time() . "' WHERE product_id= $id ");
+        // }
+
+
+        return json_encode(array($GET, $POST, $FILES));
     }
     function hideProduct($proudctid)
     {

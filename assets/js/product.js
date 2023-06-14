@@ -4,28 +4,22 @@ function multipleVar() {
     <div class="row">
         <div class="col-md-4">
             <div class="input-group">
-                <span class="input-group-text">Name</span>
-                <input type="text" class="form-control">
+                <span class="input-group-text">Enter variant name</span>
+                <input type="text" class="form-control"id="" >
             </div>
         </div>
-        <div class="col-md-4">
-            <div class="input-group">
-                <span class="input-group-text">Value</span>
-                <input type="text" class="form-control">
-            </div>
-        </div>
-        <div class="col-md-4"> <button type="button" class="btn btn-outline-success" onclick="addVariables()">Add variation</button></div>
+       
+        <div class="col-md-4"> <button type="button" class="btn btn-outline-success" onclick="addVarName()">Add variant name</button></div>
     </div>
-
 </div>`);
-    $("#variation").html('');
+
+    $("#Option").html('');
+
   } else {
+    $("#var").html("")
     $("#keys").html(``);
-    $("#variation").html(`<div class="row">
-   
-    
-  <div class="row mt-3">
-  
+    $("#Option").html(`<div class="row">    
+  <div class="row mt-3">  
     <div class="col-md-6">
         <div class="input-group">
             <span class="input-group-text">Price</span>
@@ -43,8 +37,7 @@ function multipleVar() {
             <div class="invalid-feedback">
                 Please enter a valid source of the product.
             </div>
-        </div>
-  
+        </div>  
     </div>
   </div>`)
 
@@ -52,89 +45,174 @@ function multipleVar() {
 }
 
 var variables = [];
-function delvariables(element, name, id) {
-  element.parentNode.remove()
-  let i = variables.findIndex((item) => { return item.name == name })
-  let j = variables[i].data.findIndex((item) => { return item.id == id })
-  variables[i].data.splice(j, 1)
-  if (variables[i].data.length == 0) {
-    variables.splice(i, 1)
+
+
+function addVarName() {
+
+  let name = $("#keys > div > div > div:nth-child(1) > div > input").val().trim() != '' ? $("#keys > div > div > div:nth-child(1) > div > input").val().trim().split(",") : '';
+
+  if (name != '') {
+    $("#var").html(`<div class="col-6" id="variables">
+
+    </div>
+    <div class="col-3">
+    <button type="button" class="btn btn-primary" onclick=" createVariables()">Create variation</button>
+    </div>
+   `)
+    let index = 0;
+   
+    for (let i of name) {
+      $("#variables").append(`
+        <div class="input-group mt-3">        
+        <span class="input-group-text variables-name">Attribute ${index}</span>
+        <span class="input-group-text variables-name">${i}</span>
+        <input type="text" class="form-control variables-val" placeholder="Value">
+        <button type="button" class="btn-close" onclick="delVarialbe(this)"></button>
+      </div>
+      `)
+      index++;
+    }
 
   }
+
+  else {
+    $("#var").html(`
+    `)
+  }
+
 
 
 
 }
-function addVariables() {
-  let name = $("#keys > div > div > div:nth-child(1) > div > input").val().trim() != '' ? $("#keys > div > div > div:nth-child(1) > div > input").val().trim().split(",") : '';
+function editVariable(element, index, variable) {
 
 
-  let value = $("#keys > div > div > div:nth-child(2) > div > input").val().trim() != '' ? $("#keys > div > div > div:nth-child(2) > div > input").val().trim().split(",") : ""
-
-  if (name != '' && value != '') {
-
-    let result = []
-
-    for (let i = 0; i < name.length; i++) {
-      variables.push({ name: name[i], data: [] })
-      for (let j = 0; j < value.length; j++) {
-        result.push({ name: name[i], value: value[j] })
-        let number = (new Date).getTime() + Math.floor(Math.random() * (new Date).getTime());
-        variables[variables.length - 1].data.push({ value: value[j], price: 0, sources: "", id: number })
-        $("#variation").append(`
-        <div id="var-${number}">
-        <input  type="hidden" name="product-item-id[]" value="${number}">
-            <button type="button" class="btn-close" onclick="delvariables(this,'${name[i]}',${number})"></button>
-         <div class="row">
-         <div class="col-md-4">
-             <div class="row">                
-                 <div class="col-2">
-                 <span class="badge rounded-pill bg-success">${name[i]}</span>
-               
-                 </div>
-                 <div class="col-2">
-                
-                 ${value[j]}
-                 </div>
-             </div>
-         </div>
-     </div>
-        <div class="row mt-3">
-            <div class="col-md-6">
-                <div class="input-group">
-                    <span class="input-group-text">Price</span>
-                    <input type="text"value="0"  required value="" id="price-${number}" class="form-control">
-                    <div class="invalid-feedback">
-                        Please enter a valid price.
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="border border-1 p-2 rounded-2">
-                    <label class="btn btn-info" for="src-${number}">Choose source</label>
-                    <input class="form-control" type="file"  id="src-${number}" class="form-control" onchange="inputSrc(this,'src-name-${number}')" style="display:none"  required>
-                    <span class="src"id="src-name-${number}"></span>
-                    <div class="invalid-feedback">
-                        Please enter a valid source of the product.
-                    </div>
-                </div>
-  
-            </div>
-        </div>
-            </div>`)
-
-      }
+  if (delete variables[index][variable.trim()]) {
+    if (Object.keys(variables[index]).length == 0) {
+      variables.splice(index, 1)
+      element.parentNode.parentNode.parentNode.remove()
     }
+    element.parentNode.remove();
+
+  }
+
+}
+function delOption(index) {
+  variables.splice(index, 1)
+  loadVariables()
+}
+function loadVariables() {
+  let Option = '';
+  let index = 0
+  for (let i of variables) {
+    let keys = [];
+    let values = '';
+    let id = Math.floor(Math.random() * 1000) + Date.now();
+    for (let key of Object.keys(i)) {
+
+      keys.push(key);
+
+      values += `
+          <span  class="btn btn-primary">
+      ${i[key]} <button  type="button " onclick="editVariable(this,${index},'${key}')" class="btn btn-close"></button>
+    </span>
+          
+          
+          `;
 
 
-    $("#keys > div > div > div:nth-child(1) > div > input").val(null)
 
-    $("#keys > div > div > div:nth-child(2) > div > input").val(null)
+    }
+    Option += `
+    <div class="row mt-3">
+    <div class="col-md-4">
+    
+    <span class="badge bg-secondary">${keys.join(" x ")}</span>
+    </div>
+    <div class="col-md-4">${values}</div>
+    <div class="col-md-2">
+    
+    
+  
+    <div class="input-group mt-1">
+     <span class="input-group-text">Price:</span>
+     <input type="text" class="form-control" value="0" name="price[]">
+   </div>
+    </div>
+    <div class="col-md-1">
+    <div class="border border-1 p-2 rounded-2">
+             <label class="btn btn-info" for="src${id}">Choose source</label>
+             <input class="form-control" type="file" name="src[]" id="src${id}" class="form-control" onchange="inputSrc(this,'src-${id}')" style="display:none" required>
+             <span class="src"id="src-${id}"></span>
+             <div class="invalid-feedback">
+                 Please enter a valid source of the product.
+             </div>
+         </div>  
+    
+    
+    </div>
+    <div class="col-md-1 btn-close" onclick="delOption(${index})">
+    
+    
+    </div>
+    </div>
+    
+    `
+    index++;
+  }
+  $("#Option").html(Option)
 
+}
+
+function createVariables() {
+  let grouplist = document.querySelectorAll('#variables > div.input-group');
+  let array = [];
+  let variations = []
+  for (let i of grouplist) {
+    array.push({ name: i.querySelector('span:nth-child(2)').innerHTML.trim(), value: (i.querySelector('input').value).trim().split(",") })
   }
 
 
 
+  // Hàm đệ quy để tạo biến thể
+  function generateVariations(currentIndex, currentVariation) {
+    if (currentIndex === array.length) {
+      // Đã lặp qua tất cả các thuộc tính, thêm biến thể vào mảng kết quả
+      variations.push(currentVariation);
+      return;
+    }
+
+    const attribute = array[currentIndex];
+    for (let i = 0; i < attribute.value.length; i++) {
+      const value = attribute.value[i];
+
+      // Sao chép biến thể hiện tại và thêm thuộc tính mới
+      const newVariation = { ...currentVariation };
+      newVariation[attribute.name] = value;
+
+      // Đệ quy để tiếp tục với thuộc tính tiếp theo
+      generateVariations(currentIndex + 1, newVariation);
+    }
+  }
+
+  // Bắt đầu từ biến thể rỗng và chỉ mục 0
+  generateVariations(0, {});
+  variables = variations
+  // In kết quả
+  loadVariables()
+
+
+}
+
+
+
+
+function delVarialbe(element) {
+  element.parentNode.remove()
+  if ($("#variables").html().trim() == "") {
+    $("#var").html(`
+    `)
+  }
 }
 function getVariables() {
   for (let i of variables) {
@@ -183,9 +261,7 @@ function arrow(element, id, arrow) {
   }).catch((xhr, status, error) => {
     console.log(xhr, status, error);
   })
-
 }
-
 // load products from the database
 function loads() {
   $("#form-data").removeClass("was-validated");
@@ -196,25 +272,17 @@ function loads() {
     ).val()}&page=${currentPages}`
   )
     .then((res, req) => {
-
       let view = "";
       let data = res.data;
       totalPages = res.page;
-
-
       createPagination(currentPages, res.page);
-
-
       for (let i of data) {
         let price = [];
         for (let j of i.options) {
-
           price.push(formatCurrency(j.price));
         }
         ;
-        view += `
-         
-         
+        view += `      
           <tr>
                 <td scope="row">DG${i.id}</td>
                 <td scope="row">${i.title}</td>
@@ -279,7 +347,7 @@ function addProductItems() {
   let Server = new server();
   Server.get("action=admin&function=product&type=variableOptions&optionsId=2")
   let number = new Date().getTime();
-  $("#variation").append(`<div id="var-${number}">
+  $("#Option").append(`<div id="var-${number}">
   <button type="button" class="btn-close" onclick="this.parentNode.remove()"></button>
   <div class="row">
       <div class="col-md-4">
@@ -313,6 +381,7 @@ function addProductItems() {
   getVariation(number)
 }
 function load(id) {
+  variables = []
   $("#form-data").removeClass("was-validated");
   $("#gallery").removeAttr("required");
   $("#img").removeAttr("required");
@@ -342,7 +411,7 @@ function load(id) {
         
         <div id="var-${items.id}">
        <input type="hidden" name="product-item-id[]" value="${items.id}">
-     ${res.multiple ? ` <button type="button" class="btn-close"></button> 
+     ${res.multiple ? ` <button type="button" class="btn-close" onclick="this.parentNode.remove()"></button> 
      
      
      <div class="row">
@@ -351,11 +420,11 @@ function load(id) {
          <div class="row">                
              <div class="col-2">
              <span class="badge rounded-pill bg-success"> ${items.name}</span>
-            <input type="hidden" name="variation-name[]" value="${items.name}">
+           
                
              </div>
              <div class="col-2">
-             <input type="hidden" name="variation-value[]" value="${items.value}">
+           
              ${items.value}
             
              </div>
@@ -390,7 +459,7 @@ function load(id) {
         </div>
         `;
 
-        $("#variation").html(options);
+        $("#Option").html(options);
 
       })
 
@@ -598,13 +667,10 @@ function update(e, form) {
   let formData = new FormData(form);
 
   let id = $("#id").val();
-  formData.append("title", $("#title").val());
-  formData.append("img", $("#img").prop("files")[0]);
 
-  formData.append("type", $("#category").val());
   formData.append("desc", tinymce.get("desc").getContent());
   formData.append("sdesc", tinymce.get("sdesc").getContent());
-  formData.append("discount", $("#discount").val());
+
 
 
   if (arrGallery.length > 0) {
@@ -615,22 +681,39 @@ function update(e, form) {
     formData.append("gallery[]", $("#gallery").prop("files")[0]);
   }
 
+  if ($('#multiple').is(':checked')) {
+    getVariables()
+    let index = 0;
+    for (let i of variables) {
+      for (let j of i.data) {
+        formData.append("src[]", j.sources);
+        j.sources = index++;
+
+      }
+    }
+
+    formData.append("variables", JSON.stringify(variables))
+  }
+  formData.append("multiple", $('#multiple').is(':checked'))
+
+  formData.append("variables", JSON.stringify(variables))
   let Server = new server();
   Server.post(`action=admin&function=product&id=${id}`, formData)
     .then((res, req) => {
-      Swal.fire({
-        position: 'bottom-start',
+      console.log(res);
+      // Swal.fire({
+      //   position: 'bottom-start',
 
 
-        icon: 'success',
-        title: 'The product has been successfully added',
-        showConfirmButton: false,
-        timer: 1000
-      }).then(() => {
+      //   icon: 'success',
+      //   title: 'The product has been successfully added',
+      //   showConfirmButton: false,
+      //   timer: 1000
+      // }).then(() => {
 
-        load(id);
-        loads();
-      })
+      //   load(id);
+      //   loads();
+      // })
 
     })
     .catch((xhr, status, error) => {
@@ -679,20 +762,16 @@ function del(e, id) {
 function addNew(e, form) {
   e.preventDefault();
   let formData = new FormData(form);
-  getVariables()
-  let index = 0;
-  for (let i of variables) {
-    for (let j of i.data) {
-      formData.append("src[]", j.sources);
-      j.sources = index++;
+  if ($('#multiple').is(':checked')) {
 
-    }
+
+
+    formData.append("variables", JSON.stringify(variables))
   }
 
   formData.append("desc", tinymce.get("desc").getContent());
   formData.append("sdesc", tinymce.get("sdesc").getContent());
   formData.append("multiple", $('#multiple').is(':checked'))
-  formData.append("variables", JSON.stringify(variables))
 
   if (arrGallery.length > 0) {
     arrGallery.forEach((file) => {
@@ -708,6 +787,7 @@ function addNew(e, form) {
   let Server = new server();
   Server.post(`action=admin&function=product`, formData)
     .then((res, req) => {
+      console.log(res);
       Swal.fire({
         position: 'bottom-start',
         icon: 'success',
@@ -716,11 +796,11 @@ function addNew(e, form) {
         timer: 1500
       }).then(() => {
         $("#function").text("Add New")
-  $("#form-data > div.modal-header > button").show();
+        $("#form-data > div.modal-header > button").show();
 
         loads();
-        Reset();
-      
+        // Reset();
+
       })
     })
     .catch((xhr, status, error) => {
@@ -740,7 +820,7 @@ function Reset() {
   $("#price").val("0");
   $("#discount").val("0").attr({ required: "true" });
   $(".src").text("");
-  $("#variation").html(`<div class="row">
+  $("#Option").html(`<div class="row">
  
 <div class="row mt-3">
 
