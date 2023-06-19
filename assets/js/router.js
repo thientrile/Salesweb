@@ -160,7 +160,7 @@ $(function () {
       }
     );
   } else if (checkCookie("c_user")) {
-    $("#style").attr("href", "./assets/css/styles.min.css");
+    $("#style").attr("href", "assets/css/styles.min.css");
     $("#header").remove();
     $("#footer").remove();
     $("#Modal-search").remove();

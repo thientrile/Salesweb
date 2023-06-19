@@ -19,4 +19,4 @@
     </div>
 
 </div>
-<script src="./assets/js/library.js"></script>
+<script src="assets/js/library.js"></script>

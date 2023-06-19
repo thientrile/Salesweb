@@ -235,4 +235,4 @@
     <button class="btn mt-5">Join Folow</button>
 </div>
 </div>
-<script src="./assets/js/home.js"></script>
+<script src="assets/js/home.js"></script>

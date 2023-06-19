@@ -216,4 +216,4 @@
         </div>
     </div>
 </div>
-<script src="./assets/js/user.js"></script>
+<script src="assets/js/user.js"></script>

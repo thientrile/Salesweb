@@ -1,4 +1,5 @@
 function multipleVar() {
+
   if ($('#multiple').is(':checked')) {
     $("#keys").html(`  <div class="mt-3">
     <div class="row">
@@ -11,6 +12,7 @@ function multipleVar() {
        
         <div class="col-md-4"> <button type="button" class="btn btn-outline-success" onclick="addVarName()">Add variant name</button></div>
     </div>
+    
 </div>`);
 
     $("#Option").html('');
@@ -18,35 +20,47 @@ function multipleVar() {
   } else {
     $("#var").html("")
     $("#keys").html(``);
+
     $("#Option").html(`<div class="row">    
-  <div class="row mt-3">  
-    <div class="col-md-6">
-        <div class="input-group">
-            <span class="input-group-text">Price</span>
-            <input type="text"name="price" required value="0"  class="form-control">
-            <div class="invalid-feedback">
-                Please enter a valid price.
-            </div>
-        </div>
-    </div>
-    <div class="col-md-6">
-        <div class="border border-1 p-2 rounded-2">
-            <label class="btn btn-info" for="src">Choose source</label>
-            <input class="form-control" type="file" name="src" id="src" class="form-control" onchange="inputSrc(this,'src-1')" style="display:none" required>
-            <span class="src"id="src-1"></span>
-            <div class="invalid-feedback">
-                Please enter a valid source of the product.
-            </div>
-        </div>  
-    </div>
-  </div>`)
+      <button type="button" class="btn-close" onclick="this.parentNode.remove()"></button>
+    <div class="row mt-3">  
+      <div class="col-md-6">
+          <div class="input-group">
+              <span class="input-group-text">Price</span>
+              <input type="text"name="price[]" required value="0"  class="form-control">
+              <div class="invalid-feedback">
+                  Please enter a valid price.
+              </div>
+          </div>
+      </div>
+      <div class="col-md-6">
+          <div class="border border-1 p-2 rounded-2">
+              <label class="btn btn-info" for="src">Choose source</label>
+              <input class="form-control" type="file" name="src[]" id="src" class="form-control" onchange="inputSrc(this,'src-1')" style="display:none" required>
+              <span class="src"id="src-1"></span>
+              <div class="invalid-feedback">
+                  Please enter a valid source of the product.
+              </div>
+          </div>  
+      </div>
+    </div>`)
+
+
 
   }
 }
 
 var variables = [];
 
-
+function delProductItem(element, id) {
+  element.parentNode.remove()
+  const Server = new server();
+  Server.delete(`action=admin&function=product&type=productItem&id=${id}`).then((res, req) => {
+    console.log(res);
+  }).catch((xhr, status, error) => {
+    console.log(xhr);
+  })
+}
 function addVarName() {
 
   let name = $("#keys > div > div > div:nth-child(1) > div > input").val().trim() != '' ? $("#keys > div > div > div:nth-child(1) > div > input").val().trim().split(",") : '';
@@ -60,7 +74,7 @@ function addVarName() {
     </div>
    `)
     let index = 0;
-   
+
     for (let i of name) {
       $("#variables").append(`
         <div class="input-group mt-3">        
@@ -342,45 +356,11 @@ function getCate(id = 0) {
       console.log(xhr, status, error);
     });
 }
-function addProductItems() {
 
-  let Server = new server();
-  Server.get("action=admin&function=product&type=variableOptions&optionsId=2")
-  let number = new Date().getTime();
-  $("#Option").append(`<div id="var-${number}">
-  <button type="button" class="btn-close" onclick="this.parentNode.remove()"></button>
-  <div class="row">
-      <div class="col-md-4">
-          <div class="row">             
-             
-          </div>
-      </div>
-  </div>
-  <div class="row mt-3">
-      <div class="col-md-6">
-          <div class="input-group">
-              <span class="input-group-text">Price</span>
-              <input type="text" name="price[]" required value="0" id="price" class="form-control">
-              <div class="invalid-feedback">
-                  Please enter a valid price.
-              </div>
-          </div>
-      </div>
-      <div class="col-md-6">
-          <div class="border border-1 p-2 rounded-2">
-              <label class="btn btn-info" for="src${number}">Choose source</label>
-              <input class="form-control" type="file" name="src[]" id="src${number}" class="form-control" onchange="inputSrc(this,'src-${number}')" style="display:none">
-              <span class="src"id="src-${number}"></span>
-              <div class="invalid-feedback">
-                  Please enter a valid source of the product.
-              </div>
-          </div>
-      </div>
-  </div>
-</div>`)
-  getVariation(number)
-}
 function load(id) {
+  $("#var").html(``)
+  $("#Option").html(``)
+  $("#Option-old").show();
   variables = []
   $("#form-data").removeClass("was-validated");
   $("#gallery").removeAttr("required");
@@ -393,8 +373,8 @@ function load(id) {
   $("#function").text("Update");
   let Server = new server();
   $(".modal-title").text("Edit Product");
-
-  Server.get(`action=product&id=${id}`)
+  multipleVar()
+  Server.get(`action=admin&function=product&id=${id}`)
     .then((res, req) => {
       $("#title").val(res.title);
       $("#id").val(res.id);
@@ -403,7 +383,6 @@ function load(id) {
       $("#multiple").prop('checked', res.multiple)
       let options = "";
       let variables = res.options
-      multipleVar()
 
       variables.forEach((items) => {
 
@@ -411,19 +390,20 @@ function load(id) {
         
         <div id="var-${items.id}">
        <input type="hidden" name="product-item-id[]" value="${items.id}">
-     ${res.multiple ? ` <button type="button" class="btn-close" onclick="this.parentNode.remove()"></button> 
+       <button type="button" class="btn-close" onclick="delProductItem(this, ${items.id})"></button>
+     ${items.name != '' ? `  
      
      
      <div class="row">
      <div class="col-md-4">
      
          <div class="row">                
-             <div class="col-2">
+             <div class="col-6">
              <span class="badge rounded-pill bg-success"> ${items.name}</span>
            
                
              </div>
-             <div class="col-2">
+             <div class="col-6">
            
              ${items.value}
             
@@ -438,7 +418,7 @@ function load(id) {
         <div class="col-md-6">
             <div class="input-group">
                 <span class="input-group-text">Price</span>
-                <input type="text" name="price[]" required value="${items.price}" id="price-${items.id}" class="form-control">
+                <input type="text" name="priceOld[]" required value="${items.price}" id="price-${items.id}" class="form-control">
                 <div class="invalid-feedback">
                     Please enter a valid price.
                 </div>
@@ -447,7 +427,7 @@ function load(id) {
         <div class="col-md-6">
             <div class="border border-1 p-2 rounded-2">
                 <label class="btn btn-info" for="src-${items.id}">Choose source</label>
-                <input class="form-control" type="file" name="src[]" id="src-${items.id}" class="form-control" onchange="inputSrc(this,'src-name-${items.id}')" style="display:none">
+                <input class="form-control" type="file" name="srcOld[]" id="src-${items.id}" class="form-control" onchange="inputSrc(this,'src-name-${items.id}')" style="display:none">
                 <span class="src"id="src-name-${items.id}">${items.sources.substring(items.sources.lastIndexOf("/") + 1)}</span>
                 <div class="invalid-feedback">
                     Please enter a valid source of the product.
@@ -459,7 +439,7 @@ function load(id) {
         </div>
         `;
 
-        $("#Option").html(options);
+        $("#Option-old").html(options);
 
       })
 
@@ -667,7 +647,6 @@ function update(e, form) {
   let formData = new FormData(form);
 
   let id = $("#id").val();
-
   formData.append("desc", tinymce.get("desc").getContent());
   formData.append("sdesc", tinymce.get("sdesc").getContent());
 
@@ -681,19 +660,7 @@ function update(e, form) {
     formData.append("gallery[]", $("#gallery").prop("files")[0]);
   }
 
-  if ($('#multiple').is(':checked')) {
-    getVariables()
-    let index = 0;
-    for (let i of variables) {
-      for (let j of i.data) {
-        formData.append("src[]", j.sources);
-        j.sources = index++;
 
-      }
-    }
-
-    formData.append("variables", JSON.stringify(variables))
-  }
   formData.append("multiple", $('#multiple').is(':checked'))
 
   formData.append("variables", JSON.stringify(variables))
@@ -718,7 +685,11 @@ function update(e, form) {
     })
     .catch((xhr, status, error) => {
       console.log(xhr, status, error);
-    });
+    }).finally(() => {
+      $(form).reset
+      variables = []
+      load(id)
+    })
 }
 function del(e, id) {
   $(e).html(`<div class="spinner-border text-light"></div>`);
@@ -762,12 +733,8 @@ function del(e, id) {
 function addNew(e, form) {
   e.preventDefault();
   let formData = new FormData(form);
-  if ($('#multiple').is(':checked')) {
 
-
-
-    formData.append("variables", JSON.stringify(variables))
-  }
+  formData.append("variables", JSON.stringify(variables))
 
   formData.append("desc", tinymce.get("desc").getContent());
   formData.append("sdesc", tinymce.get("sdesc").getContent());
@@ -799,7 +766,7 @@ function addNew(e, form) {
         $("#form-data > div.modal-header > button").show();
 
         loads();
-        // Reset();
+        Reset();
 
       })
     })
@@ -809,6 +776,7 @@ function addNew(e, form) {
 }
 
 function Reset() {
+  $("#Option-old").hide();
   arrGallery = [];
   getCate()
   variables = [];
@@ -821,13 +789,13 @@ function Reset() {
   $("#discount").val("0").attr({ required: "true" });
   $(".src").text("");
   $("#Option").html(`<div class="row">
- 
+  <button type="button" class="btn-close" onclick="this.parentNode.remove()"></button>
 <div class="row mt-3">
 
   <div class="col-md-6">
       <div class="input-group">
           <span class="input-group-text">Price</span>
-          <input type="text"name="price" required value="0"  class="form-control">
+          <input type="text"name="price[]" required value="0"  class="form-control">
           <div class="invalid-feedback">
               Please enter a valid price.
           </div>
@@ -836,7 +804,7 @@ function Reset() {
   <div class="col-md-6">
       <div class="border border-1 p-2 rounded-2">
           <label class="btn btn-info" for="src">Choose source</label>
-          <input class="form-control" type="file" name="src" id="src" class="form-control" onchange="inputSrc(this,'src-1')" style="display:none">
+          <input class="form-control" type="file" name="src[]" id="src" class="form-control" onchange="inputSrc(this,'src-1')" style="display:none">
           <span class="src"id="src-1"></span>
           <div class="invalid-feedback">
               Please enter a valid source of the product.

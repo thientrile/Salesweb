@@ -174,7 +174,9 @@
                     <div class="row" id="var">
                         
                     </div>
+                    <div class="mt-3" id="Option-old"></div>
                     <div class="mt-3" id="Option"></div>
+                    
 
                     <div class="row mt-3">
                         <div class="col-md-6">
@@ -253,4 +255,4 @@
         </table>
     </div>
 </div>
-<script src="./assets/js/product.js"></script>
+<script src="assets/js/product.js"></script>

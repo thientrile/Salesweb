@@ -206,4 +206,4 @@
         </div>
     </form>
 </div>
-<script src="./assets/js/member.js"></script>
+<script src="assets/js/member.js"></script>

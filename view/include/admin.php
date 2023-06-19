@@ -209,6 +209,6 @@
         });
     }
 </script>
-<script src="./assets/js/node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-<script src="./assets/js/sidebarmenu.js"></script>
-<script src="./assets/js/app.min.js"></script>
+<script src="assets/js/node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script src="assets/js/sidebarmenu.js"></script>
+<script src="assets/js/app.min.js"></script>

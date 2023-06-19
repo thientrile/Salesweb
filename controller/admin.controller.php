@@ -14,18 +14,12 @@ switch (isset($_GET['function']) ? $_GET['function'] : 0) {
                 case "GET": {
                         switch (isset($_GET['type']) ? $_GET['type'] : "0") {
                             default: {
-                                    echo $admin->getProduct(isset($_GET['page']) && $_GET['page'] != "" ? (int) $_GET['page'] : 1, isset($_GET['cate']) && $_GET['cate'] != "" ? $_GET['cate'] : 0, isset($_GET['keySearch']) ? $_GET['keySearch'] : "");
+                                    if (isset($_GET['id'])) {
+                                        echo $admin->viewProductDetails($_GET['id']);
+                                    } else {
 
-
-
-                                    break;
-                                }
-                            case "variables": {
-                                    echo $admin->getVariables();
-                                    break;
-                                }
-                            case "variableOptions": {
-                                    echo $admin->getVariablesOptions($_GET['optionsId']);
+                                        echo $admin->getProduct(isset($_GET['page']) && $_GET['page'] != "" ? (int) $_GET['page'] : 1, isset($_GET['cate']) && $_GET['cate'] != "" ? $_GET['cate'] : 0, isset($_GET['keySearch']) ? $_GET['keySearch'] : "");
+                                    }
                                     break;
                                 }
                         }
@@ -36,20 +30,14 @@ switch (isset($_GET['function']) ? $_GET['function'] : 0) {
                         switch (isset($_GET['type']) ? $_GET['type'] : "0") {
                             default: {
                                     if (isset($_GET['id'])) {
-
-
                                         echo   $admin->updateProduct($_GET, $_POST, $_FILES);
                                     } else {
-
-
                                         echo  $admin->insertProduct($_POST, $_FILES);
                                     }
                                     break;
                                 }
                             case "hidden": {
-
                                     echo json_encode(array("staut" =>  $admin->hideProduct($_POST['id'])) ? "success" : "failed");
-
                                     break;
                                 }
                             case "category": {
@@ -85,13 +73,17 @@ switch (isset($_GET['function']) ? $_GET['function'] : 0) {
                                     echo json_encode($admin->delProductCate(isset($_GET['id']) && $_GET['id'] != 0 ? $_GET['id'] : ""));
                                     break;
                                 }
+                            case "productItem": {
+                                    echo   json_encode(array("status" =>   $admin->delProductItem($_GET['id']) ? "success" : "failed"));
+                                    break;
+                                }
                         }
                         break;
                     }
             }
             break;
         }
-        // news management
+
 
     case "news": {
             switch ($method) {

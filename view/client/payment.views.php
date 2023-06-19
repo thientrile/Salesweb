@@ -23,4 +23,4 @@
 
 
 </div>
-<script src="./assets/js/payment.js"></script>
+<script src="assets/js/payment.js"></script>

@@ -39,4 +39,4 @@
 </div>
 
 
-<script src="./assets/js/login.js"></script>
+<script src="assets/js/login.js"></script>

@@ -248,6 +248,7 @@ function printHtml() {
     // Thực hiện lệnh in của trình duyệt
     printWindow.print();
   };
+  // print()
 }
 $(document).ready(() => {
   userInfo();

@@ -210,4 +210,4 @@
         </table>
     </div>
 </div>
-<script src="./assets/js/news.js"></script>
+<script src="assets/js/news.js"></script>
