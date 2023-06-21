@@ -13,6 +13,9 @@ function getprice(price) {
 
 
 }
+function formatCurrency(amount) {
+  return amount.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
+}
 function addToCart(id) {
   let data = new FormData();
   $("#cart").html(`<div class="spinner-border text-light"></div>`)
@@ -170,6 +173,7 @@ function loadproduct() {
       if (res) {
         $("body > header > title").text("SHOP - " + res.title);
         let img = res.img;
+        $("head > title").html(res.title)
         $(".heading-title").html(res.title).addClass("text-center");
         $(".heading-sub")
           .html(res.sDescription)

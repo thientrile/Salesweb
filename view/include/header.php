@@ -92,4 +92,4 @@
 		</div>
 	</div>
 </div>
-<script src="assets/js/nav-menu.js"></script>
+<script src="assets/js/nav-menu.js"async></script>

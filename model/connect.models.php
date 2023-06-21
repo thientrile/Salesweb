@@ -18,10 +18,10 @@ class connect
     {
 
         /* Connecting to the database. */
-        $dsn = 'mysql:host=localhost;dbname=shopit';
-        $user = 'root';
-        $password = '';
         try {
+            $dsn = 'mysql:host=192.168.201.117;dbname=tri';
+            $user = 'thuctap';
+            $password = 'tdRG4zNw55sAZE58vqg2';
             $this->db = new PDO($dsn, $user, $password, array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES UTF8"));
         } catch (\Throwable $th) {
             echo json_encode(array("status" => "failed", "message" => $th));

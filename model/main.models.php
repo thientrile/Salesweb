@@ -2,7 +2,11 @@
 /* It's starting a session. */
 
 
-header('Content-Type: application/json');
+
+
+header("Content-Type: application/json;");
+header("Access-Control-Allow-Origin: *");
+
 session_start();
 
 
@@ -15,7 +19,7 @@ spl_autoload_register();
 $cc = new connect();
 $User = new user();
 $Cart = new cart();
-$mail = new sendmail();
+$mail = new mail();
 $product = new product();
 
 $statistics = new statistics();
@@ -38,11 +42,11 @@ if (isset($_SESSION['s_user']) && isset($_COOKIE['c_user']) && md5($_SESSION['s_
 // tạo điều hướng controllers
 $ctrl = 'product';
 if (isset($_GET['action'])) {
-    $mydir = 'controller';
+    $mydir = './controller';
 
     $myfiles = array_diff(scandir($mydir), array('.', '..'));
-    $ctrl = array_search($_GET['action'] . ".controller.php", $myfiles, false) ? $_GET['action'] : 'home';
+    $ctrl = array_search($_GET['action'] . ".controller.php", $myfiles, false) ? $_GET['action'] : 'product';
 }
-
+include_once './controller/' . $ctrl . '.controller.php';
 
 /* It's checking if the function `currency_format` exists. If it doesn't, it creates it. */

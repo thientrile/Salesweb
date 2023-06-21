@@ -1,3 +1,4 @@
+<script src="assets/js/shop.js"></script>
 <div class="img-top" style="background: url('./assets/img/pro/seamless-gold-rhombus-grid-pattern-black-background_53876-97589.jpg')">
 
     <div class="container">
@@ -23,4 +24,3 @@
 <div id="page" class="d-flex justify-content-center">
 
 </div>
-<script src="assets/js/shop.js"></script>

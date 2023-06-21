@@ -63,7 +63,7 @@ switch ($method) {
 
                             $result = $User->getId($_SESSION['code']['email']);
                             $_SESSION["s_user"] =  $result['id'];
-
+                            
                             setcookie('c_user', md5($result['id']), time() + 86400);
                             if (isset($_SESSION['code'])) {
                                 session_name("code");

@@ -6,6 +6,7 @@
     "ckeditor": "^4.12.1",
     "font-awesome": "^4.7.0",
     "jquery": "^3.6.4",
+    "simplebar": "^6.2.5",
     "sweetalert2": "^11.7.5"
   }
 }

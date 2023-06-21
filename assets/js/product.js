@@ -358,6 +358,7 @@ function getCate(id = 0) {
 }
 
 function load(id) {
+  multipleVar()
   $("#var").html(``)
   $("#Option").html(``)
   $("#Option-old").show();
@@ -373,7 +374,7 @@ function load(id) {
   $("#function").text("Update");
   let Server = new server();
   $(".modal-title").text("Edit Product");
-  multipleVar()
+  
   Server.get(`action=admin&function=product&id=${id}`)
     .then((res, req) => {
       $("#title").val(res.title);
@@ -668,19 +669,19 @@ function update(e, form) {
   Server.post(`action=admin&function=product&id=${id}`, formData)
     .then((res, req) => {
       console.log(res);
-      // Swal.fire({
-      //   position: 'bottom-start',
+      Swal.fire({
+        position: 'bottom-start',
 
 
-      //   icon: 'success',
-      //   title: 'The product has been successfully added',
-      //   showConfirmButton: false,
-      //   timer: 1000
-      // }).then(() => {
+        icon: 'success',
+        title: 'The product has been successfully added',
+        showConfirmButton: false,
+        timer: 1000
+      }).then(() => {
 
-      //   load(id);
-      //   loads();
-      // })
+        load(id);
+        loads();
+      })
 
     })
     .catch((xhr, status, error) => {

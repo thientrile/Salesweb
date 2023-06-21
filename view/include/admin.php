@@ -1,4 +1,5 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+<link id="style" rel="stylesheet" href="assets/css/styles.css" />
 <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full" data-sidebar-position="fixed" data-header-position="fixed">
     <!-- Sidebar Start -->
     <aside class="left-sidebar">
@@ -71,7 +72,7 @@
                         </a>
                     </li>
                     <li class="sidebar-item">
-                        <a class="sidebar-link"  href="index.php?action=shop" aria-expanded="false">
+                        <a class="sidebar-link" href="index.php?action=shop" aria-expanded="false">
                             <span>
                                 <i class="fa-solid fa-shop fa-beat"></i>
                             </span>
@@ -79,7 +80,7 @@
                         </a>
                     </li>
                     <li class="sidebar-item">
-                        <a class="sidebar-link"  href="index.php?action=libary" aria-expanded="false">
+                        <a class="sidebar-link" href="index.php?action=libary" aria-expanded="false">
                             <span>
                                 <i class="fa-solid fa-book"></i>
                             </span>
@@ -87,7 +88,7 @@
                         </a>
                     </li>
                     <li class="sidebar-item">
-                        <a class="sidebar-link"  href="index.php?action=cart" aria-expanded="false">
+                        <a class="sidebar-link" href="index.php?action=cart" aria-expanded="false">
                             <span>
                                 <i class="fa-solid fa-cart-shopping"></i>
                             </span>
@@ -95,7 +96,7 @@
                         </a>
                     </li>
                     <li class="sidebar-item">
-                        <a class="sidebar-link"  href="index.php?action=user" aria-expanded="false">
+                        <a class="sidebar-link" href="index.php?action=user" aria-expanded="false">
                             <span>
                                 <i class="fa-solid fa-user"></i>
                             </span>
@@ -153,7 +154,7 @@
 
                         <li class="nav-item dropdown">
                             <a class="nav-link nav-icon-hover" href="javascript:void(0)" id="drop2" data-bs-toggle="dropdown" aria-expanded="false">
-                                <img src="../assets/images/profile/user-1.jpg" alt="" width="35" height="35" class="rounded-circle" />
+                                <img src="assets/images/profile/user-1.jpg" alt="" width="35" height="35" class="rounded-circle" />
                             </a>
                             <div class="dropdown-menu dropdown-menu-end dropdown-menu-animate-up" aria-labelledby="drop2">
                                 <div class="message-body">
@@ -179,7 +180,7 @@
         </header>
         <!--  Header End -->
         <div id="body" class="container-fluid">
-
+           
         </div>
     </div>
 </div>
