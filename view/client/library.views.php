@@ -9,7 +9,9 @@
     <div class="container translate-top">
         <div class="row" id="library">
 
-
+            <div class="d-flex justify-content-center">
+                <div class="spinner-border text-info "></div>
+            </div>
 
         </div>
 

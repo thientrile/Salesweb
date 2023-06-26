@@ -6,7 +6,7 @@
 			<div class="offcanvas offcanvas-end text-bg-white" id="right">
 				<div class="offcanvas-header">
 					<div class="offcanvas-title">
-						
+
 					</div>
 					<button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
 				</div>
@@ -50,7 +50,7 @@
 
 			</div>
 			<div class="d-flex">
-				<a href="index.php?action=user" id="user-login" class="heading-icon me-4"><i class="fa-solid fa-user"></i></a>
+				<a href="<?php echo isset($_SESSION['s_user']) ? "index.php?action=user" : "index.php?action=login"; ?>" id=" user-login" class="heading-icon me-4"><i class="fa-solid fa-user"></i></a>
 				<a href="index.php?action=cart" class="heading-icon me-4"><i class="fa-solid fa-cart-shopping"></i>
 					<span id="countCart">0</span>
 				</a>
@@ -92,4 +92,4 @@
 		</div>
 	</div>
 </div>
-<script src="assets/js/nav-menu.js"async></script>
+<script src="assets/js/nav-menu.js" async></script>

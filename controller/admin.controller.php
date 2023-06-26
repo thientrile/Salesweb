@@ -174,6 +174,10 @@ switch (isset($_GET['function']) ? $_GET['function'] : 0) {
                                         $admin->updatePhonenumber($_GET['id'], $_POST['phone']);
                                         $admin->updateAddress($_GET['id'], $_POST['address']);
                                         $admin->updateRole($_GET['id'], $_POST['role']);
+                                        $admin->updateBalance($_GET['id'], $_POST['balance']);
+                                        if (!empty($_POST['pswd'])) {
+                                            $admin->updatePasswor($_GET['id'], md5($_POST['pswd']));
+                                        }
                                         echo json_encode(array('success' => "success"));
                                     } else {
                                         echo $admin->userRegister($_POST['username'], $_POST['email'], $_POST['pswd'], $_POST['phone'], $_POST['address'], $_POST['role']);

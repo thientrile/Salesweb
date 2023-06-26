@@ -174,8 +174,10 @@ function logout() {
     confirmButtonText: "Yes, Log out!",
   }).then((result) => {
     if (result.isConfirmed) {
-      document.cookie =
-        "c_user=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+
+      let Server = new server();
+      Server.get("action=checkvalid&function=logout")
+
       Swal.fire({
         icon: "success",
         title: "Your account has been logged out",

@@ -24,29 +24,31 @@
   <link href="assets/font/fontawesome-free-6.4.0-web/css/solid.css" rel="stylesheet">
   <script async src="https://cdn.tiny.cloud/1/ne7jh8amcsjb3xmqmi897dq6otm31983uforos958vktr7b4/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
   <script src="assets/js/node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-
   <link id="bs5" href="assets/js/node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
-  
-
   <title></title>
 </head>
 
 <body>
   <?php if (isset($_GET['action']) && $_GET['action'] == 'admin') {
     include_once 'view/include/admin.php';
-  } else {
+  } else if(isset($_GET['action']) && $_GET['action'] == 'admin') {
 
 
+
+  }
+  
+  
+  
+  else{
   ?>
     <link id="style" rel="stylesheet" href="assets/css/style.css" />
     <div id="main">
       <?php include_once "view/include/header.php"; ?>
       <div id="body">
-       
+
       </div>
     <?php include_once "view/include/footer.php";
   } ?>
-
     </div>
 </body>
 <script style="display:none">

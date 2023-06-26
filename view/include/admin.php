@@ -59,7 +59,7 @@
                         </a>
                     </li>
 
-                    <li class="nav-small-cap">
+                    <!-- <li class="nav-small-cap">
                         <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
                         <span class="hide-menu">PAGE</span>
                     </li>
@@ -102,7 +102,7 @@
                             </span>
                             <span class="hide-menu">USER</span>
                         </a>
-                    </li>
+                    </li> -->
                     <!-- <li class="nav-small-cap">
                         <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
                         <span class="hide-menu">AUTHOR</span>
@@ -180,7 +180,7 @@
         </header>
         <!--  Header End -->
         <div id="body" class="container-fluid">
-           
+
         </div>
     </div>
 </div>
@@ -196,8 +196,8 @@
             confirmButtonText: "Yes, Log out!",
         }).then((result) => {
             if (result.isConfirmed) {
-                document.cookie =
-                    "c_user=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+                let Server = new server();
+                Server.get("action=checkvalid&function=logout")
                 Swal.fire({
                     icon: "success",
                     title: "Your account has been logged out",

@@ -120,15 +120,18 @@ function navigateToPage(page) {
 }
 function view(id) {
     $("#label-avatar").show()
-    $("#pswd").hide()
+    $("#pswd input").attr({ placeholder: "Enter new password" })
+    $("#pswd input").val('')
     $("#form-data").attr({ onsubmit: "update(this,event)" }).removeClass("was-validated")
     $("#form-data").attr({ "user-id": id })
-    $("#pswd").hide()
+    // $("#pswd").hide()
     $("#inputPswd").removeAttr("required")
 
     Server.get(`action=admin&function=member&id=${id}`).then((res, req) => {
         let data = res.data
+
         getRole(data.role_id);
+        $("#bal").val(data.balance)
         $("#avatar").attr({ src: data.avatar })
         $("#inputUsername").val(data.fullname)
         $("#email").val(data.email)
@@ -212,6 +215,7 @@ function insert(form, e) {
     })
 }
 function viewInser() {
+    $("#pswd input").attr({ placeholder: "Enter  password" })
     $("#avatar").attr({ src: "" })
     $("#form-data").removeAttr("user-id").removeClass("was-validated")
     $("#form-data").attr({ onsubmit: "insert(this,event)" })

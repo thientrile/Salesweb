@@ -49,7 +49,7 @@ function createPagination(currentPage, totalPages) {
   previousLi.classList.add("page-item");
   const previousButton = document.createElement("a");
   previousButton.classList.add("page-link");
-  previousButton.href = "#";
+
   previousButton.innerText = "Previous";
   previousButton.disabled = currentPage === 1;
 
@@ -91,7 +91,7 @@ function createPagination(currentPage, totalPages) {
       pageLi.classList.add("page-item");
       const pageButton = document.createElement("a");
       pageButton.classList.add("page-link");
-      pageButton.href = `#`;
+
       pageButton.setAttribute(
         "onclick",
         `addPageQueryParam(event,${currentPage})`

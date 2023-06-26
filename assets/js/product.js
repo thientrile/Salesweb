@@ -361,6 +361,7 @@ function load(id) {
   multipleVar()
   $("#var").html(``)
   $("#Option").html(``)
+  $("#Option-old").html('')
   $("#Option-old").show();
   variables = []
   $("#form-data").removeClass("was-validated");
@@ -374,7 +375,7 @@ function load(id) {
   $("#function").text("Update");
   let Server = new server();
   $(".modal-title").text("Edit Product");
-  
+
   Server.get(`action=admin&function=product&id=${id}`)
     .then((res, req) => {
       $("#title").val(res.title);
@@ -391,7 +392,7 @@ function load(id) {
         
         <div id="var-${items.id}">
        <input type="hidden" name="product-item-id[]" value="${items.id}">
-       <button type="button" class="btn-close" onclick="delProductItem(this, ${items.id})"></button>
+    ${variables.length > 1 ? `<button type="button" class="btn-close" onclick="delProductItem(this, ${items.id})"></button>` : ''}   
      ${items.name != '' ? `  
      
      
@@ -440,9 +441,9 @@ function load(id) {
         </div>
         `;
 
-        $("#Option-old").html(options);
 
       })
+      $("#Option-old").html(options);
 
       tinymce.get("sdesc").setContent(res.sDescription);
       tinymce.get("desc").setContent(res.description);
@@ -756,20 +757,31 @@ function addNew(e, form) {
   Server.post(`action=admin&function=product`, formData)
     .then((res, req) => {
       console.log(res);
-      Swal.fire({
-        position: 'bottom-start',
-        icon: 'success',
-        title: 'The product has been successfully added',
-        showConfirmButton: false,
-        timer: 1500
-      }).then(() => {
-        $("#function").text("Add New")
-        $("#form-data > div.modal-header > button").show();
+      if (res.status == "success") {
+        Swal.fire({
+          position: 'bottom-start',
+          icon: 'success',
+          title: 'The product has been successfully added',
+          showConfirmButton: false,
+          timer: 1500
+        }).then(() => {
+          $("#function").text("Add New")
+          $("#form-data > div.modal-header > button").show();
 
-        loads();
-        Reset();
+          loads();
+          Reset();
+          Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: "Can't add products!",
 
-      })
+          })
+        })
+      }
+      else {
+
+      }
+
     })
     .catch((xhr, status, error) => {
       console.log(xhr, status, error);

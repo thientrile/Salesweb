@@ -51,7 +51,7 @@ class invoice
             $select = "SELECT MAX(id) FROM `order`";
             $result = $db->getonce($select);
             $this->orderId = $result[0];
-          
+
             $inserts = "INSERT INTO `order_details`(`id`, `order_id`, `product_id`, `product_item_id`, `price`, `discount`) VALUES (NULL,$this->orderId,$row[2],$row[3],$price,$discount)";
             $db->send($inserts);
 
@@ -76,9 +76,9 @@ class invoice
     {
         $db = new connect();
         $start = 6 * $currentPage - 6;
-        $end = 6 * $currentPage;
-        $select = "SELECT product.id as id, title,img,source,category_id, price,created_at,updated_at, deleted, category.name as name FROM product,category WHERE  product.id IN (SELECT product_id FROM `order_details` WHERE  order_id IN( SELECT id FROM `order` WHERE user_id=" . $this->userId . "))AND product.category_id=category.id  LIMIT $start,$end";
-        $this->countLibary = ceil($db->getonce("SELECT COUNT(*) FROM product WHERE id IN (SELECT product_id FROM `order_details` WHERE  order_id IN( SELECT id FROM `order` WHERE user_id=" . $this->userId . ")) ")[0] / 6);
+
+        $select = "SELECT product.title, product.img, product_item.sources, category.`name` AS name, variation_option.`value`  FROM product RIGHT  JOIN product_item ON product.id = product_item.product_id  RIGHT JOIN order_details ON product_item.product_id= order_details.product_id LEFT JOIN `order` ON `order`.id=order_details.order_id AND user_id = " . $this->userId . " LEFT JOIN category ON product.category_id= category.id LEFT JOIN product_cofiguration ON product_item.id=product_cofiguration.product_item_id LEFT JOIN variation_option ON variation_option.id = product_cofiguration.variation_option_id  LIMIT $start,6";
+        $this->countLibary = ceil($db->getonce("SELECT count(*)  FROM product RIGHT  JOIN product_item ON product.id = product_item.product_id  RIGHT JOIN order_details ON product_item.product_id= order_details.product_id LEFT JOIN `order` ON `order`.id=order_details.order_id AND user_id = " . $this->userId . " LEFT JOIN category ON product.category_id= category.id LEFT JOIN product_cofiguration ON product_item.id=product_cofiguration.product_item_id LEFT JOIN variation_option ON variation_option.id = product_cofiguration.variation_option_id ")[0] / 6);
         $result = $db->getlist($select);
         $array = array();
         while ($row = $result->fetch()) {

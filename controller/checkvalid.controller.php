@@ -25,9 +25,13 @@ switch ($method) {
                         $result = $User->checkEmailExit($email);
                         if ($result) {
                             $code = rand(1000, 9999);
-                            $mail->confirmMail($email, $code, "");
-                            $_SESSION['code'] = array("email" => $email, "code" => $code);
-                            echo json_encode(array("status" => "success"));
+                            if ($mail->confirmMail($email, $code, "")) {
+
+                                $_SESSION['code'] = array("email" => $email, "code" => $code);
+                                echo json_encode(array("status" => "success"));
+                            } else {
+                                echo json_encode(array("status" => "failed"));
+                            }
                         } else {
                             echo json_encode(array("status" => "failed"));
                         }
@@ -63,7 +67,7 @@ switch ($method) {
 
                             $result = $User->getId($_SESSION['code']['email']);
                             $_SESSION["s_user"] =  $result['id'];
-                            
+
                             setcookie('c_user', md5($result['id']), time() + 86400);
                             if (isset($_SESSION['code'])) {
                                 session_name("code");
@@ -91,6 +95,20 @@ switch ($method) {
                             echo json_encode(array("status" => "fall", "error" => "Email or password is incorrect"));
                         }
 
+                        break;
+                    }
+            }
+            break;
+        }
+    case "GET": {
+            switch (isset($_GET['function']) ? $_GET['function'] : "0") {
+                case "logout": {
+                        setcookie('c_user', '', time() - 86400);
+                        if (isset($_SESSION['s_user'])) {
+                            session_name("s_user");
+                            session_unset();
+                            session_destroy();
+                        }
                         break;
                     }
             }

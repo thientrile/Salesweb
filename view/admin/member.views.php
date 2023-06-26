@@ -170,6 +170,10 @@
 
                                     </div>
                                     <!-- Form Row-->
+                                    <div class="mb-3" id="balance" >
+                                        <label class="small mb-1" for="bal">Balance</label>
+                                        <input class="form-control" name="balance" id="bal"  type="number" min=0 value="0">
+                                    </div>
                                     <div class="row gx-3 mb-3">
                                         <div class="col-md-6">
                                             <label class="small mb-1" for="inputAddress">Your Address</label>
@@ -181,7 +185,7 @@
                                         </div>
 
                                     </div>
-                                    <div class="mb-3" id="pswd" style="display:none">
+                                    <div class="mb-3" id="pswd">
                                         <label class="small mb-1" for="inputPswd">Password</label>
                                         <input class="form-control" name="pswd" id="inputPswd" onchange=" checkpswd(this)" type="text" placeholder="Enter your password" value="">
                                     </div>
