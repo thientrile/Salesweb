@@ -180,7 +180,7 @@ switch (isset($_GET['function']) ? $_GET['function'] : 0) {
                                         }
                                         echo json_encode(array('success' => "success"));
                                     } else {
-                                        echo $admin->userRegister($_POST['username'], $_POST['email'], $_POST['pswd'], $_POST['phone'], $_POST['address'], $_POST['role']);
+                                        echo $admin->userRegister($_POST['username'], $_POST['email'], md5($_POST['pswd']), $_POST['phone'], $_POST['address'], $_POST['role']);
                                     }
                                     break;
                                 }

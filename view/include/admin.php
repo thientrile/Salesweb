@@ -179,7 +179,7 @@
             </nav>
         </header>
         <!--  Header End -->
-        <div id="body" class="container-fluid">
+        <div id="body" class="container-fluid" 
 
         </div>
     </div>

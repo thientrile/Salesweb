@@ -54,13 +54,16 @@ function loadproducts() {
   let url =
     window.location.href.split("action=shop&")[1];
 
-
   let Server = new server();
   Server.get(`action=product&${url}&page=${currentPages}`)
     .then((res, _req) => {
       let result = "";
       totalPages = res.page;
       createPagination(currentPages, res.page);
+      if (window.location.href.search("&keySearch=") != -1) {
+
+        $("#body > div.img-top > div > p").text("Search Results '" + window.location.href.split("keySearch=")[1].split("&")[0] + "' found "+res.data.length+" results")
+      }
       for (let i of res.data) {
         try {
           const price = i.options.map((j) => formatCurrency(j.price)).join(", ");

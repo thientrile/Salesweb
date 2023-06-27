@@ -6,6 +6,9 @@
         background-color: #d0f8f1;
         border-radius: 30px;
         padding: 10px;
+        position: relative;
+        top: 0;
+       
     }
 
     .search_input {
@@ -26,6 +29,7 @@
         width: 350px;
         caret-color: red;
         transition: width 0.4s linear;
+        
     }
 
     .searchbar:hover>.search_icon {
